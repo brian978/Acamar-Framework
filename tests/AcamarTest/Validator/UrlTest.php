@@ -39,6 +39,11 @@ class UrlTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->validator->isValid('http://12345'));
     }
 
+    public function testIsUrlInvalidWithoutCUrlAndProtocol()
+    {
+        $this->assertFalse($this->validator->isValid('12345'));
+    }
+
     public function testIsUrlValidWithCUrl()
     {
         $this->validator->setOptions(array('curl' => true));

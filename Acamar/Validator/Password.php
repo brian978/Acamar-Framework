@@ -16,11 +16,14 @@ namespace Acamar\Validator;
  */
 class Password extends AbstractValidator
 {
+    /**
+     * @var array
+     */
     protected $options = array(
-        'length' => 8, // Minimum password length
-        'number' => true, // Require numbers
-        'ucase' => true, // Require lowercase letters
-        'lcase' => true // Require uppercase letters
+        'length' => 0, // Minimum password length
+        'number' => false, // Require numbers
+        'ucase' => false, // Require lowercase letters
+        'lcase' => false // Require uppercase letters
     );
 
     /**
@@ -32,24 +35,17 @@ class Password extends AbstractValidator
      */
     public function isValid($value)
     {
-        // ==== Result variable ==== //
-        $result = true;
-
-        // ==== Check variable ==== //
+        $result       = true;
         $failed_count = 0;
 
-        // ==== Checking if the length check is enabled ==== //
-        if (isset($this->options['length'])
-            && is_numeric($this->options['length'])
-            && $this->options['length'] > 0
-        ) {
-            // ==== Checking the length ==== //
+        // Validating the length
+        if (isset($this->options['length']) && is_numeric($this->options['length']) && $this->options['length'] >= 0) {
             if (strlen(trim($value)) < $this->options['length']) {
                 $failed_count++;
             }
         }
 
-        // ==== Checking if the number or lowercase or uppercase check is active ==== //
+        // Validating the characters count
         if ($this->options['number'] == true
             || $this->options['lcase'] == true
             || $this->options['ucase'] == true
@@ -90,28 +86,24 @@ class Password extends AbstractValidator
                 }
             }
 
-            // ==== Checking number count ==== //
             if ($this->options['number'] == true && $number == 0) {
                 $failed_count++;
             }
 
-            // ==== Checking lowercase count ==== //
             if ($this->options['lcase'] == true && $lChr == 0) {
                 $failed_count++;
             }
 
-            // ==== Checking uppercase count ==== //
             if ($this->options['ucase'] == true && $uChr == 0) {
                 $failed_count++;
             }
         }
 
         // ==== Checking the failed count ==== //
-        if ($failed_count != 0) {
+        if ($failed_count > 0) {
             $result = false;
         }
 
-        // ==== Returning result ==== //
         return $result;
     }
 }

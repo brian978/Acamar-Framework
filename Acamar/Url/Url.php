@@ -217,7 +217,7 @@ class Url implements UrlInterface
             $site_root = $this->options['site_root_ssl'];
         }
 
-        // Returing the site root
+        // Returning the site root
         return $site_root;
     }
 
@@ -341,7 +341,7 @@ class Url implements UrlInterface
      * Gets a parameter from the URL
      *
      * @param string $name
-     * @param mixed  $default
+     * @param mixed $default
      * @return mixed
      */
     public function getParam($name, $default = null)
@@ -359,7 +359,7 @@ class Url implements UrlInterface
      * Sets a parameter
      *
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      * @return object
      */
     public function setParam($name, $value)
@@ -472,8 +472,8 @@ class Url implements UrlInterface
     /**
      * Called when a call is made to the class like it's a function
      *
-     * @param string  $controller Page to link to
-     * @param array   $params
+     * @param string $controller Page to link to
+     * @param array $params
      * @param boolean $merge_get
      * @return string
      */
@@ -488,8 +488,8 @@ class Url implements UrlInterface
     /**
      * Builds the URL using the provided params
      *
-     * @param string  $controller Page to link to
-     * @param array   $params
+     * @param string $controller Page to link to
+     * @param array $params
      * @param boolean $merge_get
      * @return string
      */

@@ -34,11 +34,6 @@ class PasswordTest extends PHPUnit_Framework_TestCase
         $this->assertTrue($this->validator->isValid('Asdf1231'));
     }
 
-    public function testDefaultValidationFail()
-    {
-        $this->assertFalse($this->validator->isValid('asdf1231'));
-    }
-
     public function testNumbersValidationFail()
     {
         $this->validator->setOptions(array(

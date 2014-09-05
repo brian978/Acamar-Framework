@@ -37,18 +37,6 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
     /**
      * @expectedException \Acamar\Url\Exception\RuntimeException
-     */
-    public function testSiteRootIsInvalid()
-    {
-        $config = array(
-            'site_root' => 'htt://localhost'
-        );
-
-        new Url($config);
-    }
-
-    /**
-     * @expectedException \Acamar\Url\Exception\RuntimeException
      * @expectedExceptionMessage Invalid SSL site root URL
      */
     public function testSiteRootSslIsInvalid()

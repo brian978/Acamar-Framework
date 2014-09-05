@@ -16,6 +16,9 @@ namespace Acamar\Validator;
  */
 class Url extends AbstractValidator
 {
+    /**
+     * @var array
+     */
     protected $options = array(
         'curl' => false // It is used by the isValid method
     );
@@ -23,49 +26,38 @@ class Url extends AbstractValidator
     /**
      * Validates a given URL. It can also check if the URL is accessible (on by default).
      *
-     * @param string $url
+     * @param string $value
      * @return boolean
      */
-    public function isValid($url)
+    public function isValid($value)
     {
-        // ==== Check variable ==== //
-        $isValid = false;
+        $isValid        = false;
+        $sanitizedValue = filter_var($value, FILTER_SANITIZE_URL);
+        $url            = filter_var($sanitizedValue, FILTER_VALIDATE_URL);
 
-        // ==== Sanitizing and validating the URL ==== //
-        $url = filter_var(filter_var($url, FILTER_SANITIZE_URL), FILTER_VALIDATE_URL);
-
-        // ==== Checking if the URL passed the previous checks ==== //
-        if ($url !== false && (strpos($url, 'http://') === 0 || strpos($url, 'https://') === 0)) {
-            // Setting the flag to true
+        if ($url !== false) {
             $isValid = true;
 
             // Should we check to see if the URL also exists
             if ($this->options['curl'] === true) {
-                // ==== Initializing the cURL handle ==== //
+                // Making the cURL to check if the URL exists
                 $ch = curl_init();
-
-                // ==== Setting the cURL options ==== //
                 curl_setopt($ch, CURLOPT_URL, $url);
                 curl_setopt($ch, CURLOPT_NOBODY, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-                // ==== Executing the cURL ==== //
                 curl_exec($ch);
 
-                // ==== Getting the returned code ==== //
-                $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                // If we close the cURL before we get the info we won't find out the HTTP code
+                $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                // ==== Closing the cURL handle ==== //
                 curl_close($ch);
 
-                // ==== If code is different than 200 then the URL does not exist ==== //
-                if ($code != 200) {
+                if ($code !== 200) {
                     $isValid = false;
                 }
             }
         }
 
-        // ==== Returning result ==== //
         return $isValid;
     }
 }

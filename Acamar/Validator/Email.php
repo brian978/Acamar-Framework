@@ -29,27 +29,29 @@ class Email extends AbstractValidator
      */
     public function isValid($value)
     {
-        $isValid = true;
+        $isValid = false;
+        $email   = filter_var(filter_var($value, FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL);
 
-        // Sanitizing and filtering the email
-        $value = filter_var(filter_var($value, FILTER_SANITIZE_EMAIL), FILTER_VALIDATE_EMAIL);
 
-        if ($value === false) {
-            $isValid = false;
-        } elseif ($this->options['check_dns'] === true) {
-            // Getting the DNS part of the email
-            $dns = substr($value, strpos($value, '@'));
+        if ($email !== false) {
+            $isValid = true;
 
-            // Checking the DNS depending on what function is available
-            if (function_exists('checkdnsrr') && checkdnsrr($dns) === false) {
-                $isValid = false;
-            } elseif (function_exists('gethostbyname') && gethostbyname($dns) === $dns) {
-                $isValid = false;
-            } else {
-                throw new \RuntimeException(
-                    'In order for the domain name to be checked one of
-                 the following functions must be available: checkdnsrr, gethostbyname'
-                );
+            // Validating the DNS
+            if ($this->options['check_dns'] === true) {
+                // Getting the DNS part of the email
+                $dns = substr($email, strpos($email, '@'));
+
+                // Checking the DNS depending on what function is available
+                if (function_exists('checkdnsrr') && checkdnsrr($dns) === false) {
+                    $isValid = false;
+                } elseif (function_exists('gethostbyname') && gethostbyname($dns) === $dns) {
+                    $isValid = false;
+                } else {
+                    throw new \RuntimeException(
+                        'In order for the domain name to be checked one of
+                     the following functions must be available: checkdnsrr, gethostbyname'
+                    );
+                }
             }
         }
 

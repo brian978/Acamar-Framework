@@ -16,5 +16,11 @@ namespace Acamar\Validator;
  */
 interface ValidatorInterface
 {
+    /**
+     * Validates a given value
+     *
+     * @param mixed $value
+     * @return boolean
+     */
     public function isValid($value);
 }
