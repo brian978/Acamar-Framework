@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -9,8 +9,8 @@
 
 namespace AcamarTest\Config;
 
-use PHPUnit_Framework_TestCase;
 use Acamar\Config\Config;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class ConfigTest

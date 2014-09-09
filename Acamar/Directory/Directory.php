@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -20,7 +20,7 @@ class Directory
      * Cleans up a given directory except for the files in the whitelist
      *
      * @param string $dir
-     * @param array  $whitelist
+     * @param array $whitelist
      * @return void
      */
     public static function cleanup($dir, array $whitelist = array())

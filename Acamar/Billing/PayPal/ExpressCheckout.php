@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -86,8 +86,8 @@ class ExpressCheckout extends PayPal
      * Used to initialize the options and create the object
      *
      * @param array $options
-     * @param int   $environment [ optional ] Default is "testing"
-     * @param int   $platform    [ optional ] Default is "desktop"
+     * @param int $environment [ optional ] Default is "testing"
+     * @param int $platform [ optional ] Default is "desktop"
      * @throws \Acamar\Billing\Exception\InvalidArgumentException
      * @return ExpressCheckout
      */
@@ -256,7 +256,7 @@ class ExpressCheckout extends PayPal
     /**
      * Used to initiate the payment flow and redirect to PayPal if the operation was successful
      *
-     * @param Items  $items
+     * @param Items $items
      * @param string $returnUrl
      * @param string $cancelUrl
      * @return mixed Response object on success or false on fail

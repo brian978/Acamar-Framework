@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -9,9 +9,9 @@
 
 namespace AcamarTest\Archive;
 
+use Acamar\Archive\Zip;
 use Acamar\Directory\Directory;
 use PHPUnit_Framework_TestCase;
-use Acamar\Archive\Zip;
 
 /**
  * Class ZipTest
@@ -34,18 +34,15 @@ class ZipTest extends PHPUnit_Framework_TestCase
 
     public static function setUpBeforeClass()
     {
-        if (!is_dir(self::TEST_DIR))
-        {
+        if (!is_dir(self::TEST_DIR)) {
             mkdir(self::TEST_DIR);
 
             $last_dir = self::TEST_DIR;
 
-            for ($i = 1; $i <= self::$layers; $i++)
-            {
+            for ($i = 1; $i <= self::$layers; $i++) {
                 $file = $last_dir . self::DS . self::TEST_FILE;
 
-                if (!is_file($file))
-                {
+                if (!is_file($file)) {
                     touch($file);
                     $file = realpath($file);
                     $fh   = fopen($file, 'w');
@@ -118,49 +115,36 @@ class ZipTest extends PHPUnit_Framework_TestCase
     {
         $result = true;
 
-        foreach (scandir($original) as $path)
-        {
-            if ($path != '.' && $path != '..')
-            {
+        foreach (scandir($original) as $path) {
+            if ($path != '.' && $path != '..') {
                 $fullPath = $original . self::DS . $path;
 
-                if (is_file($fullPath))
-                {
-                    if (is_file($copy . self::DS . $path))
-                    {
+                if (is_file($fullPath)) {
+                    if (is_file($copy . self::DS . $path)) {
                         $originalSize = filesize($fullPath);
                         $copySize     = filesize($copy . self::DS . $path);
 
                         if ($originalSize == false
                             || $copySize == false
                             || $originalSize !== $copySize
-                        )
-                        {
+                        ) {
                             $result = false;
                         }
-                    }
-                    else
-                    {
+                    } else {
                         $result = false;
                     }
-                }
-                else if (is_dir($fullPath))
-                {
+                } else if (is_dir($fullPath)) {
                     $copyPath = $copy . self::DS . $path;
 
-                    if (is_dir($copyPath))
-                    {
+                    if (is_dir($copyPath)) {
                         $result = $this->compareDirectories($fullPath, $copyPath);
-                    }
-                    else
-                    {
+                    } else {
                         $result = false;
                     }
                 }
             }
 
-            if ($result == false)
-            {
+            if ($result == false) {
                 break;
             }
         }
@@ -183,13 +167,11 @@ class ZipTest extends PHPUnit_Framework_TestCase
             self::TEST_DIR . '_unpacked',
         );
 
-        foreach ($cleanup as $dir)
-        {
+        foreach ($cleanup as $dir) {
             self::cleanUpDir($dir);
         }
 
-        if (is_file(self::ARCHIVE_FILE))
-        {
+        if (is_file(self::ARCHIVE_FILE)) {
             unlink(self::ARCHIVE_FILE);
         }
     }

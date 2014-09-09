@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -85,7 +85,7 @@ class Item
     /**
      *
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      */
     public function __set($name, $value)
     {
@@ -98,7 +98,7 @@ class Item
 
     /**
      * @param string $name
-     * @param mixed  $value
+     * @param mixed $value
      * @return bool
      */
     protected function validate($name, $value)

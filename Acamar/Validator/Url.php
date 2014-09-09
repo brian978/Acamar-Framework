@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -48,7 +48,7 @@ class Url extends AbstractValidator
                 curl_exec($ch);
 
                 // If we close the cURL before we get the info we won't find out the HTTP code
-                $code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+                $code = (int)curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
                 curl_close($ch);
 

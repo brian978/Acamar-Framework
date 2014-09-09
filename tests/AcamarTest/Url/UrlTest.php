@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -9,8 +9,8 @@
 
 namespace AcamarTest\Url;
 
-use PHPUnit_Framework_TestCase;
 use Acamar\Url\Url;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class UrlTest
@@ -57,7 +57,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test', $link);
     }
@@ -70,7 +70,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test', $link);
     }
@@ -87,7 +87,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'), true);
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'), true);
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test&param2=test2&param3=test3', $link);
     }
@@ -104,7 +104,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test', 'param2' => 'test2new'), true);
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test', 'param2' => 'test2new'), true);
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test&param2=test2new&param3=test3', $link);
     }
@@ -124,7 +124,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test&param2=test2', $link);
     }
@@ -144,7 +144,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test', 'param2' => 'test2new'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test', 'param2' => 'test2new'));
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test&param2=test2new', $link);
     }
@@ -161,7 +161,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url->disableSSL();
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('http://localhost/?controller=contact&action=index&param1=test', $link);
     }
@@ -175,7 +175,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->ssl()->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->ssl()->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('https://localhost/?controller=contact&action=index&param1=test', $link);
     }
@@ -190,7 +190,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url = new Url($config);
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('https://localhost/?controller=contact&action=index&param1=test', $link);
     }
@@ -206,7 +206,7 @@ class UrlTest extends PHPUnit_Framework_TestCase
 
         $url->enableSSL();
 
-        $link = $url->get('contact', array('action'=> 'index', 'param1' => 'test'));
+        $link = $url->get('contact', array('action' => 'index', 'param1' => 'test'));
 
         $this->assertEquals('https://localhost/?controller=contact&action=index&param1=test', $link);
     }

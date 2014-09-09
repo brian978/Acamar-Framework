@@ -1,6 +1,6 @@
 <?php
 /**
- * Acamar Framework
+ * Acamar-PHP
  *
  * @link      https://github.com/brian978/Acamar-PHP
  * @copyright Copyright (c) 2013
@@ -9,8 +9,8 @@
 
 namespace AcamarTest\Directory;
 
-use PHPUnit_Framework_TestCase;
 use Acamar\Directory\Directory;
+use PHPUnit_Framework_TestCase;
 
 /**
  * Class DirectoryTest
@@ -22,13 +22,12 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
     protected static $layers = 3;
     protected static $deepFile = '';
 
-    const TEST_DIR     = 'test_cleanup_dir';
-    const DS           = DIRECTORY_SEPARATOR;
+    const TEST_DIR = 'test_cleanup_dir';
+    const DS       = DIRECTORY_SEPARATOR;
 
     public static function setUpBeforeClass()
     {
-        if (!is_dir(self::TEST_DIR))
-        {
+        if (!is_dir(self::TEST_DIR)) {
             mkdir(self::TEST_DIR);
         }
     }
@@ -37,12 +36,10 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
     {
         $last_dir = self::TEST_DIR;
 
-        for ($i = 1; $i <= self::$layers; $i++)
-        {
+        for ($i = 1; $i <= self::$layers; $i++) {
             $file = $last_dir . self::DS . md5(time()) . '.file';
 
-            if (!is_file($file))
-            {
+            if (!is_file($file)) {
                 touch($file);
                 $file = realpath($file);
                 $fh   = fopen($file, 'w');
@@ -51,12 +48,10 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
             }
 
             // Adding a second file for the whitelist test
-            if($i == 2)
-            {
+            if ($i == 2) {
                 $file = $last_dir . self::DS . 'whitelisted.file';
 
-                if (!is_file($file))
-                {
+                if (!is_file($file)) {
                     touch($file);
                     $file = realpath($file);
                     $fh   = fopen($file, 'w');
@@ -113,8 +108,7 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(count(scandir(self::TEST_DIR)) == 3);
 
         // Removing the file so that tearDownAfterClass works properly
-        if(is_file($file))
-        {
+        if (is_file($file)) {
             unlink($file);
         }
     }
@@ -133,8 +127,7 @@ class DirectoryTest extends PHPUnit_Framework_TestCase
 
     public static function tearDownAfterClass()
     {
-        if (is_dir(self::TEST_DIR))
-        {
+        if (is_dir(self::TEST_DIR)) {
             rmdir(self::TEST_DIR);
         }
     }
