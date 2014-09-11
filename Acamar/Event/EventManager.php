@@ -112,6 +112,19 @@ class EventManager
     }
 
     /**
+     * Forwards an event / Changes the name of the passed event and triggers it again
+     *
+     * @param Event $object
+     * @param string $event
+     */
+    public function forward(Event $object, $event)
+    {
+        $object->setName($event);
+
+        $this->trigger($object);
+    }
+
+    /**
      * Returns the prototype for the event class
      *
      * @return Event
