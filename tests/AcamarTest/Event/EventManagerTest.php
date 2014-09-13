@@ -52,4 +52,24 @@ class EventManagerTest extends PHPUnit_Framework_TestCase
 
         $this->assertEquals(2, $someVar);
     }
+
+    public function testCanStopEventForwarding()
+    {
+        $someVar      = 0;
+        $eventManager = new EventManager();
+
+        $eventManager->attach("test", function (Event $event) use (&$someVar, $eventManager) {
+            $someVar++;
+            $event->stopPropagation(true);
+            $eventManager->forward($event, "test2");
+        });
+
+        $eventManager->attach("test2", function () use (&$someVar) {
+            $someVar++;
+        });
+
+        $eventManager->trigger("test");
+
+        $this->assertEquals(1, $someVar);
+    }
 } 

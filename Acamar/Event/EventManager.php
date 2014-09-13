@@ -119,9 +119,10 @@ class EventManager
      */
     public function forward(Event $object, $event)
     {
-        $object->setName($event);
-
-        $this->trigger($object);
+        if (!$object->isPropagationStopped()) {
+            $object->setName($event);
+            $this->trigger($object);
+        }
     }
 
     /**
