@@ -34,6 +34,11 @@ class EventManager
     protected $eventPrototype = null;
 
     /**
+     * @var Event
+     */
+    protected $lastEvent = null;
+
+    /**
      * Sets an event class
      *
      * @param string $eventClass
@@ -102,6 +107,7 @@ class EventManager
 
         // Calling the listeners
         if ($queue !== null) {
+            $this->lastEvent = $e;
             foreach ($queue as $callback) {
                 call_user_func($callback, $e);
                 if ($e->isPropagationStopped()) {
@@ -137,5 +143,13 @@ class EventManager
         }
 
         return $this->eventPrototype;
+    }
+
+    /**
+     * @return \Acamar\Event\Event
+     */
+    public function getLastEvent()
+    {
+        return $this->lastEvent;
     }
 }
