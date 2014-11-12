@@ -15,8 +15,7 @@ include $path . '/Acamar/Loader/PSR0Autoloader.php';
 
 $autoloader = new PSR0Autoloader();
 $autoloader->registerNamespaces(array(
-    'Acamar' => $path,
-    'tests' => $path
+    'Acamar' => $path
 ));
 
 $autoloader->register();
