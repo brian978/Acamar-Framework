@@ -93,7 +93,7 @@ class EventManager
             $e     = $event;
             $event = $e->getName();
         } else {
-            $e = $this->getEventPrototype();
+            $e = $this->createEvent();
             $e->setName($event);
             $e->setTarget($target);
             $e->setParams($params);
@@ -132,17 +132,17 @@ class EventManager
     }
 
     /**
-     * Returns the prototype for the event class
+     * Creates an event object based on the $eventPrototype object
      *
      * @return Event
      */
-    protected function getEventPrototype()
+    public function createEvent()
     {
         if ($this->eventPrototype === null) {
             $this->eventPrototype = new $this->eventClass;
         }
 
-        return $this->eventPrototype;
+        return clone $this->eventPrototype;
     }
 
     /**
