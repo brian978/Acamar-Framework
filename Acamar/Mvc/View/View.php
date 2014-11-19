@@ -179,7 +179,7 @@ class View
     protected function resolveTemplatePath($template)
     {
         $templatePathname = $this->templatesPath . DIRECTORY_SEPARATOR . trim($template);
-        if (!is_file($templatePathname)) {
+        if (!file_exists($templatePathname)) {
             throw new \RuntimeException("View cannot render `$template` because the template does not exist");
         }
 
