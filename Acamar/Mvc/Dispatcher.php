@@ -35,6 +35,7 @@ class Dispatcher
      * The method will extract the route from the event and dispatch it
      *
      * @param MvcEvent $e
+     * @throws \RuntimeException
      * @return void
      */
     public function dispatch(MvcEvent $e)
