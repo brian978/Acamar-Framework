@@ -57,15 +57,15 @@ class Router
         $request = $e->getRequest();
         $route   = $this->match($request);
 
-        if ($route !== null) {
-            // Adding the route to the event
-            $e->setRoute($route);
-
-            // We trigger the already created object so we can control what type of event object it is triggered
-            $this->eventManager->forward($e, MvcEvent::EVENT_DISPATCH);
+        if ($route === null) {
+            throw new \RuntimeException('Invalid request');
         }
 
-        throw new \RuntimeException('Invalid request');
+        // Adding the route to the event
+        $e->setRoute($route);
+
+        // We trigger the already created object so we can control what type of event object it is triggered
+        $this->eventManager->forward($e, MvcEvent::EVENT_DISPATCH);
     }
 
     /**
