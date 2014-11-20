@@ -86,7 +86,7 @@ class Route
      * @return Route
      * @throws \InvalidArgumentException
      */
-    public static function fromArray(array $config)
+    public static function factory(array $config)
     {
         if (!isset($config['name']) || !is_string($config['name']) || empty($config['name'])) {
             throw new \InvalidArgumentException('The route name must be a string');
