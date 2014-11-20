@@ -50,6 +50,13 @@ class Route
     ];
 
     /**
+     * This string will contain the regex that must be applied on a request URI
+     *
+     * @var string
+     */
+    protected $regex = '';
+
+    /**
      * @var array
      */
     protected $params = [];
@@ -262,13 +269,33 @@ class Route
     }
 
     /**
-     * Used to check if the route matched the given URL
+     * Pre-computes the regular expression, based on the route pattern, that will be used when matching and URI
      *
-     * @param  string $resourceUri A Request URI
-     * @return bool
+     * @return void
      */
-    public function matches($resourceUri)
+    protected function createRegex()
     {
+        $currentPos = 0;
+        $length     = strlen($this->pattern);
+        $parts      = [];
+        $regex      = str_replace('/', '\\/', $this->pattern);
+        $wildcard   = '(?P<wildcard>(\/[^\/]+)*)';
+
+        while ($currentPos < $length) {
+            preg_match('#:(?P<token>[\w]+)#', $this->pattern, $matches, 0, $currentPos);
+            if (empty($matches[0])) {
+                break;
+            }
+
+            $currentPos += strlen($matches[0]);
+
+            $parts[$matches[0]] = $matches['token'];
+        }
+
+        foreach ($parts as $part => $token) {
+            $regex = str_replace($part, '(?P<' . $token . '>[^\/]+)', $regex);
+        }
+
         // Convert URL params into regex patterns
         $patternAsRegex = preg_replace_callback(
             '#\(?(\/)?:([\w]+)\)?#',
@@ -276,10 +303,24 @@ class Route
             (string) $this->pattern
         );
 
-        $regex = '#^' . $patternAsRegex . '(?P<wildcard>(\/[^\/]+)*)$#';
+        $this->regex = '#^' . $regex . $wildcard . '$#';
+    }
+
+    /**
+     * Used to check if the route matched the given URL
+     *
+     * @param  string $requestUri A Request URI
+     * @return bool
+     */
+    public function matches($requestUri)
+    {
+        // Only calculate the regex on demand because it might not even get to this if another route matches first
+        if (empty($this->regex)) {
+            $this->createRegex();
+        }
 
         // Trying to match the URI
-        if (!preg_match($regex, $resourceUri, $paramValues)) {
+        if (!preg_match($this->regex, $requestUri, $paramValues)) {
             return false;
         }
 
@@ -313,7 +354,7 @@ class Route
 
         // Escaping some chars
         if (!empty($slash)) {
-            $slash = addslashes($slash);
+            $slash = '\\' . $slash;
         }
 
         // This is basically how "/:controller" translates in regex
