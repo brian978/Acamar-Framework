@@ -57,6 +57,13 @@ class Route
     protected $regex = '';
 
     /**
+     * Will contain the route parts
+     *
+     * @var array
+     */
+    protected $parts = [];
+
+    /**
      * @var array
      */
     protected $params = [];
@@ -269,6 +276,52 @@ class Route
     }
 
     /**
+     * Extract the route parameters
+     *
+     * @return $this
+     */
+    protected function parseRoute()
+    {
+        $currentPos  = 0;
+        $length      = strlen($this->pattern);
+        $parts       = [];
+        $level       = 0;
+        $partCounter = 0;
+
+        while ($currentPos < $length) {
+            preg_match('#(?P<opt>\([\/]?)?(?P<fullToken>:(?P<token>[\w]+))#', $this->pattern, $matches, 0, $currentPos);
+            if (empty($matches[0])) {
+                break;
+            }
+
+            // Checking if this is an optional parameter
+            if (isset($matches['opt']) && !empty($matches['opt'])) {
+                if (!isset($parts[$level][$partCounter]['optional'])) {
+                    $parts[$level][$partCounter]['optional'] = array();
+                }
+
+                $parts[$level][$partCounter]['optional'][] = array(
+                    'fullToken' => $matches['fullToken'],
+                    'token' => $matches['token']
+                );
+            } else {
+                $parts[$level][] = array(
+                    'fullToken' => $matches['fullToken'],
+                    'token' => $matches['token']
+                );
+
+                $partCounter++;
+            }
+
+            $currentPos += strlen($matches[0]);
+        }
+
+        $this->parts = $parts;
+
+        return $this;
+    }
+
+    /**
      * Pre-computes the regular expression, based on the route pattern, that will be used when matching and URI
      *
      * @return void
@@ -316,6 +369,10 @@ class Route
     {
         // Only calculate the regex on demand because it might not even get to this if another route matches first
         if (empty($this->regex)) {
+            if (empty($this->parts)) {
+                $this->parseRoute();
+            }
+
             $this->createRegex();
         }
 
