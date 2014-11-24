@@ -278,47 +278,51 @@ class Route
     /**
      * Extract the route parameters
      *
-     * @return $this
+     * @param string $pattern
+     * @return array()
      */
-    protected function parseRoute()
+    protected function parseRoute($pattern)
     {
-        $currentPos  = 0;
-        $length      = strlen($this->pattern);
-        $parts       = [];
-        $level       = 0;
-        $partCounter = 0;
+        $currentPos = 0;
+        $length     = strlen($pattern);
+        $parts      = [];
 
         while ($currentPos < $length) {
-            preg_match('#(?P<opt>\([\/]?)?(?P<fullToken>:(?P<token>[\w]+))#', $this->pattern, $matches, 0, $currentPos);
+            preg_match('#(?P<opt>\([\/]?)?(?P<fullToken>:(?P<token>[\w]+))#', $pattern, $matches, 0, $currentPos);
             if (empty($matches[0])) {
                 break;
             }
 
             // Checking if this is an optional parameter
             if (isset($matches['opt']) && !empty($matches['opt'])) {
-                if (!isset($parts[$level][$partCounter]['optional'])) {
-                    $parts[$level][$partCounter]['optional'] = array();
+                $optional = array(
+                    array(
+                        'fullToken' => $matches['fullToken'],
+                        'token' => $matches['token']
+                    )
+                );
+
+                // A sub pattern may not exist
+                $subPattern = substr($pattern, $currentPos + strlen($matches[0]));
+                if ($subPattern !== false) {
+                    $subParts = $this->parseRoute($subPattern);
+                    if(!empty($subParts)) {
+                        $optional[] = $this->parseRoute($subPattern);
+                    }
                 }
 
-                $parts[$level][$partCounter]['optional'][] = array(
-                    'fullToken' => $matches['fullToken'],
-                    'token' => $matches['token']
-                );
+                $parts[] = array('optional' => $optional);
             } else {
-                $parts[$level][] = array(
+                $parts[] = array(
                     'fullToken' => $matches['fullToken'],
                     'token' => $matches['token']
                 );
-
-                $partCounter++;
             }
 
-            $currentPos += strlen($matches[0]);
+            $currentPos += strpos($pattern, $matches['fullToken']) + strlen($matches['fullToken']);
         }
 
-        $this->parts = $parts;
-
-        return $this;
+        return $parts;
     }
 
     /**
@@ -370,7 +374,7 @@ class Route
         // Only calculate the regex on demand because it might not even get to this if another route matches first
         if (empty($this->regex)) {
             if (empty($this->parts)) {
-                $this->parseRoute();
+                $this->parts = $this->parseRoute($this->pattern);
             }
 
             $this->createRegex();
