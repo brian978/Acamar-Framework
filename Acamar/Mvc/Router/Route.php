@@ -279,7 +279,7 @@ class Route
      * Extract the route parameters
      *
      * @param string $pattern
-     * @return array()
+     * @return array
      */
     protected function parseRoute($pattern)
     {
@@ -306,7 +306,7 @@ class Route
                 $subPattern = substr($pattern, $currentPos + strlen($matches[0]));
                 if ($subPattern !== false) {
                     $subParts = $this->parseRoute($subPattern);
-                    if(!empty($subParts)) {
+                    if (!empty($subParts)) {
                         $optional[] = $this->parseRoute($subPattern);
                     }
                 }
@@ -332,35 +332,6 @@ class Route
      */
     protected function createRegex()
     {
-        $currentPos = 0;
-        $length     = strlen($this->pattern);
-        $parts      = [];
-        $regex      = str_replace('/', '\\/', $this->pattern);
-        $wildcard   = '(?P<wildcard>(\/[^\/]+)*)';
-
-        while ($currentPos < $length) {
-            preg_match('#:(?P<token>[\w]+)#', $this->pattern, $matches, 0, $currentPos);
-            if (empty($matches[0])) {
-                break;
-            }
-
-            $currentPos += strlen($matches[0]);
-
-            $parts[$matches[0]] = $matches['token'];
-        }
-
-        foreach ($parts as $part => $token) {
-            $regex = str_replace($part, '(?P<' . $token . '>[^\/]+)', $regex);
-        }
-
-        // Convert URL params into regex patterns
-        $patternAsRegex = preg_replace_callback(
-            '#\(?(\/)?:([\w]+)\)?#',
-            array($this, 'matchesCallback'),
-            (string) $this->pattern
-        );
-
-        $this->regex = '#^' . $regex . $wildcard . '$#';
     }
 
     /**
