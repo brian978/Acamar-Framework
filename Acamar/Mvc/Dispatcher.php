@@ -1,8 +1,8 @@
 <?php
 /**
- * SlimMVC
+ * Acamar-Framework
  *
- * @link https://github.com/brian978/SlimMVC
+ * @link https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
  * @license Creative Commons Attribution-ShareAlike 3.0
  */

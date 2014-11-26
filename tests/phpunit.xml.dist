@@ -1,6 +1,6 @@
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
-        <testsuite name="Acamar-PHP Test Suite">
+        <testsuite name="Acamar-Framework Test Suite">
             <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/</directory>
             <exclude>AcamarTest/Archive/</exclude>
             <exclude>AcamarTest/Directory/</exclude>
