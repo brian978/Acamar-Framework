@@ -278,48 +278,69 @@ class Route
     /**
      * Extract the route parameters
      *
+     * The search is recursive and uses a couple of breakpoints:
+     * - literals
+     * - open parenthesis => optional parameter begins
+     * - word that starts with : and does not contain "/" or "(" is a token (length at least 1)
+     * - closed parenthesis => optional parameter end so we need to return the result so far
+     *
+     * The search always begins at the current position
+     *
      * @param string $pattern
      * @return array
      */
-    protected function parseRoute($pattern)
+    protected function parseRoute(&$pattern)
     {
-        $currentPos = 0;
-        $length     = strlen($pattern);
-        $parts      = [];
+        $parts = [];
 
-        while ($currentPos < $length) {
-            preg_match('#(?P<opt>\([\/]?)?(?P<fullToken>:(?P<token>[\w]+))#', $pattern, $matches, 0, $currentPos);
-            if (empty($matches[0])) {
-                break;
-            }
-
-            // Checking if this is an optional parameter
-            if (isset($matches['opt']) && !empty($matches['opt'])) {
-                $optional = array(
-                    array(
-                        'fullToken' => $matches['fullToken'],
-                        'token' => $matches['token']
-                    )
-                );
-
-                // A sub pattern may not exist
-                $subPattern = substr($pattern, $currentPos + strlen($matches[0]));
-                if ($subPattern !== false) {
-                    $subParts = $this->parseRoute($subPattern);
-                    if (!empty($subParts)) {
-                        $optional[] = $this->parseRoute($subPattern);
-                    }
-                }
-
-                $parts[] = array('optional' => $optional);
-            } else {
+        while (!empty($pattern)) {
+            // Searching for literals
+            preg_match('#(?P<literal>[\w\/]*)#', $pattern, $matches);
+            if (!empty($matches['literal'])) {
                 $parts[] = array(
-                    'fullToken' => $matches['fullToken'],
-                    'token' => $matches['token']
+                    'type' => 'literal',
+                    'part' => $matches['literal']
                 );
+
+                $pattern = substr($pattern, strlen($matches['literal']));
+
+                // No need to execute the rest of the regex statements
+                continue;
             }
 
-            $currentPos += strpos($pattern, $matches['fullToken']) + strlen($matches['fullToken']);
+            // Searching for opened parenthesis
+            if (strpos($pattern, '(') === 0) {
+                $pattern = ltrim($pattern, '(');
+
+                $parts[] = array(
+                    'type' => 'optional',
+                    'part' => $this->parseRoute($pattern)
+                );
+
+                // No need to execute the rest of the regex statements
+                continue;
+            }
+
+            // Searching for closed parenthesis
+            if (strpos($pattern, ')') === 0) {
+                $pattern = ltrim($pattern, ')');
+
+                return $parts;
+            }
+
+            // Searching for token
+            preg_match('#(?P<token>:[\w]+)#', $pattern, $matches);
+            if (!empty($matches['token'])) {
+                $parts[] = array(
+                    'type' => 'token',
+                    'part' => $matches['token']
+                );
+
+                $pattern = substr($pattern, strlen($matches['token']));
+
+                // No need to execute the rest of the regex statements
+                continue;
+            }
         }
 
         return $parts;

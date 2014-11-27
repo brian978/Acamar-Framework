@@ -37,7 +37,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testRouteIgnoresOptionalParameters()
     {
-        $route = new Route('test', '/:controller(/:action(/:test))/:test2', array('action' => 'index'));
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))/last/:test', array('action' => 'index'));
         $route->matches('/products');
 
         $this->assertEquals(array('controller' => 'products', 'action' => 'index'), $route->getParams());
