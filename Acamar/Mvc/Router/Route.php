@@ -287,59 +287,97 @@ class Route
      * The search always begins at the current position
      *
      * @param string $pattern
+     * @throws \RuntimeException
      * @return array
      */
-    protected function parseRoute(&$pattern)
+    protected function parseRoute($pattern)
     {
-        $parts = [];
+        $currentPos = 0;
+        $length     = strlen($pattern);
+        $parts      = [];
 
-        while (!empty($pattern)) {
-            // Searching for literals
-            preg_match('#(?P<literal>[\w\/]*)#', $pattern, $matches);
+        while ($currentPos < $length) {
+            preg_match('#(?P<literal>[\w\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
+
+            // Literal
             if (!empty($matches['literal'])) {
                 $parts[] = array(
                     'type' => 'literal',
                     'part' => $matches['literal']
                 );
 
-                $pattern = substr($pattern, strlen($matches['literal']));
-
-                // No need to execute the rest of the regex statements
-                continue;
+                $currentPos += strlen($matches[0]);
             }
 
-            // Searching for opened parenthesis
-            if ($pattern[0] === '(') {
-                $pattern = ltrim($pattern, '(');
+            switch ($matches['token']) {
+                // Parameter
+                case ':':
+                    preg_match('#(?P<param>[\w]*)([^\w]?)#', $pattern, $matches, 0, $currentPos);
+                    if (empty($matches['param'])) {
+                        throw new \RuntimeException('Empty parameter found');
+                    }
 
-                $parts[] = array(
-                    'type' => 'optional',
-                    'part' => $this->parseRoute($pattern)
-                );
+                    $parts[] = array(
+                        'type' => 'parameter',
+                        'part' => $matches['param']
+                    );
 
-                // No need to execute the rest of the regex statements
-                continue;
-            }
+                    $currentPos += strlen($matches['param']);
+                    break;
 
-            // Searching for closed parenthesis
-            if ($pattern[0] === ')') {
-                $pattern = ltrim($pattern, ')');
+                // Begin optional parameter
+                case '(':
+                    // We need the optional array so we can reference part of it
+                    // without counting the existing parts
+                    $opt = array(
+                        'type' => 'optional',
+                        'part' => array(
+                            'ref' => &$parts // We keep a reference to know where to get back
+                        )
+                    );
 
-                return $parts;
-            }
+                    // Now we swap the arrays
+                    $parts[] = $opt;
+                    $parts   = & $opt['part'];
 
-            // Searching for token
-            preg_match('#(?P<token>:[\w]+)#', $pattern, $matches);
-            if (!empty($matches['token'])) {
-                $parts[] = array(
-                    'type' => 'token',
-                    'part' => $matches['token']
-                );
+                    // Free some memory
+                    unset($opt);
 
-                $pattern = substr($pattern, strlen($matches['token']));
 
-                // No need to execute the rest of the regex statements
-                continue;
+                    // We need to get past the parenthesis or else something will break
+                    $currentPos += 1;
+                    break;
+
+                // End optional parameter
+                case ')':
+                    // We need this to make the array swap
+                    $parentParts = & $parts['ref'];
+
+                    // The first parent array of parts won't have a reference to another array
+                    // so we need to take that in account
+                    $count = 1;
+                    if (isset($parentParts['ref'])) {
+                        $count = 2;
+                    }
+
+                    // Don't need this anymore
+                    unset($parts['ref']);
+
+                    // Copying what we have so far into the parents
+                    $parentParts[count($parentParts) - $count] = array(
+                        'type' => 'optional',
+                        'part' => $parts
+                    );
+
+                    // Making the swap so we can go up one level
+                    $parts = & $parentParts;
+
+                    // Free some memory
+                    unset($parentParts, $count);
+
+                    // We need to get past the parenthesis or else something will break
+                    $currentPos += 1;
+                    break;
             }
         }
 
