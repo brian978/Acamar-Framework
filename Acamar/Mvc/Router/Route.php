@@ -278,14 +278,6 @@ class Route
     /**
      * Extract the route parameters
      *
-     * The search is recursive and uses a couple of breakpoints:
-     * - literals
-     * - open parenthesis => optional parameter begins
-     * - word that starts with : and does not contain "/" or "(" is a token (length at least 1)
-     * - closed parenthesis => optional parameter end so we need to return the result so far
-     *
-     * The search always begins at the current position
-     *
      * @param string $pattern
      * @throws \RuntimeException
      * @return array
