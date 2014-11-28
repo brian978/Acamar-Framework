@@ -164,6 +164,9 @@ class Route
     {
         $this->pattern = $pattern;
 
+        // Resetting the regex because it will not match the new pattern otherwise
+        $this->regex = '';
+
         return $this;
     }
 
@@ -280,7 +283,7 @@ class Route
      *
      * @param string $pattern
      * @throws \RuntimeException
-     * @return array
+     * @return $this
      */
     protected function parseRoute($pattern)
     {
@@ -289,7 +292,7 @@ class Route
         $parts      = [];
 
         while ($currentPos < $length) {
-            preg_match('#(?P<literal>[\w\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
+            preg_match('#(?P<literal>[\w-_\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
 
             // Literal
             if (!empty($matches['literal'])) {
@@ -313,6 +316,10 @@ class Route
                         'type' => 'parameter',
                         'part' => $matches['param']
                     );
+
+                    // We need to keep track of the parameter names as well
+                    // so we can extract them after a match
+                    $this->paramNames[] = $matches['param'];
 
                     $currentPos += strlen($matches['param']);
                     break;
@@ -373,16 +380,48 @@ class Route
             }
         }
 
-        return $parts;
+        $this->parts = $parts;
+
+        return $this;
     }
 
     /**
      * Pre-computes the regular expression, based on the route pattern, that will be used when matching and URI
      *
-     * @return void
+     * @return $this
      */
     protected function createRegex()
     {
+        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-_]+))?#';
+
+        return $this;
+    }
+
+    /**
+     * @param array $parts
+     * @return string
+     */
+    protected function assembleRegexParts(array $parts)
+    {
+        $string = '';
+
+        foreach ($parts as $part) {
+            switch ($part['type']) {
+                case 'literal':
+                    $string .= str_replace('/', '\/', $part['part']);
+                    break;
+
+                case 'optional':
+                    $string .= '(' . $this->assembleRegexParts($part['part']) . ')?';
+                    break;
+
+                case 'parameter':
+                    $string .= '(?P<' . $part['part'] . '>[\w-_]+)';
+                    break;
+            }
+        }
+
+        return $string;
     }
 
     /**
@@ -395,11 +434,7 @@ class Route
     {
         // Only calculate the regex on demand because it might not even get to this if another route matches first
         if (empty($this->regex)) {
-            if (empty($this->parts)) {
-                $this->parts = $this->parseRoute($this->pattern);
-            }
-
-            $this->createRegex();
+            $this->parseRoute($this->pattern)->createRegex();
         }
 
         // Trying to match the URI
