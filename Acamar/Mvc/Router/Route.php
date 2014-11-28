@@ -50,6 +50,20 @@ class Route
     ];
 
     /**
+     * This string will contain the regex that must be applied on a request URI
+     *
+     * @var string
+     */
+    protected $regex = '';
+
+    /**
+     * Will contain the route parts
+     *
+     * @var array
+     */
+    protected $parts = [];
+
+    /**
      * @var array
      */
     protected $params = [];
@@ -79,7 +93,7 @@ class Route
      * @return Route
      * @throws \InvalidArgumentException
      */
-    public static function fromArray(array $config)
+    public static function factory(array $config)
     {
         if (!isset($config['name']) || !is_string($config['name']) || empty($config['name'])) {
             throw new \InvalidArgumentException('The route name must be a string');
@@ -149,6 +163,9 @@ class Route
     public function setPattern($pattern)
     {
         $this->pattern = $pattern;
+
+        // Resetting the regex because it will not match the new pattern otherwise
+        $this->regex = '';
 
         return $this;
     }
@@ -262,24 +279,166 @@ class Route
     }
 
     /**
+     * Extract the route parameters
+     *
+     * @param string $pattern
+     * @throws \RuntimeException
+     * @return $this
+     */
+    protected function parseRoute($pattern)
+    {
+        $currentPos = 0;
+        $length     = strlen($pattern);
+        $parts      = [];
+
+        while ($currentPos < $length) {
+            preg_match('#(?P<literal>[\w-_\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
+
+            // Literal
+            if (!empty($matches['literal'])) {
+                $parts[] = array(
+                    'type' => 'literal',
+                    'part' => $matches['literal']
+                );
+
+                $currentPos += strlen($matches[0]);
+            }
+
+            switch ($matches['token']) {
+                // Parameter
+                case ':':
+                    preg_match('#(?P<param>[\w]*)([^\w]?)#', $pattern, $matches, 0, $currentPos);
+                    if (empty($matches['param'])) {
+                        throw new \RuntimeException('Empty parameter found');
+                    }
+
+                    $parts[] = array(
+                        'type' => 'parameter',
+                        'part' => $matches['param']
+                    );
+
+                    // We need to keep track of the parameter names as well
+                    // so we can extract them after a match
+                    $this->paramNames[] = $matches['param'];
+
+                    $currentPos += strlen($matches['param']);
+                    break;
+
+                // Begin optional parameter
+                case '(':
+                    // We need the optional array so we can reference part of it
+                    // without counting the existing parts
+                    $opt = array(
+                        'type' => 'optional',
+                        'part' => array(
+                            'ref' => &$parts // We keep a reference to know where to get back
+                        )
+                    );
+
+                    // Now we swap the arrays
+                    $parts[] = $opt;
+                    $parts   = & $opt['part'];
+
+                    // Free some memory
+                    unset($opt);
+
+
+                    // We need to get past the parenthesis or else something will break
+                    $currentPos += 1;
+                    break;
+
+                // End optional parameter
+                case ')':
+                    // We need this to make the array swap
+                    $parentParts = & $parts['ref'];
+
+                    // The first parent array of parts won't have a reference to another array
+                    // so we need to take that in account
+                    $count = 1;
+                    if (isset($parentParts['ref'])) {
+                        $count = 2;
+                    }
+
+                    // Don't need this anymore
+                    unset($parts['ref']);
+
+                    // Copying what we have so far into the parents
+                    $parentParts[count($parentParts) - $count] = array(
+                        'type' => 'optional',
+                        'part' => $parts
+                    );
+
+                    // Making the swap so we can go up one level
+                    $parts = & $parentParts;
+
+                    // Free some memory
+                    unset($parentParts, $count);
+
+                    // We need to get past the parenthesis or else something will break
+                    $currentPos += 1;
+                    break;
+            }
+        }
+
+        $this->parts = $parts;
+
+        return $this;
+    }
+
+    /**
+     * Pre-computes the regular expression, based on the route pattern, that will be used when matching and URI
+     *
+     * @return $this
+     */
+    protected function createRegex()
+    {
+        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-_]+))?#';
+
+        return $this;
+    }
+
+    /**
+     * @param array $parts
+     * @return string
+     */
+    protected function assembleRegexParts(array $parts)
+    {
+        $string = '';
+
+        foreach ($parts as $part) {
+            switch ($part['type']) {
+                case 'literal':
+                    $string .= str_replace('/', '\/', $part['part']);
+                    break;
+
+                case 'optional':
+                    $string .= '(' . $this->assembleRegexParts($part['part']) . ')?';
+                    break;
+
+                case 'parameter':
+                    $string .= '(?P<' . $part['part'] . '>[\w-_]+)';
+                    break;
+            }
+        }
+
+        return $string;
+    }
+
+    /**
      * Used to check if the route matched the given URL
      *
-     * @param  string $resourceUri A Request URI
+     * @param  string $requestUri A Request URI
      * @return bool
      */
-    public function matches($resourceUri)
+    public function matches($requestUri)
     {
-        // Convert URL params into regex patterns
-        $patternAsRegex = preg_replace_callback(
-            '#\(?(\/)?:([\w]+)\)?#',
-            array($this, 'matchesCallback'),
-            (string) $this->pattern
-        );
-
-        $regex = '#^' . $patternAsRegex . '(?P<wildcard>(\/[^\/]+)*)$#';
+        // Only calculate the regex on demand because it might not even get to this if another route matches first
+        if (empty($this->regex)) {
+            $this->parseRoute($this->pattern)->createRegex();
+        }
 
         // Trying to match the URI
-        if (!preg_match($regex, $resourceUri, $paramValues)) {
+        if (!preg_match($this->regex, $requestUri, $paramValues)) {
             return false;
         }
 
@@ -313,7 +472,7 @@ class Route
 
         // Escaping some chars
         if (!empty($slash)) {
-            $slash = addslashes($slash);
+            $slash = '\\' . $slash;
         }
 
         // This is basically how "/:controller" translates in regex

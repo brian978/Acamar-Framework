@@ -37,10 +37,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     public function testRouteIgnoresOptionalParameters()
     {
-        $route = new Route('test', '/:controller(/:action)', array('action' => 'index'));
-        $route->matches('/products');
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))', array('action' => 'index'));
+        $route->matches('/products/index/1');
 
-        $this->assertEquals(array('controller' => 'products', 'action' => 'index'), $route->getParams());
+        $this->assertEquals(array('controller' => 'products', 'action' => 'index', 'id' => 1), $route->getParams());
     }
 
     public function testRouteCapturesOptionalParameters()
@@ -70,4 +70,27 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($route->acceptsHttpMethod('GET'));
     }
-} 
+
+    public function testRouteCanPartiallyMatchMultipleOptionalParams()
+    {
+        $route = new Route('test', '/:controller(/:action(/:id))', array('action' => 'index'));
+        $route->matches('/products/random-action');
+
+
+        $this->assertEquals('random-action', $route->getParam('action'));
+    }
+
+    public function testRouteCanMatchRouteThatContainsLiterals()
+    {
+        $route = new Route('test', '/some-module/:controller(/:action)', array('action' => 'index'));
+
+        $this->assertTrue($route->matches('/some-module/products/random-action'));
+    }
+
+    public function testRouteDoesNotMatchRouteThatContainsLiterals()
+    {
+        $route = new Route('test', '/some-module/:controller(/:action)', array('action' => 'index'));
+
+        $this->assertFalse($route->matches('/another-module/products/random-action'));
+    }
+}

@@ -181,7 +181,7 @@ class Application implements ApplicationInterface
                 /** @var $routeClass \Acamar\Mvc\Router\Route */
                 $routeClass = $this->router->getRouteClass();
 
-                $this->router->addRoute($routeClass::fromArray($info));
+                $this->router->addRoute($routeClass::factory($info));
             }
         }
 
