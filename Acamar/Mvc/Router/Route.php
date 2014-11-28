@@ -298,7 +298,7 @@ class Route
             if (!empty($matches['literal'])) {
                 $parts[] = array(
                     'type' => 'literal',
-                    'part' => $matches['literal']
+                    'comp' => $matches['literal']
                 );
 
                 $currentPos += strlen($matches[0]);
@@ -314,7 +314,7 @@ class Route
 
                     $parts[] = array(
                         'type' => 'parameter',
-                        'part' => $matches['param']
+                        'comp' => $matches['param']
                     );
 
                     // We need to keep track of the parameter names as well
@@ -330,14 +330,14 @@ class Route
                     // without counting the existing parts
                     $opt = array(
                         'type' => 'optional',
-                        'part' => array(
+                        'comp' => array(
                             'ref' => &$parts // We keep a reference to know where to get back
                         )
                     );
 
                     // Now we swap the arrays
                     $parts[] = $opt;
-                    $parts   = & $opt['part'];
+                    $parts   = & $opt['comp'];
 
                     // Free some memory
                     unset($opt);
@@ -365,7 +365,7 @@ class Route
                     // Copying what we have so far into the parents
                     $parentParts[count($parentParts) - $count] = array(
                         'type' => 'optional',
-                        'part' => $parts
+                        'comp' => $parts
                     );
 
                     // Making the swap so we can go up one level
@@ -408,15 +408,15 @@ class Route
         foreach ($parts as $part) {
             switch ($part['type']) {
                 case 'literal':
-                    $string .= str_replace('/', '\/', $part['part']);
+                    $string .= str_replace('/', '\/', $part['comp']);
                     break;
 
                 case 'optional':
-                    $string .= '(' . $this->assembleRegexParts($part['part']) . ')?';
+                    $string .= '(' . $this->assembleRegexParts($part['comp']) . ')?';
                     break;
 
                 case 'parameter':
-                    $string .= '(?P<' . $part['part'] . '>[\w-_]+)';
+                    $string .= '(?P<' . $part['comp'] . '>[\w-_]+)';
                     break;
             }
         }
