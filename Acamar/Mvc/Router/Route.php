@@ -309,7 +309,7 @@ class Route
             }
 
             // Searching for opened parenthesis
-            if (strpos($pattern, '(') === 0) {
+            if ($pattern[0] === '(') {
                 $pattern = ltrim($pattern, '(');
 
                 $parts[] = array(
@@ -322,7 +322,7 @@ class Route
             }
 
             // Searching for closed parenthesis
-            if (strpos($pattern, ')') === 0) {
+            if ($pattern[0] === ')') {
                 $pattern = ltrim($pattern, ')');
 
                 return $parts;
