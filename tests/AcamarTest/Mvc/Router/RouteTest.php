@@ -93,4 +93,57 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFalse($route->matches('/another-module/products/random-action'));
     }
+
+    public function testCanAssembleSimpleRoute()
+    {
+        $route = new Route('test', '/some-module/:controller(/:action)', array(
+            'controller' => 'index',
+            'action' => 'index'
+        ));
+
+        $url = $route->assemble(array('controller' => 'products', 'action' => 'list'));
+
+        $this->assertEquals('/some-module/products/list', $url);
+    }
+
+    public function testCanAssembleSimpleRouteAndIgnoreOptionalParameters()
+    {
+        $route = new Route('test', '/some-module/:controller(/:action)', array(
+            'controller' => 'index',
+            'action' => 'index'
+        ));
+
+        $url = $route->assemble(array('controller' => 'products'));
+
+        $this->assertEquals('/some-module/products', $url);
+    }
+
+    public function testCanAssembleComplexRouteAndIgnoreOptionalParameters()
+    {
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
+
+        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+
+        $this->assertEquals('/products/list/1/some-literal/e', $url);
+    }
+
+    public function testCanAssembleComplexRouteIgnoreOptionalParametersAndProperlyAddsLiterals()
+    {
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
+
+        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+
+        $this->assertEquals('/products/list/1/some-literal/e', $url);
+    }
+
+    /**
+     * @expectedException \RuntimeException
+     * @expectedExceptionMessage Missing parameter
+     */
+    public function testCanAssembleComplexRouteThrowErrorOnMissingParam()
+    {
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
+
+        $route->assemble(array('controller' => 'products', 'action' => 'list', 'test' => 'e'));
+    }
 }

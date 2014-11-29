@@ -164,8 +164,9 @@ class Route
     {
         $this->pattern = $pattern;
 
-        // Resetting the regex because it will not match the new pattern otherwise
+        // Resetting all that depend on the pattern
         $this->regex = '';
+        $this->parts = [];
 
         return $this;
     }
@@ -292,7 +293,7 @@ class Route
         $parts      = [];
 
         while ($currentPos < $length) {
-            preg_match('#(?P<literal>[\w-_\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
+            preg_match('#(?P<literal>[\w-\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
 
             // Literal
             if (!empty($matches['literal'])) {
@@ -392,7 +393,7 @@ class Route
      */
     protected function createRegex()
     {
-        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-_]+))?#';
+        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-]+))?#';
 
         return $this;
     }
@@ -416,7 +417,7 @@ class Route
                     break;
 
                 case 'parameter':
-                    $string .= '(?P<' . $part['comp'] . '>[\w-_]+)';
+                    $string .= '(?P<' . $part['comp'] . '>[\w-]+)';
                     break;
             }
         }
@@ -434,7 +435,11 @@ class Route
     {
         // Only calculate the regex on demand because it might not even get to this if another route matches first
         if (empty($this->regex)) {
-            $this->parseRoute($this->pattern)->createRegex();
+            if (empty($this->parts)) {
+                $this->parseRoute($this->pattern);
+            }
+
+            $this->createRegex();
         }
 
         // Trying to match the URI
@@ -455,37 +460,6 @@ class Route
         }
 
         return true;
-    }
-
-    /**
-     * Returns pieces for the regular expression that must be used to match the URL
-     *
-     * @param  array $m URL parameters
-     * @return string Regular expression for URL parameter
-     */
-    protected function matchesCallback($m)
-    {
-        $name  = $m[2];
-        $slash = $m[1];
-
-        $this->paramNames[] = $name;
-
-        // Escaping some chars
-        if (!empty($slash)) {
-            $slash = '\\' . $slash;
-        }
-
-        // This is basically how "/:controller" translates in regex
-        $baseRegEx = $slash . '(?P<' . $name . '>[^\/]+)';
-
-        // The final regex depends on optional params
-        if (strpos($m[0], '(/') === 0) {
-            return '(' . $baseRegEx . ')?';
-        } elseif (strpos($m[0], '(') === 0) {
-            return $baseRegEx . '?';
-        }
-
-        return $baseRegEx;
     }
 
     /**
@@ -513,38 +487,72 @@ class Route
      * Creates an URL using the route information
      *
      * @param array $params
-     * @param Route $currentRoute
+     * @param Route|null $currentRoute
      * @return string
      */
-    public function assemble(array $params, Route $currentRoute)
+    public function assemble(array $params, Route $currentRoute = null)
     {
-        // Getting the params from the route so we can replace them
-        preg_match_all('#:([\w]+)#', $this->pattern, $matchedParams);
+        if (null !== $currentRoute) {
+            $params = array_merge($params, $currentRoute->getParams());
+        }
 
-        // We need the group matches
-        $routeParams = $matchedParams[1];
+        if (empty($this->parts)) {
+            $this->parseRoute($this->pattern);
+        }
 
-        // First we get rid of all the parenthesis
-        $result = str_replace(array('(', ')'), '', $this->pattern);
+        return $this->assembleUriParts($this->parts, $params);
+    }
 
-        // Building the route using the provided params
-        foreach ($routeParams as $routeParam) {
-            if (isset($params[$routeParam])) {
-                $value = $params[$routeParam];
-                unset($params[$routeParam]);
-            } else {
-                $value = $currentRoute->getParam($routeParam);
+    /**
+     * Assembles the route
+     *
+     * @param array $parts
+     * @param array $params
+     * @throws \RuntimeException
+     * @return string
+     */
+    protected function assembleUriParts(array $parts, array $params)
+    {
+        $string         = '';
+        $pendingLiteral = '';
+        $parameterCount = 0;
+
+        foreach ($parts as $part) {
+            switch ($part['type']) {
+                case 'literal':
+                    if ($part['comp'] === '/') {
+                        $pendingLiteral = '/';
+                    } else {
+                        $string .= $part['comp'];
+                    }
+                    break;
+
+                case 'optional':
+                    $subString = $this->assembleUriParts($part['comp'], $params);
+                    if (!empty($subString)) {
+                        $subString      = $pendingLiteral . $subString;
+                        $pendingLiteral = '';
+                    }
+
+                    $string .= $subString;
+                    break;
+
+                case 'parameter':
+                    if (isset($params[$part['comp']])) {
+                        $string .= $pendingLiteral . $params[$part['comp']];
+                        $pendingLiteral = '';
+                    } elseif ($parameterCount >= 1) {
+                        throw new \RuntimeException(
+                            'Missing parameter `' . $part['comp'] . '` on route `' . $this->name . '`'
+                        );
+                    }
+
+                    $parameterCount++;
+                    break;
             }
-
-            $result = str_replace(':' . $routeParam, $value, $result);
         }
 
-        // Attaching the rest of the params
-        foreach ($params as $key => $value) {
-            $result .= '/' . $key . '/' . $value;
-        }
-
-        return $result;
+        return $string;
     }
 
     /**
