@@ -282,6 +282,8 @@ class Route
     /**
      * Extract the route parameters
      *
+     * TODO: make this parse in under 1.3s for 10.000 iterations
+     *
      * @param string $pattern
      * @throws \RuntimeException
      * @return $this
