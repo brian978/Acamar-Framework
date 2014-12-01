@@ -295,14 +295,14 @@ class Route
         while ($currentPos < $length) {
             preg_match('#(?P<literal>[^:\(\)]*)(?P<token>[:\(\)])#', $pattern, $matches, 0, $currentPos);
 
+            $currentPos += strlen($matches[0]);
+
             // Literal
             if (!empty($matches['literal'])) {
                 $parts[] = array(
                     'type' => 'literal',
                     'comp' => $matches['literal']
                 );
-
-                $currentPos += strlen($matches[0]);
             }
 
             switch ($matches['token']) {
@@ -342,10 +342,6 @@ class Route
 
                     // Free some memory
                     unset($opt);
-
-
-                    // We need to get past the parenthesis or else something will break
-                    $currentPos += 1;
                     break;
 
                 // End optional parameter
@@ -374,9 +370,6 @@ class Route
 
                     // Free some memory
                     unset($parentParts, $count);
-
-                    // We need to get past the parenthesis or else something will break
-                    $currentPos += 1;
                     break;
             }
         }
