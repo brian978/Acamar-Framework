@@ -308,8 +308,7 @@ class Route
             switch ($matches['token']) {
                 // Parameter
                 case ':':
-                    preg_match('#(?P<param>[\w]*)([^\w]?)#', $pattern, $matches, 0, $currentPos);
-                    if (empty($matches['param'])) {
+                    if (!preg_match('#(?P<param>[^:\(\)/]*)#', $pattern, $matches, 0, $currentPos)) {
                         throw new \RuntimeException('Empty parameter found');
                     }
 
@@ -339,9 +338,6 @@ class Route
                     // Now we swap the arrays
                     $parts[] = $opt;
                     $parts   = & $opt['comp'];
-
-                    // Free some memory
-                    unset($opt);
                     break;
 
                 // End optional parameter
@@ -349,27 +345,20 @@ class Route
                     // We need this to make the array swap
                     $parentParts = & $parts['ref'];
 
-                    // The first parent array of parts won't have a reference to another array
-                    // so we need to take that in account
-                    $count = 1;
-                    if (isset($parentParts['ref'])) {
-                        $count = 2;
-                    }
-
                     // Don't need this anymore
                     unset($parts['ref']);
 
+                    // We will replace the last entry in the parentParts
+                    array_pop($parentParts);
+
                     // Copying what we have so far into the parents
-                    $parentParts[count($parentParts) - $count] = array(
+                    $parentParts[] = array(
                         'type' => 'optional',
-                        'comp' => $parts
+                        'comp' => & $parts
                     );
 
                     // Making the swap so we can go up one level
                     $parts = & $parentParts;
-
-                    // Free some memory
-                    unset($parentParts, $count);
                     break;
             }
         }
