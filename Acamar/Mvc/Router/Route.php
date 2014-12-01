@@ -293,7 +293,7 @@ class Route
         $parts      = [];
 
         while ($currentPos < $length) {
-            preg_match('#(?P<literal>[\w-\/]*)(?P<token>[(:)])#', $pattern, $matches, 0, $currentPos);
+            preg_match('#(?P<literal>[^:\(\)]*)(?P<token>[:\(\)])#', $pattern, $matches, 0, $currentPos);
 
             // Literal
             if (!empty($matches['literal'])) {
