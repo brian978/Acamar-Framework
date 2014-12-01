@@ -408,6 +408,27 @@ class Route
     }
 
     /**
+     * Parses the wildcard parameters (if they are valid)
+     *
+     * @param array $routeMatches
+     * @return array
+     */
+    protected function validateWildcard(array $routeMatches)
+    {
+        $wildcard       = ltrim($routeMatches['wildcard'], '/');
+        $wildcardPieces = explode('/', $wildcard);
+        $piecesCount    = count($wildcardPieces);
+        if ($piecesCount % 2 === 0) {
+            for ($i = 0; $i < $piecesCount - 1; $i += 2) {
+                $this->paramNames[]                = $wildcardPieces[$i];
+                $routeMatches[$wildcardPieces[$i]] = $wildcardPieces[$i + 1];
+            }
+        }
+
+        return $routeMatches;
+    }
+
+    /**
      * Used to check if the route matched the given URL
      *
      * @param  string $requestUri A Request URI
@@ -442,27 +463,6 @@ class Route
         }
 
         return true;
-    }
-
-    /**
-     * Parses the wildcard parameters (if they are valid)
-     *
-     * @param array $routeMatches
-     * @return array
-     */
-    protected function validateWildcard(array $routeMatches)
-    {
-        $wildcard       = ltrim($routeMatches['wildcard'], '/');
-        $wildcardPieces = explode('/', $wildcard);
-        $piecesCount    = count($wildcardPieces);
-        if ($piecesCount % 2 === 0) {
-            for ($i = 0; $i < $piecesCount - 1; $i += 2) {
-                $this->paramNames[]                = $wildcardPieces[$i];
-                $routeMatches[$wildcardPieces[$i]] = $wildcardPieces[$i + 1];
-            }
-        }
-
-        return $routeMatches;
     }
 
     /**

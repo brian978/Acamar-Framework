@@ -170,5 +170,6 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
 
         $this->assertEquals('/products/list/1/some-literal/e', $url);
+        $this->assertTrue($route->matches($url));
     }
 }
