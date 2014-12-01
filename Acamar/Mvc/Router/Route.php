@@ -521,11 +521,9 @@ class Route
                     break;
 
                 case 'optional':
-                    $subString = $this->assembleUriParts($part['comp'], $params);
-                    if (!empty($subString)) {
-                        $subString      = $pendingLiteral . $subString;
-                        $pendingLiteral = '';
-                    }
+                    $subString      = $this->assembleUriParts($part['comp'], $params);
+                    $subString      = $pendingLiteral . $subString;
+                    $pendingLiteral = '';
 
                     $string .= $subString;
                     break;
@@ -533,19 +531,20 @@ class Route
                 case 'parameter':
                     if (isset($params[$part['comp']])) {
                         $string .= $pendingLiteral . $params[$part['comp']];
-                        $pendingLiteral = '';
                     } elseif ($parameterCount >= 1) {
                         throw new \RuntimeException(
                             'Missing parameter `' . $part['comp'] . '` on route `' . $this->name . '`'
                         );
                     }
 
+                    $pendingLiteral = '';
+
                     $parameterCount++;
                     break;
             }
         }
 
-        return $string;
+        return $string . $pendingLiteral;
     }
 
     /**
