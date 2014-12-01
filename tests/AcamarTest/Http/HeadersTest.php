@@ -19,6 +19,9 @@ use Acamar\Http\Headers;
  */
 class HeadersTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Acamar\Http\Headers::fromString()
+     */
     public function testHeadersFromString()
     {
         $headers = Headers::fromString(file_get_contents(realpath(__DIR__ . '/_files/response_headers.txt')));
@@ -26,6 +29,10 @@ class HeadersTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Wed, 12 Nov 2014 20:34:29 GMT', $headers->get('Date'));
     }
 
+    /**
+     * @covers Acamar\Http\Headers::set()
+     * @covers Acamar\Http\Headers::get()
+     */
     public function testCanSetMultipleHeaders()
     {
         $headers = new Headers();
@@ -35,6 +42,10 @@ class HeadersTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(2, $headers->get(Headers::ACCEPT_ENCODING));
     }
 
+    /**
+     * @covers Acamar\Http\Headers::set()
+     * @covers Acamar\Http\Headers::get()
+     */
     public function testCanOverwriteHeaders()
     {
         $headers = new Headers();

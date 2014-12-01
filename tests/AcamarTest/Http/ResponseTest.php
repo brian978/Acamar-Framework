@@ -20,6 +20,9 @@ use Acamar\Http\Response;
  */
 class ResponseTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Acamar\Http\Response::getContentType
+     */
     public function testResponseContentType()
     {
         $response = new Response();
@@ -28,6 +31,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('text/json', $response->getContentType());
     }
 
+    /**
+     * @covers Acamar\Http\Response::getStatusHeaderString
+     */
     public function testResponseStatusHeader()
     {
         $this->assertEquals('HTTP/1.1 200 OK', Response::getStatusHeaderString(200));

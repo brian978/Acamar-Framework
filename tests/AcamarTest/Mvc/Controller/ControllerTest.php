@@ -20,6 +20,7 @@ use Acamar\Mvc\Event\MvcEvent;
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * @covers Acamar\Mvc\Controller\AbstractController::__construct()
      * @expectedException \RuntimeException
      * @expectedExceptionMessage The startup event was modified
      */
