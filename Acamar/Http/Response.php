@@ -103,6 +103,17 @@ class Response
     protected $body = '';
 
     /**
+     * @param \Acamar\Http\Headers $headers
+     * @return $this
+     */
+    public function setHeaders($headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    /**
      * Returns the response headers
      *
      * @return Headers
