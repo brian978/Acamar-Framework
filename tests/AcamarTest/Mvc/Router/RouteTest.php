@@ -51,6 +51,22 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
     }
 
+    public function testRouteCapturesOptionalParametersEventWithSlashesOutsideOptional()
+    {
+        $route = new Route('test', '/:controller/(:action)', array('action' => 'index'));
+        $route->matches('/products/list');
+
+        $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
+    }
+
+    public function testRouteCapturesOptionalParametersEventWithSlashesAtEndOfOptional()
+    {
+        $route = new Route('test', '/:controller/(:action/)', array('action' => 'index'));
+        $route->matches('/products/list/');
+
+        $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
+    }
+
     public function testRouteAcceptsHttpMethod()
     {
         $route = new Route('test', '/:controller(/:action)', array('action' => 'index'));
@@ -145,5 +161,14 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
 
         $route->assemble(array('controller' => 'products', 'action' => 'list', 'test' => 'e'));
+    }
+
+    public function testCanAssembleComplexRouteWithSlashesInDifferentPositions()
+    {
+        $route = new Route('test', '/:controller/(:action/:id(:someParam)/)some-literal/:test');
+
+        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+
+        $this->assertEquals('/products/list/1/some-literal/e', $url);
     }
 }
