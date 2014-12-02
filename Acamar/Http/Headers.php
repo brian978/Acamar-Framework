@@ -60,23 +60,37 @@ class Headers implements Countable, Iterator
      */
     public static function fromString($string)
     {
-        /** @var $headers Headers */
-        $headers = new static();
-
         $lines = explode("\r\n", $string);
         if (empty($lines) || $lines[0] == $string) {
             $lines = explode("\n", $string);
         }
 
-        // Extracting the headers
-        foreach ($lines as $line) {
-            // Matching the header name and value
-            if (preg_match('/^(?P<name>[^()><@,;:\"\\/\[\]?=}{ \t]+):\W+(?P<value>.*)$/', $line, $matches)) {
-                $headers->set($matches['name'], $matches['value']);
-            } elseif (preg_match('/^\s*$/', $line)) {
-                // Finished with the headers
-                break;
-            }
+        return static::fromArray($lines);
+    }
+
+    /**
+     * Creates a Headers object from an array
+     *
+     * @param array $lines
+     * @return Headers
+     */
+    public static function fromArray(array &$lines)
+    {
+        /** @var $headers Headers */
+        $headers = new static();
+
+        if(count($lines)) {
+            do {
+                $line = array_shift($lines);
+
+                // Matching the header name and value
+                if (preg_match('/^(?P<name>[^()><@,;:\"\\/\[\]?=}{ \t]+):\W+(?P<value>.*)$/', $line, $matches)) {
+                    $headers->set($matches['name'], $matches['value']);
+                } elseif (preg_match('/^\s*$/', $line)) {
+                    // Finished with the headers
+                    break;
+                }
+            } while(false !== $line);
         }
 
         return $headers;

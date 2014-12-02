@@ -96,6 +96,11 @@ class Response
     protected $statusCode = 0;
 
     /**
+     * @var string
+     */
+    protected $statusPhrase = '';
+
+    /**
      * @var Headers
      */
     protected $headers = null;
@@ -121,40 +126,48 @@ class Response
             $lines = explode("\n", $string);
         }
 
-        $httpSubVersion = '';
-        $statusCode     = 0;
-        $body           = '';
+        $httpVersion  = '';
+        $statusCode   = 0;
+        $statusPhrase = '';
+        $headers      = Headers::fromArray($lines);
+        $body         = '';
 
-        $stage = 'response';
-        foreach ($lines as $line) {
-            switch ($stage) {
-                case 'response':
-                    $matched = preg_match(
-                        '#HTTP\/(?P<version>1\.[0-9]) (?P<status>[0-9]{3}) (?P<statusPhrase>.*)#',
-                        $line,
-                        $matches
-                    );
+        if (count($lines)) {
+            $line = array_shift($lines);
+            while (false !== $line) {
+                $matched = preg_match(
+                    '#HTTP\/(?P<version>1\.[0-9]) (?P<status>[0-9]{3}) (?P<statusPhrase>.*)#',
+                    $line,
+                    $matches
+                );
 
-                    if (!$matched && (strpos($line, '\n') === false || strpos($line, '\r') === false)) {
-                        $stage = 'headers';
-                    } else {
-                        $httpSubVersion = $matches['version'];
-                        $statusCode     = $matches['status'];
-                    }
+                // Matching the header name and value
+                if ($matched) {
+                    $httpVersion  = $matches['version'];
+                    $statusCode   = $matches['status'];
+                    $statusPhrase = $matches['statusPhrase'];
+                } else if (!preg_match('/^\s*$/', $line)) {
                     break;
+                }
 
-                case 'headers':
-
-                    break;
-
-                case 'body';
-                    break;
+                // We need to shift here because the line we are matching may be a header
+                $line = array_shift($lines);
             }
+
+
+            // The headers must be retrieved only after the response can be populated
+            $headers = Headers::fromArray($lines);
+
+            // Now that we only have the body we can build it
+            $body = implode("\r\n", $lines);
         }
 
-        $instance = new self;
-        $instance->setHttpVersion('1.' . $httpSubVersion);
+        /** @var $instance Response */
+        $instance = new static;
+        $instance->setHttpVersion($httpVersion);
         $instance->setStatusCode($statusCode);
+        $instance->setStatusPhrase($statusPhrase);
+        $instance->setHeaders($headers);
         $instance->setBody($body);
 
         return $instance;
@@ -204,6 +217,36 @@ class Response
     }
 
     /**
+     * @param string $statusPhrase
+     * @return $this
+     */
+    public function setStatusPhrase($statusPhrase)
+    {
+        $this->statusPhrase = $statusPhrase;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusPhrase()
+    {
+        return $this->statusPhrase;
+    }
+
+    /**
+     * @param \Acamar\Http\Headers $headers
+     * @return $this
+     */
+    public function setHeaders($headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    /**
      * Returns the response headers
      *
      * @return Headers
@@ -223,8 +266,9 @@ class Response
      * @param string $body
      * @return $this
      */
-    public function setBody($body)
-    {
+    public function setBody(
+        $body
+    ) {
         $this->body = $body;
 
         return $this;

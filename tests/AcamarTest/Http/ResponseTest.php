@@ -40,13 +40,56 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Acamar\Http\Response::fromString
+     * To avoid creating the response multiple times
+     *
+     * @return array
      */
-    public function testCreateResponseFromString()
+    public function responseProvider()
     {
-        $response = Response::fromString(file_get_contents(realpath(__DIR__ . '/_files/reponse_multi_headers.txt')));
+        return array(
+            array(Response::fromString(file_get_contents(realpath(__DIR__ . '/_files/response_multi_headers.txt'))))
+        );
+    }
 
+    /**
+     * @covers       Acamar\Http\Response::fromString
+     * @dataProvider responseProvider
+     */
+    public function testCreateResponseFromString(Response $response)
+    {
         $this->assertInstanceOf('\Acamar\Http\Response', $response);
         $this->assertEquals(200, $response->getStatusCode());
+    }
+
+    /**
+     * @covers       Acamar\Http\Response::fromString
+     * @dataProvider responseProvider
+     */
+    public function testCreateResponseFromStringWithHeaders(Response $response)
+    {
+        $this->assertEquals(256, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers       Acamar\Http\Response::fromString
+     * @dataProvider responseProvider
+     */
+    public function testCreateResponseFromStringWithStatusPhrase(Response $response)
+    {
+        $this->assertEquals('OK', $response->getStatusPhrase());
+    }
+
+    /**
+     * @covers       Acamar\Http\Response::fromString
+     * @dataProvider responseProvider
+     */
+    public function testCreateResponseFromStringWithBody(Response $response)
+    {
+        $json = json_decode($response->getBody());
+        if (!is_object($json)) {
+            $json = new \stdClass();
+        }
+
+        $this->assertEquals('ok', $json->status);
     }
 }

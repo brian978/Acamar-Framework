@@ -4,5 +4,7 @@ HTTP/1.1 100 Continue
 
 HTTP/1.1 200 OK
 Date: Tue, 02 Dec 2014 11:22:27 GMT
-Content-Length: 0
+Content-Length: 256
 Server: AmazonS3
+
+{"status": "ok"}
