@@ -1,0 +1,8 @@
+HTTP/1.0 200 Connection established
+
+HTTP/1.1 100 Continue
+
+HTTP/1.1 200 OK
+Date: Tue, 02 Dec 2014 11:22:27 GMT
+Content-Length: 0
+Server: AmazonS3

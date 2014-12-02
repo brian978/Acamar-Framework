@@ -86,14 +86,19 @@ class Response
     );
 
     /**
-     * @var Headers
+     * @var string
      */
-    protected $headers = null;
+    protected $httpVersion = '';
 
     /**
      * @var int
      */
-    protected $statusCode = 200;
+    protected $statusCode = 0;
+
+    /**
+     * @var Headers
+     */
+    protected $headers = null;
 
     /**
      * Body of the response
@@ -102,39 +107,77 @@ class Response
      */
     protected $body = '';
 
+
     /**
-     * @param \Acamar\Http\Headers $headers
-     * @return $this
+     * Parses a response string and creates a response object
+     *
+     * @param string $string
+     * @return Response
      */
-    public function setHeaders($headers)
+    public static function fromString($string)
     {
-        $this->headers = $headers;
+        $lines = explode("\r\n", $string);
+        if (empty($lines) || $lines[0] == $string) {
+            $lines = explode("\n", $string);
+        }
+
+        $httpSubVersion = '';
+        $statusCode     = 0;
+        $body           = '';
+
+        $stage = 'response';
+        foreach ($lines as $line) {
+            switch ($stage) {
+                case 'response':
+                    $matched = preg_match(
+                        '#HTTP\/(?P<version>1\.[0-9]) (?P<status>[0-9]{3}) (?P<statusPhrase>.*)#',
+                        $line,
+                        $matches
+                    );
+
+                    if (!$matched && (strpos($line, '\n') === false || strpos($line, '\r') === false)) {
+                        $stage = 'headers';
+                    } else {
+                        $httpSubVersion = $matches['version'];
+                        $statusCode     = $matches['status'];
+                    }
+                    break;
+
+                case 'headers':
+
+                    break;
+
+                case 'body';
+                    break;
+            }
+        }
+
+        $instance = new self;
+        $instance->setHttpVersion('1.' . $httpSubVersion);
+        $instance->setStatusCode($statusCode);
+        $instance->setBody($body);
+
+        return $instance;
+    }
+
+    /**
+     * @param string $httpVersion
+     *
+     * @return Response
+     */
+    public function setHttpVersion($httpVersion)
+    {
+        $this->httpVersion = $httpVersion;
 
         return $this;
     }
 
     /**
-     * Returns the response headers
-     *
-     * @return Headers
+     * @return string
      */
-    public function getHeaders()
+    public function getHttpVersion()
     {
-        if (null === $this->headers) {
-            $this->headers = new Headers();
-        }
-
-        return $this->headers;
-    }
-
-    /**
-     * Returns the content type
-     *
-     * @return string|null
-     */
-    public function getContentType()
-    {
-        return $this->getHeaders()->get(Headers::CONTENT_TYPE);
+        return $this->httpVersion;
     }
 
     /**
@@ -161,6 +204,20 @@ class Response
     }
 
     /**
+     * Returns the response headers
+     *
+     * @return Headers
+     */
+    public function getHeaders()
+    {
+        if (null === $this->headers) {
+            $this->headers = new Headers();
+        }
+
+        return $this->headers;
+    }
+
+    /**
      * Sets the body for the response
      *
      * @param string $body
@@ -179,6 +236,16 @@ class Response
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Returns the content type
+     *
+     * @return string|null
+     */
+    public function getContentType()
+    {
+        return $this->getHeaders()->get(Headers::CONTENT_TYPE);
     }
 
     /**
