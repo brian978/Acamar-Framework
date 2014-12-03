@@ -31,12 +31,40 @@ class Request
     protected $server = array();
 
     /**
+     * @var Headers
+     */
+    protected $headers = null;
+
+    /**
      * Constructor for the request object
      *
      */
     public function __construct()
     {
         $this->server = $_SERVER;
+    }
+
+    /**
+     * @param \Acamar\Http\Headers $headers
+     * @return $this
+     */
+    public function setHeaders($headers)
+    {
+        $this->headers = $headers;
+
+        return $this;
+    }
+
+    /**
+     * @return \Acamar\Http\Headers
+     */
+    public function getHeaders()
+    {
+        if (null === $this->headers) {
+            $this->headers = Headers::fromServerArray($this->server);
+        }
+
+        return $this->headers;
     }
 
 
