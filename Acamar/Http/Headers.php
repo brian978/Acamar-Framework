@@ -20,6 +20,21 @@ use Iterator;
 class Headers implements Countable, Iterator
 {
     /**
+     * Common headers fields (Request & Response)
+     *
+     */
+    const CACHE_CONTROL       = 'Cache-Control';
+    const CONNECTION          = 'Connection';
+    const CONTENT_LENGTH      = 'Content-Length';
+    const CONTENT_MD5         = 'Content-MD5';
+    const CONTENT_TYPE        = 'Content-Type';
+    const DATE                = 'Date';
+    const PRAGMA              = 'Pragma';
+    const PROXY_AUTHORIZATION = 'Proxy-Authorization';
+    const UPGRADE             = 'Upgrade';
+    const VIA                 = 'Via';
+
+    /**
      * Request fields
      *
      */
@@ -29,13 +44,7 @@ class Headers implements Countable, Iterator
     const ACCEPT_LANGUAGE     = 'Accept-Language';
     const ACCEPT_DATETIME     = 'Accept-Datetime';
     const AUTHORIZATION       = 'Authorization';
-    const CACHE_CONTROL       = 'Cache-Control';
-    const CONNECTION          = 'Connection';
     const COOKIE              = 'Cookie';
-    const CONTENT_LENGTH      = 'Content-Length';
-    const CONTENT_MD5         = 'Content-MD5';
-    const CONTENT_TYPE        = 'Content-Type';
-    const DATE                = 'Date';
     const EXPECT              = 'Expect';
     const FROM                = 'From';
     const HOST                = 'Host';
@@ -46,14 +55,10 @@ class Headers implements Countable, Iterator
     const IF_UNMODIFIED_SINCE = 'If-Unmodified-Since';
     const MAX_FORWARDS        = 'Max-Forwards';
     const ORIGIN              = 'Origin';
-    const PRAGMA              = 'Pragma';
-    const PROXY_AUTHORIZATION = 'Proxy-Authorization';
     const RANGE               = 'Range';
     const REFERER             = 'Referer';
     const TE                  = 'TE';
     const USER_AGENT          = 'User-Agent';
-    const UPGRADE             = 'Upgrade';
-    const VIA                 = 'Via';
     const WARNING             = 'Warning';
 
 
@@ -62,7 +67,13 @@ class Headers implements Countable, Iterator
      *
      * TODO: Add all
      */
-    const ETAG = 'ETag';
+    const ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
+    const ACCEPT_RANGES               = 'Accept-Ranges';
+    const AGE                         = 'Age';
+    const ALLOW                       = 'Allow';
+    const CONTENT_ENCODING            = 'Content-Encoding';
+    const CONTENT_LANGUAGE            = 'Content-Language';
+    const ETAG                        = 'ETag';
 
     /**
      * List of headers
