@@ -21,6 +21,16 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * @covers Acamar\Mvc\Router\Route::matches
+     */
+    public function testCanMatchBaseUrl()
+    {
+        $route = new Route('test', '/');
+
+        $this->assertTrue($route->matches('/'));
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::matches
      * @covers Acamar\Mvc\Router\Route::getParams
      */
     public function testCanMatchUrl()
