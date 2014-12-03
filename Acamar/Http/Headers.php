@@ -69,7 +69,7 @@ class Headers implements Countable, Iterator
     }
 
     /**
-     * Creates a Headers object from an array
+     * Creates a Headers object from an array of lines
      *
      * @param array $lines
      * @return Headers
@@ -79,7 +79,7 @@ class Headers implements Countable, Iterator
         /** @var $headers Headers */
         $headers = new static();
 
-        if(count($lines)) {
+        if (count($lines)) {
             do {
                 $line = array_shift($lines);
 
@@ -90,10 +90,48 @@ class Headers implements Countable, Iterator
                     // Finished with the headers
                     break;
                 }
-            } while(false !== $line);
+            } while (false !== $line);
         }
 
         return $headers;
+    }
+
+    /**
+     * The can be used to extract the request headers from the $_SERVER array
+     *
+     * @param array $server
+     * @return Headers
+     */
+    public static function fromServerArray(array $server)
+    {
+        /** @var $headers Headers */
+        $headers = new static();
+
+        foreach ($server as $k => $v) {
+            if (strpos($k, 'HTTP_') === 0) {
+                $headers->set(static::normalizeHeader($k), $v);
+            }
+        }
+
+        return $headers;
+    }
+
+    /**
+     * Converts a header name from HTTP_ACCEPT_ENCODING to Accept-Encoding
+     *
+     * @param string $name
+     * @return string
+     */
+    protected static function normalizeHeader($name)
+    {
+        $name   = str_replace('HTTP_', '', $name);
+        $pieces = explode('_', $name);
+
+        foreach ($pieces as &$piece) {
+            $piece = ucfirst(strtolower($piece));
+        }
+
+        return implode('-', $pieces);
     }
 
     /**

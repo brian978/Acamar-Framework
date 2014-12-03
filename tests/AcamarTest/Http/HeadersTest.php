@@ -54,4 +54,35 @@ class HeadersTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('ascii', $headers->get(Headers::ACCEPT_ENCODING));
     }
+
+    /**
+     * Parses a set of request headers from an emulated $_SERVER array
+     *
+     */
+    public function canParseRequestHeaders()
+    {
+        $headers = Headers::fromServerArray(require realpath(__DIR__ . '/_files/request_headers.php'));
+
+        return array(
+            array($headers)
+        );
+    }
+
+    /**
+     * @covers Acamar\Http\Headers::fromServerArray
+     * @dataProvider canParseRequestHeaders
+     */
+    public function testParseOnlyValidHeaders(Headers $headers)
+    {
+        $this->assertEquals(10, $headers->count());
+    }
+
+    /**
+     * @covers Acamar\Http\Headers::fromServerArray
+     * @dataProvider canParseRequestHeaders
+     */
+    public function testParseRequestHeadersProperly(Headers $headers)
+    {
+        $this->assertEquals('gzip, deflate, sdch', $headers->get(Headers::ACCEPT_ENCODING));
+    }
 }
