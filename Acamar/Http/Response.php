@@ -93,7 +93,7 @@ class Response
     /**
      * @var int
      */
-    protected $statusCode = 0;
+    protected $statusCode = 200;
 
     /**
      * @var string
