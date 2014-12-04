@@ -464,7 +464,7 @@ class Route
             return false;
         }
 
-        if($this->isLiteral && strlen($paramValues['uri']) != strlen($requestUri)) {
+        if ($this->isLiteral && strlen($paramValues['uri']) != strlen($requestUri)) {
             return false;
         }
 
