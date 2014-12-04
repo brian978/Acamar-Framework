@@ -493,7 +493,7 @@ class Route
     public function assemble(array $params, Route $currentRoute = null)
     {
         if (null !== $currentRoute) {
-            $params = array_merge($params, $currentRoute->getParams());
+            $params = array_merge($currentRoute->getParams(), $params);
         }
 
         if (empty($this->parts)) {
