@@ -262,4 +262,32 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('/products/list/1/some-literal/e', $url);
         $this->assertTrue($route->matches($url));
     }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::assemble
+     */
+    public function testCanAssembleRouteUsingPreviousRoute()
+    {
+        $oldRoute = new Route('test', '/:controller/:action');
+        $oldRoute->matches('/products/index');
+
+        $route = new Route('random', '/:controller/:action/:id');
+        $url   = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1), $oldRoute);
+
+        $this->assertEquals('/products/list/1', $url);
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::assemble
+     */
+    public function testCanAssembleRouteUsingPreviousRouteAndOptionalParameters()
+    {
+        $oldRoute = new Route('test', '/:controller/:action');
+        $oldRoute->matches('/products/index');
+
+        $route = new Route('random', '/:controller/:action/:id');
+        $url   = $route->assemble(array('controller' => 'index', 'id' => 1), $oldRoute);
+
+        $this->assertEquals('/index/index/1', $url);
+    }
 }
