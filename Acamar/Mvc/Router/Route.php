@@ -57,6 +57,13 @@ class Route
     protected $regex = '';
 
     /**
+     * This is set to "true" when the entire route is a literal not just part of it
+     *
+     * @var bool
+     */
+    protected $isLiteral = false;
+
+    /**
      * Will contain the route parts
      *
      * @var array
@@ -367,6 +374,11 @@ class Route
 
         $this->parts = $parts;
 
+        // Flagging this route as a literal (must match exactly)
+        if (count($parts) == 1 && $parts[0]['type'] == 'literal') {
+            $this->isLiteral = true;
+        }
+
         return $this;
     }
 
@@ -377,7 +389,7 @@ class Route
      */
     protected function createRegex()
     {
-        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-]+))?#';
+        $this->regex = '#\G(?P<uri>' . $this->assembleRegexParts($this->parts) . ')((?P<wildcard>[\w\/-]+))?#';
 
         return $this;
     }
@@ -449,6 +461,10 @@ class Route
 
         // Trying to match the URI
         if (!preg_match($this->regex, $requestUri, $paramValues)) {
+            return false;
+        }
+
+        if($this->isLiteral && strlen($paramValues['uri']) != strlen($requestUri)) {
             return false;
         }
 
