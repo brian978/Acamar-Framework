@@ -72,12 +72,14 @@ class ViewRenderer
             $viewHelperManager->setEvent($this->event);
 
             // Configure the template
-            $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
+            if(isset($config['view']['paths'][$route->getModuleName()])) {
+                $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
+            }
+
             $view->setTemplate($route->getControllerName() . '\\' . $route->getActionName());
 
-            $body = $this->renderingStrategy->render();
-
-            $this->event->getResponse()->setBody($body);
+            // Setting the rendered view as the response
+            $this->event->getResponse()->setBody($this->renderingStrategy->render());
         }
     }
 }
