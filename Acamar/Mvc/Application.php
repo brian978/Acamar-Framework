@@ -162,7 +162,14 @@ class Application implements ApplicationInterface
     protected function loadModuleConfigs()
     {
         $modulesPath = $this->config['modulesPath'];
+        $defaultConfigFiles = $this->config['modulesConfigs'];
+
         foreach ($this->config['modules'] as $module => $configFiles) {
+            if(empty($configFiles)) {
+                $configFiles = & $defaultConfigFiles;
+            }
+
+            // Merging the configuration files
             $moduleConfigPath = realpath($modulesPath . '/' . $module . '/resources/config');
             foreach ($configFiles as $cfgFile) {
                 $this->config->add(require $moduleConfigPath . DIRECTORY_SEPARATOR . $cfgFile);
