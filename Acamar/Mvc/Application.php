@@ -117,12 +117,14 @@ class Application implements ApplicationInterface
         $namespaces  = [];
         $modulesPath = $this->config['modulesPath'];
 
-        // Creating the paths for the namespaces that need to be registered
-        // When we are in a test environment we will also create the paths for the test folders
+        // The autoloader will call the "realpath" function on all the provided paths
+        // so we don't need to this here as well
         foreach ($this->config['modules'] as $module => $cfgFiles) {
-            $namespaces[$module] = realpath($modulesPath . '/' . $module . '/src/main');
+            $namespaces[$module] = $modulesPath . '/' . $module . '/src/main';
+
+            // When we are in a test environment we will also create the paths for the test folders
             if ($this->env === static::ENV_PHPUNIT) {
-                $testDir = realpath($modulesPath . '/' . $module . '/src/test');
+                $testDir = $modulesPath . '/' . $module . '/src/test';
                 if (is_dir($testDir)) {
                     $namespaces[$module . 'Test'] = $testDir;
                 }
@@ -161,9 +163,9 @@ class Application implements ApplicationInterface
     {
         $modulesPath = $this->config['modulesPath'];
         foreach ($this->config['modules'] as $module => $configFiles) {
+            $moduleConfigPath = realpath($modulesPath . '/' . $module . '/resources/config');
             foreach ($configFiles as $cfgFile) {
-                $moduleConfig = realpath($modulesPath . '/' . $module . '/resources/config/' . $cfgFile);
-                $this->config->add(require $moduleConfig);
+                $this->config->add(require $moduleConfigPath . DIRECTORY_SEPARATOR . $cfgFile);
             }
         }
 
