@@ -41,6 +41,11 @@ class Application implements ApplicationInterface
     /**
      * @var string
      */
+    protected $configCacheFilename = 'application.config.php';
+
+    /**
+     * @var string
+     */
     protected $env = "";
 
     /**
@@ -142,15 +147,45 @@ class Application implements ApplicationInterface
      * @throws \RuntimeException
      * @return $this
      */
-    protected function loadAppConfig()
+    protected function loadConfig()
     {
         $configPath = realpath('config/application.config.php');
         if (!is_file($configPath)) {
             throw new \RuntimeException('The main "application.config.php" was not found in the "config" folder');
         }
 
+        $configCached = false;
+
+        // We get the application configuration here so we can check the config caching flag before we
+        // add the config into the Config object
+        $appConfig = require $configPath;
+
+        // Checking if the configuration cache is enabled
+        $isConfigCacheEnabled = false;
+        if (isset($appConfig['configCache']) && !empty($appConfig['configCache']['path'])) {
+            $isConfigCacheEnabled = (bool) $appConfig['configCache']['enabled'];
+        }
+
+        // Getting the cached version if it exists and setting a flag
+        $appCachedConfigFilePath = $appConfig['configCache']['path'] . DIRECTORY_SEPARATOR . $this->configCacheFilename;
+        if ($isConfigCacheEnabled && file_exists($appCachedConfigFilePath)) {
+            $appConfig = require $appCachedConfigFilePath;
+
+            $configCached = true;
+        }
+
         // For now we have a single global file
-        $this->config->add(require $configPath);
+        $this->config->add($appConfig);
+
+        // Loading the configurations for the modules
+        if ($configCached === false) {
+            $this->loadModuleConfigs();
+        }
+
+        // Caching the configuration if required
+        if ($isConfigCacheEnabled && !$configCached) {
+            $this->cacheConfig();
+        }
 
         return $this;
     }
@@ -161,11 +196,11 @@ class Application implements ApplicationInterface
      */
     protected function loadModuleConfigs()
     {
-        $modulesPath = $this->config['modulesPath'];
+        $modulesPath        = $this->config['modulesPath'];
         $defaultConfigFiles = $this->config['modulesConfigs'];
 
         foreach ($this->config['modules'] as $module => $configFiles) {
-            if(empty($configFiles)) {
+            if (empty($configFiles)) {
                 $configFiles = & $defaultConfigFiles;
             }
 
@@ -175,6 +210,25 @@ class Application implements ApplicationInterface
                 $this->config->add(require $moduleConfigPath . DIRECTORY_SEPARATOR . $cfgFile);
             }
         }
+
+        return $this;
+    }
+
+    /**
+     * The method cache the current configuration
+     *
+     * @return $this
+     */
+    protected function cacheConfig()
+    {
+        $filePath = $this->config['configCache']['path'] . DIRECTORY_SEPARATOR . $this->configCacheFilename;
+
+        $data = "<?php \n";
+        $data .= "return ";
+        $data .= var_export($this->config->getArrayCopy(), 1);
+        $data .= ";";
+
+        file_put_contents($filePath, $data);
 
         return $this;
     }
@@ -263,9 +317,8 @@ class Application implements ApplicationInterface
      */
     public function onBootstrap(MvcEvent $e)
     {
-        $this->loadAppConfig();
+        $this->loadConfig();
         $this->registerNamespaces();
-        $this->loadModuleConfigs();
         $this->loadRoutes();
 
         $this->eventManager->forward($e, MvcEvent::EVENT_ROUTE);
