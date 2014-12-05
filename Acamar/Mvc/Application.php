@@ -71,10 +71,14 @@ class Application implements ApplicationInterface
      */
     public function __construct($env = self::ENV_PRODUCTION, $configFileScopes = [])
     {
-        $this->env = $env;
+        $this->env          = $env;
+        $this->eventManager = new EventManager();
+        $this->router       = new Router($this->eventManager);
+        $this->dispatcher   = new Dispatcher($this->eventManager);
 
         if (empty($configFileScopes)) {
             $this->configFileScopes[] = 'global';
+            $this->configFileScopes[] = 'config';
             $this->configFileScopes[] = $env;
             $this->configFileScopes[] = 'local';
         } else {
@@ -99,11 +103,57 @@ class Application implements ApplicationInterface
     }
 
     /**
+     * The method allows the controller (or any other object that gets the event object) to access the config
+     *
+     * @return Config
+     */
+    public function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * The method allows the controller (or any other object that gets the event object) to access the router
+     *
+     * @return Router
+     */
+    public function getRouter()
+    {
+        return $this->router;
+    }
+
+    /**
+     *
+     * @return $this
+     */
+    protected function registerNamespaces()
+    {
+        $namespaces  = [];
+        $modulesPath = $this->config['modulesPath'];
+
+        // Creating the paths for the namespaces that need to be registered
+        // When we are in a test environment we will also create the paths for the test folders
+        foreach ($this->config['modules'] as $module) {
+            $namespaces[$module] = realpath($modulesPath . '/' . $module . '/src/main');
+            if ($this->env === static::ENV_PHPUNIT) {
+                $testDir = realpath($modulesPath . '/' . $module . '/src/test');
+                if (is_dir($testDir)) {
+                    $namespaces[$module . 'Test'] = $testDir;
+                }
+            }
+        }
+
+        $this->autoloader->registerNamespaces($namespaces);
+
+        return $this;
+    }
+
+    /**
      * This is called directly from the index.php file before the Application::run() method
      *
      * @return $this
      */
-    public function loadConfig()
+    protected function loadAppConfig()
     {
         // The config files array must have the order of the config file scopes
         $configFiles = [];
@@ -133,32 +183,6 @@ class Application implements ApplicationInterface
                 $this->config->add(require $filePath);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     *
-     * @return $this
-     */
-    protected function registerNamespaces()
-    {
-        $namespaces  = [];
-        $modulesPath = $this->config['modulesPath'];
-
-        // Creating the paths for the namespaces that need to be registered
-        // When we are in a test environment we will also create the paths for the test folders
-        foreach ($this->config['modules'] as $module) {
-            $namespaces[$module] = realpath($modulesPath . '/' . $module . '/src/main');
-            if ($this->env === static::ENV_PHPUNIT) {
-                $testDir = realpath($modulesPath . '/' . $module . '/src/test');
-                if (is_dir($testDir)) {
-                    $namespaces[$module . 'Test'] = $testDir;
-                }
-            }
-        }
-
-        $this->autoloader->registerNamespaces($namespaces);
 
         return $this;
     }
@@ -201,20 +225,6 @@ class Application implements ApplicationInterface
     }
 
     /**
-     * Loads the most essential classes
-     *
-     * @return $this
-     */
-    protected function loadEssentials()
-    {
-        $this->eventManager = new EventManager();
-        $this->router       = new Router($this->eventManager);
-        $this->dispatcher   = new Dispatcher($this->eventManager);
-
-        return $this;
-    }
-
-    /**
      * Handles uncaught exceptions
      *
      * This is basically the default error handler
@@ -250,33 +260,11 @@ class Application implements ApplicationInterface
     }
 
     /**
-     * The method allows the controller (or any other object that gets the event object) to access the config
-     *
-     * @return Config
-     */
-    public function getConfig()
-    {
-        return $this->config;
-    }
-
-    /**
-     * The method allows the controller (or any other object that gets the event object) to access the router
-     *
-     * @return Router
-     */
-    public function getRouter()
-    {
-        return $this->router;
-    }
-
-    /**
      * Registers the namespaces, initializes the routing and dispatches the request
      *
      */
     public function run()
     {
-        $this->loadEssentials();
-
         // Adding some default event handlers
         $this->eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'onBootstrap']);
         $this->eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
@@ -298,6 +286,7 @@ class Application implements ApplicationInterface
      */
     public function onBootstrap(MvcEvent $e)
     {
+        $this->loadAppConfig();
         $this->registerNamespaces();
         $this->loadModuleConfigs();
         $this->loadRoutes();
