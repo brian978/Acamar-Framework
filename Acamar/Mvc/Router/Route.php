@@ -57,6 +57,13 @@ class Route
     protected $regex = '';
 
     /**
+     * This is set to "true" when the entire route is a literal not just part of it
+     *
+     * @var bool
+     */
+    protected $isLiteral = false;
+
+    /**
      * Will contain the route parts
      *
      * @var array
@@ -367,6 +374,11 @@ class Route
 
         $this->parts = $parts;
 
+        // Flagging this route as a literal (must match exactly)
+        if (count($parts) == 1 && $parts[0]['type'] == 'literal') {
+            $this->isLiteral = true;
+        }
+
         return $this;
     }
 
@@ -377,7 +389,7 @@ class Route
      */
     protected function createRegex()
     {
-        $this->regex = '#\G' . $this->assembleRegexParts($this->parts) . '((?P<wildcard>[\w\/-]+))?#';
+        $this->regex = '#\G(?P<uri>' . $this->assembleRegexParts($this->parts) . ')((?P<wildcard>[\w\/-]+))?#';
 
         return $this;
     }
@@ -452,6 +464,10 @@ class Route
             return false;
         }
 
+        if ($this->isLiteral && strlen($paramValues['uri']) != strlen($requestUri)) {
+            return false;
+        }
+
         if (isset($paramValues['wildcard']) && !empty($paramValues['wildcard'])) {
             $paramValues = $this->validateWildcard($paramValues);
         }
@@ -477,7 +493,7 @@ class Route
     public function assemble(array $params, Route $currentRoute = null)
     {
         if (null !== $currentRoute) {
-            $params = array_merge($params, $currentRoute->getParams());
+            $params = array_merge($currentRoute->getParams(), $params);
         }
 
         if (empty($this->parts)) {

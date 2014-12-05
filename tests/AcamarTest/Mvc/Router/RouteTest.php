@@ -41,6 +41,26 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @covers Acamar\Mvc\Router\Route::matches
+     */
+    public function testCanMatchLiteral()
+    {
+        $route = new Route('test', '/index');
+
+        $this->assertTrue($route->matches('/index'));
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::matches
+     */
+    public function testCannotMatchLiteral()
+    {
+        $route = new Route('test', '/index');
+
+        $this->assertFalse($route->matches('/index/test'));
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::matches
      * @covers Acamar\Mvc\Router\Route::getParams
      */
     public function testCanMatchUrl()
@@ -241,5 +261,33 @@ class RouteTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('/products/list/1/some-literal/e', $url);
         $this->assertTrue($route->matches($url));
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::assemble
+     */
+    public function testCanAssembleRouteUsingPreviousRoute()
+    {
+        $oldRoute = new Route('test', '/:controller/:action');
+        $oldRoute->matches('/products/index');
+
+        $route = new Route('random', '/:controller/:action/:id');
+        $url   = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1), $oldRoute);
+
+        $this->assertEquals('/products/list/1', $url);
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::assemble
+     */
+    public function testCanAssembleRouteUsingPreviousRouteAndOptionalParameters()
+    {
+        $oldRoute = new Route('test', '/:controller/:action');
+        $oldRoute->matches('/products/index');
+
+        $route = new Route('random', '/:controller/:action/:id');
+        $url   = $route->assemble(array('controller' => 'index', 'id' => 1), $oldRoute);
+
+        $this->assertEquals('/index/index/1', $url);
     }
 }

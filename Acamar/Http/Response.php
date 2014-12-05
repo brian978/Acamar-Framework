@@ -112,7 +112,6 @@ class Response
      */
     protected $body = '';
 
-
     /**
      * Parses a response string and creates a response object
      *

@@ -63,10 +63,11 @@ class Url implements ConfigAwareInterface, EventAwareInterface, HelperInterface
      *
      * @param string $routeName
      * @param array $params
-     * @return string
+     * @param bool $reuseParameters
      * @throws \RuntimeException
+     * @return string
      */
-    public function __invoke($routeName, $params = array())
+    public function __invoke($routeName, $params = array(), $reuseParameters = false)
     {
         if (!is_string($routeName) || !isset($this->config['routes'][$routeName])) {
             throw new \RuntimeException('Invalid route');
@@ -78,6 +79,11 @@ class Url implements ConfigAwareInterface, EventAwareInterface, HelperInterface
             throw new \RuntimeException('The target of the event must be the application');
         }
 
-        return $target->getRouter()->getRoute($routeName)->assemble($params, $this->event->getRoute());
+        $currentRoute = null;
+        if ($reuseParameters) {
+            $currentRoute = $this->event->getRoute();
+        }
+
+        return $target->getRouter()->getRoute($routeName)->assemble($params, $currentRoute);
     }
 }
