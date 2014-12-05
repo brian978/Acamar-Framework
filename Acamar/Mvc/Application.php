@@ -39,11 +39,6 @@ class Application implements ApplicationInterface
     protected $config = null;
 
     /**
-     * @var array
-     */
-    protected $configFileScopes = [];
-
-    /**
      * @var string
      */
     protected $env = "";
@@ -67,23 +62,14 @@ class Application implements ApplicationInterface
      * Constructs the Application object
      *
      * @param string $env
-     * @param array $configFileScopes
      */
-    public function __construct($env = self::ENV_PRODUCTION, $configFileScopes = [])
+    public function __construct($env = self::ENV_PRODUCTION)
     {
         $this->env          = $env;
         $this->eventManager = new EventManager();
         $this->router       = new Router($this->eventManager);
         $this->dispatcher   = new Dispatcher($this->eventManager);
-
-        if (empty($configFileScopes)) {
-            $this->configFileScopes[] = 'global';
-            $this->configFileScopes[] = 'config';
-            $this->configFileScopes[] = $env;
-            $this->configFileScopes[] = 'local';
-        } else {
-            $this->configFileScopes = $configFileScopes;
-        }
+        $this->config       = new Config();
 
         // registering the error handler
         set_exception_handler(array($this, 'handleException'));
@@ -133,7 +119,7 @@ class Application implements ApplicationInterface
 
         // Creating the paths for the namespaces that need to be registered
         // When we are in a test environment we will also create the paths for the test folders
-        foreach ($this->config['modules'] as $module) {
+        foreach ($this->config['modules'] as $module => $cfgFiles) {
             $namespaces[$module] = realpath($modulesPath . '/' . $module . '/src/main');
             if ($this->env === static::ENV_PHPUNIT) {
                 $testDir = realpath($modulesPath . '/' . $module . '/src/test');
@@ -151,38 +137,18 @@ class Application implements ApplicationInterface
     /**
      * This is called directly from the index.php file before the Application::run() method
      *
+     * @throws \RuntimeException
      * @return $this
      */
     protected function loadAppConfig()
     {
-        // The config files array must have the order of the config file scopes
-        $configFiles = [];
-        foreach ($this->configFileScopes as $scope) {
-            $configFiles[$scope] = [];
+        $configPath = realpath('config/application.config.php');
+        if (!is_file($configPath)) {
+            throw new \RuntimeException('The main "application.config.php" was not found in the "config" folder');
         }
 
-        // Initializing the required vars
-        $ds           = DIRECTORY_SEPARATOR;
-        $files        = scandir('config');
-        $scopePattern = implode('|', $this->configFileScopes);
-
-        // Initializing the config
-        $this->config = new Config();
-
-        // Building the list of files to load
-        foreach ($files as $file) {
-            $matches = [];
-            if (preg_match('^(.+)\.(' . $scopePattern . ').php^', $file, $matches) === 1 && isset($matches[2])) {
-                $configFiles[$matches[2]][] = realpath('config' . $ds . $file);
-            }
-        }
-
-        // Loading the files
-        foreach ($configFiles as $paths) {
-            foreach ($paths as $filePath) {
-                $this->config->add(require $filePath);
-            }
-        }
+        // For now we have a single global file
+        $this->config->add(require $configPath);
 
         return $this;
     }
@@ -194,9 +160,11 @@ class Application implements ApplicationInterface
     protected function loadModuleConfigs()
     {
         $modulesPath = $this->config['modulesPath'];
-        foreach ($this->config['modules'] as $module) {
-            $moduleConfig = realpath($modulesPath . '/' . $module . '/resources/config/module.config.php');
-            $this->config->add(require $moduleConfig);
+        foreach ($this->config['modules'] as $module => $configFiles) {
+            foreach ($configFiles as $cfgFile) {
+                $moduleConfig = realpath($modulesPath . '/' . $module . '/resources/config/' . $cfgFile);
+                $this->config->add(require $moduleConfig);
+            }
         }
 
         return $this;
@@ -222,6 +190,26 @@ class Application implements ApplicationInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Registers the namespaces, initializes the routing and dispatches the request
+     *
+     */
+    public function run()
+    {
+        // Adding some default event handlers
+        $this->eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'onBootstrap']);
+        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
+        $this->eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender']);
+        $this->eventManager->attach(MvcEvent::EVENT_RENDERED, [$this, 'onRenderComplete']);
+
+        // Starting the event group
+        $mainEvent = new MvcEvent(MvcEvent::EVENT_BOOTSTRAP, $this);
+        $mainEvent->setRequest(new Request());
+        $mainEvent->setResponse(new Response());
+
+        $this->eventManager->trigger($mainEvent);
     }
 
     /**
@@ -257,26 +245,6 @@ class Application implements ApplicationInterface
         } else {
             echo 'Something went very wrong.';
         }
-    }
-
-    /**
-     * Registers the namespaces, initializes the routing and dispatches the request
-     *
-     */
-    public function run()
-    {
-        // Adding some default event handlers
-        $this->eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'onBootstrap']);
-        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
-        $this->eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender']);
-        $this->eventManager->attach(MvcEvent::EVENT_RENDERED, [$this, 'onRenderComplete']);
-
-        // Starting the event group
-        $mainEvent = new MvcEvent(MvcEvent::EVENT_BOOTSTRAP, $this);
-        $mainEvent->setRequest(new Request());
-        $mainEvent->setResponse(new Response());
-
-        $this->eventManager->trigger($mainEvent);
     }
 
     /**
