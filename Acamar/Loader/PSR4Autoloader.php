@@ -9,12 +9,15 @@
 
 namespace Acamar\Loader;
 
+// Loading the dependencies
+require_once 'LoaderInterface.php';
+
 /**
  * Class PSR4Autoloader
  *
  * @package Acamar\Loader
  */
-class PSR4Autoloader
+class PSR4Autoloader implements LoaderInterface
 {
     /**
      * Namespaces

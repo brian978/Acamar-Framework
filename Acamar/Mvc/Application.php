@@ -13,6 +13,7 @@ use Acamar\Config\Config;
 use Acamar\Event\EventManager;
 use Acamar\Http\Request;
 use Acamar\Http\Response;
+use Acamar\Loader\LoaderInterface;
 use Acamar\Loader\PSR0Autoloader;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\Router\Route;
@@ -38,6 +39,11 @@ class Application implements ApplicationInterface
     protected $config = null;
 
     /**
+     * @var array
+     */
+    protected $configFileScopes = [];
+
+    /**
      * @var string
      */
     protected $env = "";
@@ -58,11 +64,22 @@ class Application implements ApplicationInterface
     protected $dispatcher = null;
 
     /**
+     * Constructs the Application object
+     *
      * @param string $env
+     * @param array $configFileScopes
      */
-    public function __construct($env = self::ENV_PRODUCTION)
+    public function __construct($env = self::ENV_PRODUCTION, $configFileScopes = [])
     {
         $this->env = $env;
+
+        if (empty($configFileScopes)) {
+            $this->configFileScopes[] = 'global';
+            $this->configFileScopes[] = $env;
+            $this->configFileScopes[] = 'local';
+        } else {
+            $this->configFileScopes = $configFileScopes;
+        }
 
         // registering the error handler
         set_exception_handler(array($this, 'handleException'));
@@ -71,10 +88,10 @@ class Application implements ApplicationInterface
     /**
      * Sets the autoloader object
      *
-     * @param \Acamar\Loader\PSR0Autoloader $autoloader
+     * @param LoaderInterface $autoloader
      * @return $this
      */
-    public function setAutoloader($autoloader)
+    public function setAutoloader(LoaderInterface $autoloader)
     {
         $this->autoloader = $autoloader;
 
@@ -84,25 +101,20 @@ class Application implements ApplicationInterface
     /**
      * This is called directly from the index.php file before the Application::run() method
      *
-     * @param array $fileScopes
-     *
      * @return $this
      */
-    public function loadConfig($fileScopes = ['global', 'local'])
+    public function loadConfig()
     {
-        $configFiles = [
-            'global' => [],
-            'local' => [],
-            $this->env => []
-        ];
-
-        // The last scope to load must be the environment one
-        $fileScopes[] = $this->env;
+        // The config files array must have the order of the config file scopes
+        $configFiles = [];
+        foreach ($this->configFileScopes as $scope) {
+            $configFiles[$scope] = [];
+        }
 
         // Initializing the required vars
         $ds           = DIRECTORY_SEPARATOR;
         $files        = scandir('config');
-        $scopePattern = implode('|', $fileScopes);
+        $scopePattern = implode('|', $this->configFileScopes);
 
         // Initializing the config
         $this->config = new Config();
