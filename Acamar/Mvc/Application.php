@@ -200,8 +200,10 @@ class Application implements ApplicationInterface
         $defaultConfigFiles = $this->config['modulesConfigs'];
 
         foreach ($this->config['modules'] as $module => $configFiles) {
-            if (empty($configFiles)) {
+            if (null === $configFiles || !is_array($configFiles)) {
                 $configFiles = & $defaultConfigFiles;
+            } elseif (empty($configFiles)) {
+                continue;
             }
 
             // Merging the configuration files
