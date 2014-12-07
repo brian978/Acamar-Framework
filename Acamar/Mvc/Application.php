@@ -174,9 +174,12 @@ class Application implements ApplicationInterface
         // Getting the cached version if it exists and setting a flag
         $appCachedConfigFilePath = $appConfig['configCache']['filePath'];
         if ($isConfigCacheEnabled && file_exists($appCachedConfigFilePath)) {
-            $appConfig = require $appCachedConfigFilePath;
+            $cachedConfig = require $appCachedConfigFilePath;
 
-            $configCached = true;
+            if (time() - $cachedConfig['cacheCreateTime'] < $appConfig['configCache']['lifetime']) {
+                $configCached = true;
+                $appConfig    = & $cachedConfig;
+            }
         }
 
         // For now we have a single global file
@@ -233,14 +236,17 @@ class Application implements ApplicationInterface
      */
     protected function cacheConfig()
     {
-        $filePath = $this->config['configCache']['filePath'];
+        // We need to add the cache create time so we can determine when the cache should expire
+        $config                    = $this->config->getArrayCopy();
+        $config['cacheCreateTime'] = time();
 
+        // Saving the cache file
         $data = "<?php \n";
         $data .= "return ";
-        $data .= var_export($this->config->getArrayCopy(), 1);
+        $data .= var_export($config, 1);
         $data .= ";";
 
-        file_put_contents($filePath, $data);
+        file_put_contents($this->config['configCache']['filePath'], $data);
 
         return $this;
     }
