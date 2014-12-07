@@ -78,6 +78,8 @@ class Dispatcher
 
                 $dispatched = true;
             }
+        } else {
+            throw new \RuntimeException('The `' . $controllerClass . '` controller was not be found');
         }
 
         if ($dispatched === false) {

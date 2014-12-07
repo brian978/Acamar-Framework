@@ -199,7 +199,8 @@ class Application implements ApplicationInterface
         $modulesPath        = $this->config['modulesPath'];
         $defaultConfigFiles = $this->config['modulesConfigs'];
 
-        foreach ($this->config['modules'] as $module => $configFiles) {
+        foreach ($this->config['modules'] as $module => $setup) {
+            $configFiles = & $setup['configs'];
             if (!is_array($configFiles)) {
                 $configFiles = & $defaultConfigFiles;
             } elseif (empty($configFiles)) {
@@ -252,6 +253,26 @@ class Application implements ApplicationInterface
 
                 $this->router->addRoute($routeClass::factory($info));
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Event\MvcEvent $event
+     * @return $this
+     */
+    protected function runSetups(MvcEvent $event)
+    {
+        foreach ($this->config['modules'] as $module => $setup) {
+            if (!isset($setup['runSetup']) || !$setup['runSetup']) {
+                continue;
+            }
+
+            $class = $module . '\\' . 'Setup';
+
+            // The setup will be run in the __construct() method of the class
+            new $class($event);
         }
 
         return $this;
@@ -322,6 +343,7 @@ class Application implements ApplicationInterface
         $this->loadConfig();
         $this->registerNamespaces();
         $this->loadRoutes();
+        $this->runSetups($e);
 
         $this->eventManager->forward($e, MvcEvent::EVENT_ROUTE);
     }
