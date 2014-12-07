@@ -24,7 +24,12 @@ class PSR4Autoloader implements LoaderInterface
      *
      * @var array
      */
-    protected $namespaces = array();
+    protected $namespaces = [];
+
+    /**
+     * @var array
+     */
+    protected $resolved = [];
 
     /**
      * @var bool
@@ -38,7 +43,7 @@ class PSR4Autoloader implements LoaderInterface
     public function register()
     {
         if ($this->registered === false) {
-            $this->registered = spl_autoload_register(array($this, 'loadClass'));
+            $this->registered = spl_autoload_register([$this, 'loadClass']);
         }
     }
 
@@ -48,7 +53,7 @@ class PSR4Autoloader implements LoaderInterface
      * @param array $namespaces
      * @return $this
      */
-    public function registerNamespaces(array $namespaces = array())
+    public function registerNamespaces(array $namespaces = [])
     {
         foreach ($namespaces as $namespace => $path) {
             if (is_string($path)) {
@@ -95,12 +100,12 @@ class PSR4Autoloader implements LoaderInterface
      * @param string $class
      * @return void
      */
-    protected function loadClass($class)
+    public function loadClass($class)
     {
-        // Getting the namespace of the class
-        $namespace = substr($class, 0, strpos($class, '\\'));
+        if ($this->resolveNamespace($class)) {
+            $namespace = & $this->resolved[$class]['ns'];
+            $class     = & $this->resolved[$class]['class'];
 
-        if (isset($this->namespaces[$namespace])) {
             foreach ($this->namespaces[$namespace] as $path) {
                 $file = $path;
                 $file .= DIRECTORY_SEPARATOR;
@@ -113,5 +118,39 @@ class PSR4Autoloader implements LoaderInterface
                 }
             }
         }
+    }
+
+    /**
+     * Extracts the registered namespace from the class name
+     *
+     * @param string $class
+     * @return boolean
+     */
+    protected function resolveNamespace($class)
+    {
+        if (isset($this->resolved[$class])) {
+            return $this->resolved[$class]['ns'];
+        }
+
+        $resolved  = false;
+        $pieces    = explode('\\', $class);
+        $namespace = '';
+
+        do {
+            $namespace .= array_shift($pieces);
+            if (isset($this->namespaces[$namespace])) {
+                $resolved = true;
+            } else {
+                $namespace .= '\\';
+            }
+        } while (!$resolved && !empty($pieces));
+
+        // Caching our results
+        $this->resolved[$class] = [
+            'ns' => $namespace,
+            'class' => str_replace($namespace . '\\', '', $class)
+        ];
+
+        return $resolved;
     }
 }

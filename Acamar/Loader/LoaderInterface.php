@@ -39,4 +39,12 @@ interface LoaderInterface
      * @return $this
      */
     public function registerNamespace($namespace, $path);
+
+    /**
+     * Loads a class based on it's name
+     *
+     * @param string $class
+     * @return void
+     */
+    public function loadClass($class);
 }

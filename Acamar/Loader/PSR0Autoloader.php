@@ -80,7 +80,7 @@ class PSR0Autoloader implements LoaderInterface
      * @param string $class
      * @return void
      */
-    protected function loadClass($class)
+    public function loadClass($class)
     {
         // Getting the namespace of the class
         $namespace = substr($class, 0, strpos($class, '\\'));
