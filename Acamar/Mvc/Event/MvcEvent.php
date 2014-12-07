@@ -30,6 +30,16 @@ class MvcEvent extends Event
     const EVENT_RENDERED       = "rendered";
 
     /**
+     * Overritten only for the type hint
+     *
+     * @return \Acamar\Mvc\Application
+     */
+    public function getTarget()
+    {
+        return parent::getTarget();
+    }
+
+    /**
      * @param \Exception $error
      * @return $this
      */

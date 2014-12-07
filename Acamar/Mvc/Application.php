@@ -114,6 +114,16 @@ class Application implements ApplicationInterface
     }
 
     /**
+     * The method allows the controller (or any other object that gets the event object) to access the event manager
+     *
+     * @return \Acamar\Event\EventManager
+     */
+    public function getEventManager()
+    {
+        return $this->eventManager;
+    }
+
+    /**
      *
      * @return $this
      */
@@ -200,7 +210,11 @@ class Application implements ApplicationInterface
         $defaultConfigFiles = $this->config['modulesConfigs'];
 
         foreach ($this->config['modules'] as $module => $setup) {
-            $configFiles = & $setup['configs'];
+            $configFiles = null;
+            if (isset($setup['configs'])) {
+                $configFiles = & $setup['configs'];
+            }
+
             if (!is_array($configFiles)) {
                 $configFiles = & $defaultConfigFiles;
             } elseif (empty($configFiles)) {
