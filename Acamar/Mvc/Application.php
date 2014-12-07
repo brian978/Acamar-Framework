@@ -41,11 +41,6 @@ class Application implements ApplicationInterface
     /**
      * @var string
      */
-    protected $configCacheFilename = 'application.config.php';
-
-    /**
-     * @var string
-     */
     protected $env = "";
 
     /**
@@ -172,12 +167,12 @@ class Application implements ApplicationInterface
 
         // Checking if the configuration cache is enabled
         $isConfigCacheEnabled = false;
-        if (isset($appConfig['configCache']) && !empty($appConfig['configCache']['path'])) {
+        if (isset($appConfig['configCache']) && !empty($appConfig['configCache']['filePath'])) {
             $isConfigCacheEnabled = (bool) $appConfig['configCache']['enabled'];
         }
 
         // Getting the cached version if it exists and setting a flag
-        $appCachedConfigFilePath = $appConfig['configCache']['path'] . DIRECTORY_SEPARATOR . $this->configCacheFilename;
+        $appCachedConfigFilePath = $appConfig['configCache']['filePath'];
         if ($isConfigCacheEnabled && file_exists($appCachedConfigFilePath)) {
             $appConfig = require $appCachedConfigFilePath;
 
@@ -238,7 +233,7 @@ class Application implements ApplicationInterface
      */
     protected function cacheConfig()
     {
-        $filePath = $this->config['configCache']['path'] . DIRECTORY_SEPARATOR . $this->configCacheFilename;
+        $filePath = $this->config['configCache']['filePath'];
 
         $data = "<?php \n";
         $data .= "return ";
