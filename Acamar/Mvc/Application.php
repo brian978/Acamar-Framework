@@ -62,10 +62,12 @@ class Application implements ApplicationInterface
      * Constructs the Application object
      *
      * @param string $env
+     * @param \Acamar\Loader\LoaderInterface $autoloader
      */
-    public function __construct($env = self::ENV_PRODUCTION)
+    public function __construct($env = self::ENV_PRODUCTION, LoaderInterface $autoloader)
     {
         $this->env          = $env;
+        $this->autoloader   = $autoloader;
         $this->eventManager = new EventManager();
         $this->router       = new Router($this->eventManager);
         $this->dispatcher   = new Dispatcher($this->eventManager);
@@ -73,19 +75,6 @@ class Application implements ApplicationInterface
 
         // registering the error handler
         set_exception_handler(array($this, 'handleException'));
-    }
-
-    /**
-     * Sets the autoloader object
-     *
-     * @param LoaderInterface $autoloader
-     * @return $this
-     */
-    public function setAutoloader(LoaderInterface $autoloader)
-    {
-        $this->autoloader = $autoloader;
-
-        return $this;
     }
 
     /**
