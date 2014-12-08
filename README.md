@@ -12,5 +12,3 @@ with a full stack framework.
 # Documentation
 
 The documentation can be found [HERE](http://acamar.no-ip.biz)
-
-
