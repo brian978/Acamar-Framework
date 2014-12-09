@@ -161,4 +161,56 @@ class Request
 
         return $this;
     }
+
+    /**
+     * Returns the IP from where the request originated
+     *
+     * @return string
+     */
+    public function getIp()
+    {
+        $ip = $this->getIpFromProxy();
+        if (!empty($ip)) {
+            return $ip;
+        }
+
+        if (isset($this->server['REMOTE_ADDR'])) {
+            return $this->server['REMOTE_ADDR'];
+        }
+
+        return '';
+    }
+
+    /**
+     * Retrieves the IP, of the client, that is behind the proxy
+     *
+     * The header for the proxy should look like this:
+     * X-Forwarded-For: client, proxy1, proxy2
+     *
+     * @return string
+     * @see http://en.wikipedia.org/wiki/X-Forwarded-For
+     */
+    protected function getIpFromProxy()
+    {
+        $proxyHeader = $this->headers->get('X-Forwarded-For');
+        if (!$proxyHeader) {
+            return '';
+        }
+
+        $ips = explode(',', $proxyHeader);
+
+        // Theoretically the client IP is the first, but since this can be spoofed, it doesn't really matter
+        // which one we choose
+        $ip = array_shift($ips);
+        if (is_string($ip)) {
+            $ip = trim($ip);
+        }
+
+        // The $ip may be "" or NULL
+        if (!empty($ip)) {
+            return $ip;
+        }
+
+        return '';
+    }
 }
