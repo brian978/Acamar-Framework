@@ -37,28 +37,11 @@ class Request extends BasicRequest
 
         $this->setQueryString();
         $this->setPathInfo(); // Must be called AFTER setQueryString()
+
         $this->setMethod($this->server['REQUEST_METHOD']);
         $this->setUri($this->server['PATH_INFO']);
-
-        // TODO: move this logic somewhere else, like in a method
-        if (null === $get) {
-            $get = [];
-
-            if (!empty($_GET)) {
-                $get = $_GET;
-            } elseif (!empty($this->server['QUERY_STRING'])) {
-                parse_str($this->server['QUERY_STRING'], $get);
-            }
-        }
-
-        $this->setQueryParams($get);
-
-        // TODO: same here
-        if (null === $post) {
-            $post = $_POST;
-        }
-
-        $this->setPostParams($post);
+        $this->setQueryParams(null === $get ? $_GET : $get);
+        $this->setPostParams(null === $post ? $_POST : $post);
     }
 
     /**
