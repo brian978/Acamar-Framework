@@ -36,12 +36,37 @@ class Request
     protected $headers = null;
 
     /**
-     * Constructor for the request object
-     *
+     * @var array
      */
-    public function __construct()
+    protected $queryParams = [];
+
+    /**
+     * @var array
+     */
+    protected $postParams = [];
+
+    /**
+     * @param array $server
+     * @param array $post
+     */
+    public function __construct(array $server = null, array $post = null)
     {
-        $this->server = $_SERVER;
+        $this->setServer($server);
+        $this->setQueryStringAndParseIt();
+        $this->setPathInfo(); // Must be called AFTER setQueryStringAndParseIt()
+    }
+
+    /**
+     * Sets the server array
+     *
+     * @param array|null $server
+     * @return $this
+     */
+    public function setServer(array $server = null)
+    {
+        $this->server = (null === $server ? $_SERVER : $server);
+
+        return $this;
     }
 
     /**
@@ -67,6 +92,66 @@ class Request
         return $this->headers;
     }
 
+    /**
+     * Sets a value as a query parameter
+     *
+     * @param string $name
+     * @param string $value
+     * @return $this
+     */
+    public function setQuery($name, $value)
+    {
+        if (is_string($name) && (is_string($value) || is_numeric($value))) {
+            $this->queryParams[$name] = (string) $value;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Returns a value from the query parameters based on $name
+     *
+     * @param string $name
+     * @param string $default
+     * @return array
+     */
+    public function getQuery($name, $default = null)
+    {
+        if (isset($this->queryParams[$name])) {
+            return $this->queryParams[$name];
+        }
+
+        return $default;
+    }
+
+    /**
+     * Sets the post array
+     *
+     * @param array|null $post
+     * @return $this
+     */
+    public function setPost(array $post = null)
+    {
+        $this->postParams = (null === $post ? $_POST : $post);
+
+        return $this;
+    }
+
+    /**
+     * Returns a value from the post parameters based on $name
+     *
+     * @param string $name
+     * @param string $default
+     * @return array
+     */
+    public function getPost($name, $default = null)
+    {
+        if (isset($this->postParams[$name])) {
+            return $this->postParams[$name];
+        }
+
+        return $default;
+    }
 
     /**
      * Returns the HTTP request method (identified by `REQUEST_METHOD`)
@@ -89,75 +174,65 @@ class Request
      */
     public function getRequestUri()
     {
-        if (!isset($this->server['PATH_INFO'])) {
-            $this->detectPathInfo();
-        }
-
         return $this->server['PATH_INFO'];
     }
 
     /**
-     * Returns the query string in array format
+     * Checks if the `PATH_INFO` is set and tried to detect it if not
      *
-     * @return array
-     */
-    public function getQuery()
-    {
-        if (empty($this->server['QUERY_STRING']) && strpos($this->server['REQUEST_URI'], '?')) {
-            $this->detectQueryString();
-        }
-
-        // TODO: optimize this
-        parse_str($this->server['QUERY_STRING'], $output);
-
-        return $output;
-    }
-
-    /**
-     * Detects the request path
+     * DO NOT call this before having the `QUERY_STRING` set
      *
-     * @return $this
      * @throws \RuntimeException
+     * @return $this
      */
-    protected function detectPathInfo()
+    protected function setPathInfo()
     {
-        if (!isset($this->server['REQUEST_URI'])) {
-            throw new \RuntimeException('Cannot detect the path info due to lack of information');
+        if (!isset($this->server['PATH_INFO'])) {
+            if (!isset($this->server['REQUEST_URI'])) {
+                throw new \RuntimeException('Cannot detect the path info due to lack of information');
+            }
+
+            $requestUri = $this->server['REQUEST_URI'];
+            $scriptName = str_replace('/index.php', '', $this->server['SCRIPT_NAME']);
+
+            // Removing the query string from the request URI
+            $requestUri = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
+            $requestUri = preg_replace('#.*' . $scriptName . '#', '', $requestUri);
+
+            // Updating the PATH_INFO with the proper information (ensuring right slash)
+            $this->server['PATH_INFO'] = '/' . rtrim($requestUri, '/');
         }
-
-        $requestUri = $this->server['REQUEST_URI'];
-        $scriptName = str_replace('/index.php', '', $this->server['SCRIPT_NAME']);
-
-        if (empty($this->server['QUERY_STRING']) && strpos($this->server['REQUEST_URI'], '?')) {
-            $this->detectQueryString();
-        }
-
-        // Removing the query string from the request URI
-        $requestUri = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
-        $requestUri = preg_replace('#.*' . $scriptName . '#', '', $requestUri);
-
-        // Updating the PATH_INFO with the proper information (ensuring right slash)
-        $this->server['PATH_INFO'] = '/' . rtrim($requestUri, '/');
 
         return $this;
     }
 
     /**
-     * Detects the query string
+     * Detects the query string if it's not present and sets it, then it parses it
      *
+     * @throws \RuntimeException
      * @return $this
      */
-    protected function detectQueryString()
+    protected function setQueryStringAndParseIt()
     {
-        $requestUri = $this->server['REQUEST_URI'];
+        if (empty($this->server['QUERY_STRING'])) {
+            if (!isset($this->server['REQUEST_URI'])) {
+                throw new \RuntimeException('Cannot detect the path info due to lack of information');
+            }
 
-        // If "nginx" is used then it may be configured wrong and we may not have the `QUERY_STRING`
-        $queryString = $this->server['QUERY_STRING'];
-        if (($argsPos = strpos($requestUri, '?')) !== false && empty($queryString)) {
-            $queryString = substr($requestUri, $argsPos + 1);
+            if (strpos($this->server['REQUEST_URI'], '?')) {
+                $requestUri = $this->server['REQUEST_URI'];
+
+                // If "nginx" is used then it may be configured wrong and we may not have the `QUERY_STRING`
+                $queryString = $this->server['QUERY_STRING'];
+                if (($argsPos = strpos($requestUri, '?')) !== false && empty($queryString)) {
+                    $queryString = substr($requestUri, $argsPos + 1);
+                }
+
+                $this->server['QUERY_STRING'] = $queryString;
+            }
         }
 
-        $this->server['QUERY_STRING'] = $queryString;
+        parse_str($this->server['QUERY_STRING'], $this->queryParams);
 
         return $this;
     }
