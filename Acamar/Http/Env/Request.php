@@ -27,6 +27,11 @@ class Request extends BasicRequest
     protected $server = array();
 
     /**
+     * @var string
+     */
+    protected $baseUri = null;
+
+    /**
      * @param array $server
      * @param array $get
      * @param array $post
@@ -79,7 +84,7 @@ class Request extends BasicRequest
             $requestUri = preg_replace('#.*' . $scriptName . '#', '', $requestUri);
 
             // Updating the PATH_INFO with the proper information (ensuring right slash)
-            $this->server['PATH_INFO'] = '/' . rtrim($requestUri, '/');
+            $this->server['PATH_INFO'] = '/' . trim($requestUri, '/');
         }
 
         return $this;
@@ -112,6 +117,18 @@ class Request extends BasicRequest
         }
 
         return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getBaseUri()
+    {
+        if (null === $this->baseUri) {
+            $this->baseUri = str_replace($this->getUri(), '', $this->server['REQUEST_URI']);
+        }
+
+        return $this->baseUri;
     }
 
     /**

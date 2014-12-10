@@ -84,6 +84,8 @@ class Url implements ConfigAwareInterface, EventAwareInterface, HelperInterface
             $currentRoute = $this->event->getRoute();
         }
 
-        return $target->getRouter()->getRoute($routeName)->assemble($params, $currentRoute);
+        $baseUri = $this->event->getRequest()->getBaseUri();
+
+        return $baseUri . $target->getRouter()->getRoute($routeName)->assemble($params, $currentRoute);
     }
 }
