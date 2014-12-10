@@ -47,13 +47,31 @@ class Request
 
     /**
      * @param array $server
+     * @param array $get
      * @param array $post
      */
-    public function __construct(array $server = null, array $post = null)
+    public function __construct(array $server = null, array $get = null, array $post = null)
     {
         $this->setServer($server);
-        $this->setQueryStringAndParseIt();
+        $this->setQueryString();
         $this->setPathInfo(); // Must be called AFTER setQueryStringAndParseIt()
+
+        // TODO: move this logic somewhere else
+        if (null === $get) {
+            if (!empty($_GET)) {
+                $get = $_GET;
+            } elseif (!empty($this->server['QUERY_STRING'])) {
+                parse_str($this->server['QUERY_STRING'], $get);
+            }
+        }
+
+        $this->setQueryParams($get);
+
+        if(null === $post) {
+            $post = $_POST;
+        }
+
+        $this->setPostParams($post);
     }
 
     /**
@@ -93,6 +111,21 @@ class Request
     }
 
     /**
+     * Sets the query parameters for the request
+     *
+     * @param array $params
+     * @return $this
+     */
+    public function setQueryParams(array $params)
+    {
+        array_map('trim', $params);
+
+        $this->queryParams = $params;
+
+        return $this;
+    }
+
+    /**
      * Sets a value as a query parameter
      *
      * @param string $name
@@ -125,14 +158,32 @@ class Request
     }
 
     /**
-     * Sets the post array
+     * Sets the query parameters for the request
      *
-     * @param array|null $post
+     * @param array $params
      * @return $this
      */
-    public function setPost(array $post = null)
+    public function setPostParams(array $params)
     {
-        $this->postParams = (null === $post ? $_POST : $post);
+        array_map('trim', $params);
+
+        $this->postParams = $params;
+
+        return $this;
+    }
+
+    /**
+     * Sets the post array
+     *
+     * @param string $name
+     * @param string $value
+     * @return $this
+     */
+    public function setPost($name, $value)
+    {
+        if (is_string($name) && (is_string($value) || is_numeric($value))) {
+            $this->postParams[$name] = (string) $value;
+        }
 
         return $this;
     }
@@ -193,7 +244,7 @@ class Request
             }
 
             $requestUri = $this->server['REQUEST_URI'];
-            $scriptName = str_replace('/index.php', '', $this->server['SCRIPT_NAME']);
+            $scriptName = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
 
             // Removing the query string from the request URI
             $requestUri = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
@@ -212,7 +263,7 @@ class Request
      * @throws \RuntimeException
      * @return $this
      */
-    protected function setQueryStringAndParseIt()
+    protected function setQueryString()
     {
         if (empty($this->server['QUERY_STRING'])) {
             if (!isset($this->server['REQUEST_URI'])) {
@@ -231,8 +282,6 @@ class Request
                 $this->server['QUERY_STRING'] = $queryString;
             }
         }
-
-        parse_str($this->server['QUERY_STRING'], $this->queryParams);
 
         return $this;
     }
