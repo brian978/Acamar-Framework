@@ -144,7 +144,7 @@ class View
     public function setTemplatesPath($path)
     {
         if (is_string($path)) {
-            $this->templatesPath = trim($path);
+            $this->templatesPath = $this->convertPath(trim($path));
         }
 
         return $this;
@@ -166,7 +166,7 @@ class View
      */
     public function setTemplate($template)
     {
-        $this->template = (strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
+        $this->template = $this->convertPath(strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
 
         return $this;
     }
@@ -184,6 +184,23 @@ class View
         }
 
         return $templatePathname;
+    }
+
+    /**
+     * Converts the slashes in the given string to the ones specific to the platform that the framework runs on
+     *
+     * @param string $string
+     * @return string
+     */
+    protected function convertPath($string)
+    {
+        if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
+            $string = str_replace('/', DIRECTORY_SEPARATOR, $string);
+        } else {
+            $string = str_replace('\\', DIRECTORY_SEPARATOR, $string);
+        }
+
+        return $string;
     }
 
     /**
