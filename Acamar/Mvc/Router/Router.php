@@ -76,7 +76,7 @@ class Router
      */
     public function match(Request $request)
     {
-        $uri = $request->getRequestUri();
+        $uri = $request->getUri();
 
         /** @var $route Route */
         foreach ($this->routes as $route) {
