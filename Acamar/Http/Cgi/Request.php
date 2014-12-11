@@ -175,10 +175,6 @@ class Request extends BasicRequest
      */
     public function getIp()
     {
-        if (null === $this->remoteAddress) {
-            $this->remoteAddress = new RemoteAddress($this);
-        }
-
-        return $this->remoteAddress->getResolved();
+        return $this->getRemoteAddress()->getResolved();
     }
 }
