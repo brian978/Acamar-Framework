@@ -73,6 +73,8 @@ class Request
 
 
     /**
+     * Sets the HTTP request method
+     *
      * @param string $method
      * @return $this
      */
@@ -94,6 +96,8 @@ class Request
     }
 
     /**
+     * Sets the URI of the request
+     *
      * @param string $uri
      * @return $this
      */
@@ -105,7 +109,7 @@ class Request
     }
 
     /**
-     * This is the URL that was/is used for the HTTP request
+     * Return the URI that was used for the HTTP request
      *
      * @return string
      */
@@ -130,7 +134,7 @@ class Request
     }
 
     /**
-     * Sets a value as a query parameter
+     * Sets/overwrites a single GET/Query parameter
      *
      * @param string $name
      * @param string $value
@@ -146,7 +150,7 @@ class Request
     }
 
     /**
-     * Returns a value from the query parameters based on $name
+     * Returns a value from the GET/Query parameters based on $name
      *
      * @param string $name
      * @param mixed $default
@@ -162,7 +166,7 @@ class Request
     }
 
     /**
-     * Sets the query parameters for the request
+     * Sets the post parameters for the request
      *
      * @param array $params
      * @return $this
@@ -177,7 +181,7 @@ class Request
     }
 
     /**
-     * Sets the post array
+     * Sets/overwrites a single POST parameter
      *
      * @param string $name
      * @param string $value
@@ -193,7 +197,7 @@ class Request
     }
 
     /**
-     * Returns a value from the post parameters based on $name
+     * Returns a value from the POST parameters based on $name
      *
      * @param string $name
      * @param mixed $default
