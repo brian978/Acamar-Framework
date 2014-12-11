@@ -46,8 +46,7 @@ class Request extends BasicRequest
     {
         $this->server = (null === $server ? $_SERVER : $server);
 
-        $this->setQueryString();
-        $this->setPathInfo(); // Must be called AFTER setQueryString()
+        $this->setPathInfo();
 
         $this->setMethod($this->server['REQUEST_METHOD']);
         $this->setUri($this->server['PATH_INFO']);
@@ -101,42 +100,13 @@ class Request extends BasicRequest
             $scriptPath = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
 
             // Removing the query string from the request URI as well as parts of the script name
-            $requestPath = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
+            $requestPath = substr($requestUri, 0, strpos($requestUri, '?'));
             if (!empty($scriptPath)) {
                 $requestPath = preg_replace('#.*' . $scriptPath . '#', '', $requestPath);
             }
 
             // Updating the PATH_INFO with the proper information (ensuring right slash)
             $this->server['PATH_INFO'] = '/' . trim($requestPath, '/');
-        }
-
-        return $this;
-    }
-
-    /**
-     * Detects the query string if it's not present and sets it, then it parses it
-     *
-     * @throws \RuntimeException
-     * @return $this
-     */
-    protected function setQueryString()
-    {
-        if (empty($this->server['QUERY_STRING'])) {
-            if (!isset($this->server['REQUEST_URI'])) {
-                throw new \RuntimeException('Cannot detect the path info due to lack of information');
-            }
-
-            if (strpos($this->server['REQUEST_URI'], '?')) {
-                $requestUri = $this->server['REQUEST_URI'];
-
-                // If "nginx" is used then it may be configured wrong and we may not have the `QUERY_STRING`
-                $queryString = $this->server['QUERY_STRING'];
-                if (($argsPos = strpos($requestUri, '?')) !== false && empty($queryString)) {
-                    $queryString = substr($requestUri, $argsPos + 1);
-                }
-
-                $this->server['QUERY_STRING'] = $queryString;
-            }
         }
 
         return $this;
