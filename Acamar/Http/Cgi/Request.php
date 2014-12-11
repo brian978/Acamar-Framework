@@ -77,14 +77,16 @@ class Request extends BasicRequest
             }
 
             $requestUri = $this->server['REQUEST_URI'];
-            $scriptName = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
+            $scriptPath = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
 
-            // Removing the query string from the request URI
-            $requestUri = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
-            $requestUri = preg_replace('#.*' . $scriptName . '#', '', $requestUri);
+            // Removing the query string from the request URI as well as parts of the script name
+            $requestPath = str_replace('?' . $this->server['QUERY_STRING'], '', $requestUri);
+            if (!empty($scriptPath)) {
+                $requestPath = preg_replace('#.*' . $scriptPath . '#', '', $requestPath);
+            }
 
             // Updating the PATH_INFO with the proper information (ensuring right slash)
-            $this->server['PATH_INFO'] = '/' . trim($requestUri, '/');
+            $this->server['PATH_INFO'] = '/' . trim($requestPath, '/');
         }
 
         return $this;
