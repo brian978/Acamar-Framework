@@ -33,7 +33,7 @@ abstract class AbstractController
     public function __construct(MvcEvent $event)
     {
         if ($event->getTarget() instanceof Application === false) {
-            throw new \RuntimeException('The startup event was modified');
+            throw new \RuntimeException('Invalid event target type');
         }
 
         $this->event   = $event;
