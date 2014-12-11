@@ -63,6 +63,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanGetWithRootBaseFolder(array $server)
     {
+        // The query string must also be present in the REQUEST_URI
         $server['SCRIPT_NAME'] = '/index.php';
         $server['REQUEST_URI'] = '/controller/action?test=1';
 
