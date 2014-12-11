@@ -96,13 +96,14 @@ class Route
     /**
      * Factory method for the route object
      *
+     * @param string $name
      * @param array $config
-     * @return Route
      * @throws \InvalidArgumentException
+     * @return Route
      */
-    public static function factory(array $config)
+    public static function factory($name, array $config)
     {
-        if (!isset($config['name']) || !is_string($config['name']) || empty($config['name'])) {
+        if (!is_string($name) || empty($name)) {
             throw new \InvalidArgumentException('The route name must be a string');
         }
 
@@ -119,7 +120,7 @@ class Route
         }
 
 
-        return new self($config['name'], $config['pattern'], $config['defaults'], $config['options']);
+        return new self($name, $config['pattern'], $config['defaults'], $config['options']);
     }
 
     /**

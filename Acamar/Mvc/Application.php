@@ -250,12 +250,10 @@ class Application implements ApplicationInterface
         // If we don't have any routes we don't add anything to the router
         if (isset($this->config['routes']) && count($this->config['routes']) > 0) {
             foreach ($this->config['routes'] as $name => $info) {
-                $info['name'] = $name;
-
                 /** @var $routeClass \Acamar\Mvc\Router\Route */
                 $routeClass = $this->router->getRouteClass();
 
-                $this->router->addRoute($routeClass::factory($info));
+                $this->router->addRoute($routeClass::factory($name, $info));
             }
         }
 
