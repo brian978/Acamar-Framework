@@ -219,7 +219,7 @@ class Request
      */
     public function isXmlHttpRequest()
     {
-        return ($this->getHeaders()->get('X-Requested-With') == 'XMLHttpRequest');
+        return ('XMLHttpRequest' == $this->getHeaders()->get('X-Requested-With'));
     }
 
     /**
@@ -229,7 +229,7 @@ class Request
      */
     public function isHead()
     {
-        return ($this->method == Request::METHOD_HEAD);
+        return (Request::METHOD_HEAD == $this->method);
     }
 
     /**
@@ -239,7 +239,7 @@ class Request
      */
     public function isGet()
     {
-        return ($this->method == Request::METHOD_GET);
+        return (Request::METHOD_GET == $this->method);
     }
 
     /**
@@ -249,7 +249,7 @@ class Request
      */
     public function isPost()
     {
-        return ($this->method == Request::METHOD_POST);
+        return (Request::METHOD_POST == $this->method);
     }
 
     /**
@@ -259,7 +259,7 @@ class Request
      */
     public function isPut()
     {
-        return ($this->method == Request::METHOD_PUT);
+        return (Request::METHOD_PUT == $this->method);
     }
 
     /**
@@ -269,7 +269,7 @@ class Request
      */
     public function isDelete()
     {
-        return ($this->method == Request::METHOD_DELETE);
+        return (Request::METHOD_DELETE == $this->method);
     }
 
     /**
@@ -279,6 +279,6 @@ class Request
      */
     public function isOptions()
     {
-        return ($this->method == Request::METHOD_OPTIONS);
+        return (Request::METHOD_OPTIONS  == $this->method);
     }
 }

@@ -63,7 +63,7 @@ class RemoteAddress
     public function getResolved()
     {
         if(null === $this->resolved) {
-            if($this->useProxy === true) {
+            if(true === $this->useProxy) {
                 $this->resolved = $this->getIpFromProxy();
             }
 
@@ -87,7 +87,7 @@ class RemoteAddress
     protected function getIpFromProxy()
     {
         $proxyHeader = $this->request->getHeaders()->get('X-Forwarded-For');
-        if (!$proxyHeader) {
+        if (false === $proxyHeader) {
             return '';
         }
 
