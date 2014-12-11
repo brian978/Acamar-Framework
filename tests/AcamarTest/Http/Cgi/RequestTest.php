@@ -64,7 +64,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     public function testCanGetWithRootBaseFolder(array $server)
     {
         $server['SCRIPT_NAME'] = '/index.php';
-        $server['REQUEST_URI'] = '/controller/action';
+        $server['REQUEST_URI'] = '/controller/action?test=1';
 
         $request = new Request($server);
 
