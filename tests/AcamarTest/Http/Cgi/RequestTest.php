@@ -61,7 +61,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      * @dataProvider serverDataProvider
      * @covers Request::setPathInfo
      */
-    public function testCanGetWithRootBaseFolder(array $server)
+    public function testCanGetUriWithRootBaseFolder(array $server)
     {
         // The query string must also be present in the REQUEST_URI
         $server['SCRIPT_NAME'] = '/index.php';
@@ -70,6 +70,40 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request = new Request($server);
 
         $this->assertEquals('/controller/action', $request->getUri());
+    }
+
+    /**
+     * @param array $server
+     * @dataProvider serverDataProvider
+     * @covers Request::setPathInfo
+     */
+    public function testCanGetUriWithRootBaseFolderAndNoQueryString(array $server)
+    {
+        // The query string must also be present in the REQUEST_URI
+        $server['SCRIPT_NAME'] = '/index.php';
+        $server['REQUEST_URI'] = '/controller/action';
+        $server['QUERY_STRING'] = '';
+
+        $request = new Request($server);
+
+        $this->assertEquals('/controller/action', $request->getUri());
+    }
+
+    /**
+     * @param array $server
+     * @dataProvider serverDataProvider
+     * @covers Request::setPathInfo
+     */
+    public function testCanGetUriFromRoot(array $server)
+    {
+        // The query string must also be present in the REQUEST_URI
+        $server['SCRIPT_NAME'] = '/index.php';
+        $server['REQUEST_URI'] = '/';
+        $server['QUERY_STRING'] = '';
+
+        $request = new Request($server);
+
+        $this->assertEquals('/', $request->getUri());
     }
 
     /**

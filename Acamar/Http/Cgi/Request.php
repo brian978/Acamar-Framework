@@ -118,7 +118,7 @@ class Request extends BasicRequest
     public function getBaseUri()
     {
         if (null === $this->baseUri) {
-            $this->baseUri = str_replace($this->getUri(), '', $this->server['REQUEST_URI']);
+            $this->baseUri = str_replace($this->getUri(), '', explode('?', $this->server['REQUEST_URI'])[0]);
         }
 
         return $this->baseUri;
