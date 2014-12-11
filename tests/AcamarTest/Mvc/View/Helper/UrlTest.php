@@ -102,6 +102,33 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers \Acamar\Mvc\View\Helper\Url::__invoke
      */
+    public function testCanGenerateUrlWithBasePath()
+    {
+        $request = new Request(array(
+            'REQUEST_METHOD' => 'GET',
+            'SCRIPT_NAME' => '/folder/BasePath/index.php',
+            'REQUEST_URI' => '/folder/BasePath/',
+            'QUERY_STRING' => '',
+            'REMOTE_ADDR' => '127.0.0.1'
+        ));
+
+        $this->event->expects($this->any())
+            ->method('getRequest')
+            ->will($this->returnValue($request));
+
+        // Creating our object
+        $urlHelper = new Url();
+        $urlHelper->setConfig($this->event->getTarget()->getConfig());
+        $urlHelper->setEvent($this->event);
+
+        $url = $urlHelper('mvc', ['controller' => 'products', 'action' => 'add']);
+
+        $this->assertEquals('/folder/BasePath/products/add', $url);
+    }
+
+    /**
+     * @covers \Acamar\Mvc\View\Helper\Url::__invoke
+     */
     public function testCanGenerateUrlWithNoBasePath()
     {
         $request = new Request(array(
