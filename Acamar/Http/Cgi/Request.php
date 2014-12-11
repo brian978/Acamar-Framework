@@ -9,6 +9,7 @@
 
 namespace Acamar\Http\Cgi;
 
+use Acamar\Http\Cgi\Server\RemoteAddress;
 use Acamar\Http\Headers;
 use Acamar\Http\Request as BasicRequest;
 
@@ -30,6 +31,11 @@ class Request extends BasicRequest
      * @var string
      */
     protected $baseUri = null;
+
+    /**
+     * @var \Acamar\Http\Cgi\Server\RemoteAddress
+     */
+    protected $remoteAddress = null;
 
     /**
      * @param array $server
@@ -59,6 +65,21 @@ class Request extends BasicRequest
         }
 
         return $this->headers;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed $default
+     * @return mixed
+     */
+    public function getServer($name, $default = null)
+    {
+        if (isset($this->server[$name])) {
+            return $this->server[$name];
+        }
+
+
+        return $default;
     }
 
     /**
@@ -134,57 +155,30 @@ class Request extends BasicRequest
     }
 
     /**
-     * Returns the IP from where the request originated
+     * Returns the remote address object that the Request object will use to provide the IP address
      *
-     * @param bool $useProxy [ optional ]
-     * @return string
+     * @return \Acamar\Http\Cgi\Server\RemoteAddress
      */
-    public function getIp($useProxy = false)
+    public function getRemoteAddress()
     {
-        if (!$useProxy) {
-            $ip = $this->getIpFromProxy();
-            if (!empty($ip)) {
-                return $ip;
-            }
+        if (null === $this->remoteAddress) {
+            $this->remoteAddress = new RemoteAddress($this);
         }
 
-        if (isset($this->server['REMOTE_ADDR'])) {
-            return $this->server['REMOTE_ADDR'];
-        }
-
-        return '';
+        return $this->remoteAddress;
     }
 
     /**
-     * Retrieves the IP, of the client, that is behind the proxy
-     *
-     * The header for the proxy should look like this:
-     * X-Forwarded-For: client, proxy1, proxy2
+     * Returns the IP from where the request originated
      *
      * @return string
-     * @see http://en.wikipedia.org/wiki/X-Forwarded-For
      */
-    protected function getIpFromProxy()
+    public function getIp()
     {
-        $proxyHeader = $this->headers->get('X-Forwarded-For');
-        if (!$proxyHeader) {
-            return '';
+        if (null === $this->remoteAddress) {
+            $this->remoteAddress = new RemoteAddress($this);
         }
 
-        $ips = explode(',', $proxyHeader);
-
-        // Theoretically the client IP is the first, but since this can be spoofed, it doesn't really matter
-        // which one we choose
-        $ip = array_shift($ips);
-        if (is_string($ip)) {
-            $ip = trim($ip);
-        }
-
-        // The $ip may be "" or NULL
-        if (!empty($ip)) {
-            return $ip;
-        }
-
-        return '';
+        return $this->remoteAddress->getResolved();
     }
 }

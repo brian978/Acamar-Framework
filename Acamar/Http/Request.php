@@ -149,8 +149,8 @@ class Request
      * Returns a value from the query parameters based on $name
      *
      * @param string $name
-     * @param string $default
-     * @return array
+     * @param mixed $default
+     * @return mixed
      */
     public function getQuery($name, $default = null)
     {
@@ -196,8 +196,8 @@ class Request
      * Returns a value from the post parameters based on $name
      *
      * @param string $name
-     * @param string $default
-     * @return array
+     * @param mixed $default
+     * @return mixed
      */
     public function getPost($name, $default = null)
     {

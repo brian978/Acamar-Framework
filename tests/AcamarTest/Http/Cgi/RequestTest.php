@@ -70,4 +70,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('/controller/action', $request->getUri());
     }
+
+    /**
+     * @param array $server
+     * @dataProvider serverDataProvider
+     * @covers RemoteAddress::getResolved
+     */
+    public function testCanGetRemoteAddress(array $server)
+    {
+        $request = new Request($server);
+
+        $this->assertEquals('127.0.0.1', $request->getIp());
+    }
 }
