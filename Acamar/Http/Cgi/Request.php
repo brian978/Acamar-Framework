@@ -100,7 +100,7 @@ class Request extends BasicRequest
             $scriptPath = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
 
             // Removing the query string from the request URI as well as parts of the script name
-            $requestPath = substr($requestUri, 0, strpos($requestUri, '?'));
+            $requestPath = explode('?', $requestUri)[0];
             if (!empty($scriptPath)) {
                 $requestPath = preg_replace('#.*' . $scriptPath . '#', '', $requestPath);
             }
