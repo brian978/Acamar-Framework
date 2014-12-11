@@ -211,4 +211,74 @@ class Request
 
         return $default;
     }
+
+    /**
+     * Checks if the request is an XMLHttpRequest (also know as Ajax) request
+     *
+     * @return bool
+     */
+    public function isXmlHttpRequest()
+    {
+        return ($this->getHeaders()->get('X-Requested-With') == 'XMLHttpRequest');
+    }
+
+    /**
+     * Checks if the request is of type HEAT
+     *
+     * @return bool
+     */
+    public function isHead()
+    {
+        return ($this->method == Request::METHOD_HEAD);
+    }
+
+    /**
+     * Checks if the request is of type GET
+     *
+     * @return bool
+     */
+    public function isGet()
+    {
+        return ($this->method == Request::METHOD_GET);
+    }
+
+    /**
+     * Checks if the request is of type POST
+     *
+     * @return bool
+     */
+    public function isPost()
+    {
+        return ($this->method == Request::METHOD_POST);
+    }
+
+    /**
+     * Checks if the request is of type PUT
+     *
+     * @return bool
+     */
+    public function isPut()
+    {
+        return ($this->method == Request::METHOD_PUT);
+    }
+
+    /**
+     * Checks if the request is of type DELETE
+     *
+     * @return bool
+     */
+    public function isDelete()
+    {
+        return ($this->method == Request::METHOD_DELETE);
+    }
+
+    /**
+     * Checks if the request is of type OPTIONS
+     *
+     * @return bool
+     */
+    public function isOptions()
+    {
+        return ($this->method == Request::METHOD_OPTIONS);
+    }
 }

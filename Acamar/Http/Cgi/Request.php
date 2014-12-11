@@ -177,16 +177,4 @@ class Request extends BasicRequest
     {
         return $this->getRemoteAddress()->getResolved();
     }
-
-    /**
-     * Checks if the request is an XMLHttpRequest (also know as Ajax) request
-     *
-     * @return bool
-     */
-    public function isXmlHttpRequest()
-    {
-        return ($this->getHeaders()->get('X-Requested-With') == 'XMLHttpRequest');
-    }
-
-
 }
