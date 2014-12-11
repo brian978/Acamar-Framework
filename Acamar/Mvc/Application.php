@@ -11,7 +11,7 @@ namespace Acamar\Mvc;
 
 use Acamar\Config\Config;
 use Acamar\Event\EventManager;
-use Acamar\Http\Env\Request;
+use Acamar\Http\Cgi\Request;
 use Acamar\Http\Response;
 use Acamar\Loader\LoaderInterface;
 use Acamar\Loader\PSR0Autoloader;

@@ -70,7 +70,7 @@ class MvcEvent extends Event
     }
 
     /**
-     * @return Request|\Acamar\Http\Env\Request|null
+     * @return Request|\Acamar\Http\Cgi\Request|null
      */
     public function getRequest()
     {

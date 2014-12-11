@@ -7,7 +7,7 @@
  * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE.txt New BSD License
  */
 
-namespace Acamar\Http\Env;
+namespace Acamar\Http\Cgi;
 
 use Acamar\Http\Headers;
 use Acamar\Http\Request as BasicRequest;
@@ -15,7 +15,7 @@ use Acamar\Http\Request as BasicRequest;
 /**
  * Class Request
  *
- * @package Acamar\Http\Env
+ * @package Acamar\Http\Cgi
  */
 class Request extends BasicRequest
 {
