@@ -29,20 +29,6 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     private $event;
 
     /**
-     * this is used to simulate the $_SERVER super global
-     *
-     * @return array
-     */
-    public function serverDataProvider()
-    {
-        $server = require realpath(__DIR__ . '/_files/server.php');
-
-        return array(
-            array($server)
-        );
-    }
-
-    /**
      * Sets up the fixture, for example, open a network connection.
      * This method is called before a test is executed.
      *
@@ -87,12 +73,17 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @dataProvider serverDataProvider
      * @covers \Acamar\Mvc\View\Helper\Url::__invoke
      */
-    public function testCanGenerateUrl(array $server)
+    public function testCanGenerateUrl()
     {
-        $request = new Request($server);
+        $request = new Request(array(
+            'REQUEST_METHOD' => 'GET',
+            'SCRIPT_NAME' => '/folder/BasePath/index.php',
+            'REQUEST_URI' => '/folder/BasePath/products/index?test=1',
+            'QUERY_STRING' => 'test=1',
+            'REMOTE_ADDR' => '127.0.0.1'
+        ));
 
         $this->event->expects($this->any())
             ->method('getRequest')
