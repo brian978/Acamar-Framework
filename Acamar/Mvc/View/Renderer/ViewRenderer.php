@@ -60,7 +60,6 @@ class ViewRenderer
         if ($view instanceof View) {
             $this->renderingStrategy->setView($view);
 
-
             /** @var $application \Acamar\Mvc\Application */
             $application = $this->event->getTarget();
             $config      = $application->getConfig();
