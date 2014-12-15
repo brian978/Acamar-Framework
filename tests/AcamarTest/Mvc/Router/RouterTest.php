@@ -23,6 +23,9 @@ use Acamar\Mvc\Router\Router;
  */
 class RouterTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @covers Router::onRoute
+     */
     public function testRouterCanTriggerDispatch()
     {
         $eventManager = new EventManager();
@@ -47,4 +50,4 @@ class RouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($routed);
     }
-} 
+}
