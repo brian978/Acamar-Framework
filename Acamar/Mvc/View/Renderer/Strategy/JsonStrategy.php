@@ -9,8 +9,6 @@
 
 namespace Acamar\Mvc\View\Renderer\Strategy;
 
-use Acamar\Http\Headers;
-
 /**
  * Class JsonStrategy
  *
@@ -25,14 +23,6 @@ class JsonStrategy extends AbstractRenderingStrategy implements RenderingStrateg
      */
     public function render()
     {
-        $response = $this->event->getResponse();
-
-        // Updating the response headers to match the type of content
-        $response->getHeaders()->set(Headers::CONTENT_TYPE, 'text/json');
-
-        // Clear all from response to avoid breaking the JSON
-        $response->setBody('');
-
         return json_encode($this->view->toArray());
     }
 }

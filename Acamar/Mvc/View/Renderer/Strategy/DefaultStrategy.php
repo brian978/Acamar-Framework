@@ -9,7 +9,6 @@
 
 namespace Acamar\Mvc\View\Renderer\Strategy;
 
-use Acamar\Http\Headers;
 use Acamar\Mvc\View\View;
 
 /**
@@ -26,8 +25,10 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
      */
     public function render()
     {
-        // Updating the response headers to match the type of content
-        $this->event->getResponse()->getHeaders()->set(Headers::CONTENT_TYPE, 'text/html');
+        $response = $this->event->getResponse();
+        if (false === $response->getContentType()) {
+            $response->setContentType('text/html');
+        }
 
         // We will need a layout
         $layout = new View();
