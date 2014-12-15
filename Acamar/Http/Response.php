@@ -265,9 +265,8 @@ class Response
      * @param string $body
      * @return $this
      */
-    public function setBody(
-        $body
-    ) {
+    public function setBody($body)
+    {
         $this->body = $body;
 
         return $this;
@@ -279,6 +278,19 @@ class Response
     public function getBody()
     {
         return $this->body;
+    }
+
+    /**
+     * Sets the content type for the response
+     *
+     * @param string $type
+     * @return $this
+     */
+    public function setContentType($type)
+    {
+        $this->getHeaders()->set(Headers::CONTENT_TYPE, $type);
+
+        return $this;
     }
 
     /**
