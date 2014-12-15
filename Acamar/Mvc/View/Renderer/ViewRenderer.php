@@ -75,7 +75,7 @@ class ViewRenderer
                 $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
             }
 
-            $view->setTemplate($route->getControllerName() . '\\' . $route->getActionName());
+            $view->setTemplate($route->getControllerName() . DIRECTORY_SEPARATOR . $route->getActionName());
 
             // Setting the rendered view as the response
             $this->event->getResponse()->setBody($this->renderingStrategy->render());
