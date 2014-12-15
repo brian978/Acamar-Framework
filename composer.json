@@ -1,0 +1,17 @@
+{
+    "name": "brian978/acamar",
+    "type": "library",
+    "description": "Fast PHP framework using an event-driven architecture",
+    "keywords": ["php", "framework", "event-driven architecture"],
+    "homepage": "https://github.com/brian978/Acamar-Framework",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "brian978",
+            "role": "developer"
+        }
+    ],
+    "require": {
+        "php": ">=5.4.0"
+    }
+}
