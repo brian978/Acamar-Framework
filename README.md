@@ -12,3 +12,19 @@ with a full stack framework.
 # Documentation
 
 The documentation can be found [HERE](http://acamar.no-ip.biz)
+
+# Composer
+
+The framework can also be installed via composer:
+
+    {
+        "require": {
+                "brian978/acamar": "dev-master"
+            }
+    }
+
+# Starter application
+
+The framework uses a specific file structure (which can be found in the documentation).
+If you don't want to create the structure manually you can use the skeleton application
+from [HERE](https://github.com/brian978/Acamar-SkeletonApplication).
