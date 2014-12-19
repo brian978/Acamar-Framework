@@ -24,6 +24,7 @@ implement a bookstore application (as a usage example) on the skeleton applicati
 # Minimum requirements
 
 * PHP 5.4
+* Nginx / Apache web server (it's not yet tested on others)
 
 # Documentation
 
