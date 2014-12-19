@@ -21,6 +21,10 @@ implement a bookstore application (as a usage example) on the skeleton applicati
 * Decoupled a much as possible (the Mvc package si an exception)
 * Some features load ONLY on demand
 
+# Minimum requirements
+
+* PHP 5.4
+
 # Documentation
 
 The documentation can be found [HERE](http://acamar.no-ip.biz)
