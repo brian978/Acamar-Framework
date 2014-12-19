@@ -1,13 +1,25 @@
 # About
 
-The Acamar framework is not intended as a full stack framework and it will never be one. It's meant to be used as a base
-for APIs and simple websites. For more complex websites (like admin back-ends) it can very well be used in conjunction
-with a full stack framework.
+The Acamar framework is not intended as a full stack framework and it will never be one. The main purpose of the
+framework is to provide the minimum code that is required to build a web application that uses the MVC pattern (this
+ranges from APIs to admin back-ends).
+
+The framework is PSR-0 / PSR-4 compliant, so you can use it in conjunction with any other library or full stack
+framework.
+
+# Development state
+
+Since the framework is only implemented in
+the [skeleton application](https://github.com/brian978/Acamar-SkeletonApplication) I will keep it in Alpha stage for
+now. After the propel integration is done I will move it to Beta stage. I'll will set it to Stable only after I
+implement a bookstore application (as a usage example) on the skeleton application.
 
 # Main selling points
 * Event based architecture
 * Light and fast
 * Flexible
+* Decoupled a much as possible outside
+* Some features load ONLY on demand
 
 # Documentation
 
