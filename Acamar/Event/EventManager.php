@@ -39,19 +39,14 @@ class EventManager
     protected $lastEvent = null;
 
     /**
-     * Sets an event class
+     * Sets the event prototype that will be used when triggering an event
      *
-     * @param string $eventClass
-     * @throws \InvalidArgumentException
+     * @param \Acamar\Event\Event $eventPrototype
      * @return $this
      */
-    public function setEventClass($eventClass)
+    public function setEventPrototype(Event $eventPrototype)
     {
-        if (!class_exists($eventClass)) {
-            throw new \InvalidArgumentException('The class ' . $eventClass . ' does not exist');
-        }
-
-        $this->eventClass = $eventClass;
+        $this->eventPrototype = $eventPrototype;
 
         return $this;
     }
