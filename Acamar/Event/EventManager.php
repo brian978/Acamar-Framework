@@ -113,7 +113,8 @@ class EventManager
     }
 
     /**
-     * Forwards an event / Changes the name of the passed event and triggers it again
+     * Forwards an event by converting it to another event (basically it changes the name of the event) and triggers
+     * it again (if the propagation is not stopped)
      *
      * @param Event $object
      * @param string $event
