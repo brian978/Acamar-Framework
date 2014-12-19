@@ -18,7 +18,7 @@ implement a bookstore application (as a usage example) on the skeleton applicati
 * Event based architecture
 * Light and fast
 * Flexible
-* Decoupled a much as possible outside
+* Decoupled a much as possible (the Mvc package si an exception)
 * Some features load ONLY on demand
 
 # Documentation
