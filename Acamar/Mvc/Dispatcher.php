@@ -95,6 +95,10 @@ class Dispatcher
             }
 
             $controller->getEvent()->setView($view);
+        } else {
+            // Although an event object is already created in the event, there is a chance we
+            // might want to return an response object of our own
+            $controller->getEvent()->setResponse($return);
         }
 
         // Don't care what is printed out in the controller
