@@ -11,6 +11,7 @@ namespace Acamar\Mvc;
 
 use Acamar\Event\EventManager;
 use Acamar\Http\Response;
+use Acamar\Mvc\Controller\AbstractController;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\View\View;
 
@@ -51,31 +52,7 @@ class Dispatcher
             /** @var $controller \Acamar\Mvc\Controller\AbstractController */
             $controller = new $controllerClass($e);
             if (is_callable(array($controller, $actionMethod))) {
-                // Running the method in the controller and capturing any potential echoed data
-                ob_start();
-
-                $view   = null;
-                $return = $controller->$actionMethod();
-
-                // The return type of the action can be of the following types: Response, View, array, NULL
-                if (!$return instanceof Response) {
-                    if (!$return instanceof View) {
-                        $view = new View();
-                        if (is_array($return)) {
-                            foreach ($return as $key => $value) {
-                                $view->set($key, $value);
-                            }
-                        }
-                    } else {
-                        $view = $return;
-                    }
-
-                    $e->setView($view);
-                }
-
-                // Don't care what is printed out in the controller
-                ob_end_clean();
-
+                $this->call($controller, $actionMethod);
                 $dispatched = true;
             }
         } else {
@@ -87,5 +64,40 @@ class Dispatcher
         }
 
         $this->eventManager->forward($e, $eventName);
+    }
+
+    /**
+     * Calls the action from the given controller
+     *
+     * @param AbstractController $controller
+     * @param string $method
+     * @return void
+     */
+    public function call(AbstractController $controller, $method)
+    {
+        // Running the method in the controller and capturing any potential echoed data
+        ob_start();
+
+        $view   = null;
+        $return = $controller->$method();
+
+        // The return type of the action can be of the following types: Response, View, array, NULL
+        if (!$return instanceof Response) {
+            if (!$return instanceof View) {
+                $view = new View();
+                if (is_array($return)) {
+                    foreach ($return as $key => $value) {
+                        $view->set($key, $value);
+                    }
+                }
+            } else {
+                $view = $return;
+            }
+
+            $controller->getEvent()->setView($view);
+        }
+
+        // Don't care what is printed out in the controller
+        ob_end_clean();
     }
 }

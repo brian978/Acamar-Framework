@@ -42,6 +42,16 @@ abstract class AbstractController
     }
 
     /**
+     * Returns the event object that was triggered by the Application object
+     *
+     * @return MvcEvent
+     */
+    public function getEvent()
+    {
+        return $this->event;
+    }
+
+    /**
      * Returns the request object that was initially passed to the controller
      *
      * @return Request
