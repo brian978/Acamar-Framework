@@ -185,6 +185,18 @@ class View
     }
 
     /**
+     * Calls the resolveTemplatePath() method with the provided template
+     *
+     * TODO: should this be changed somehow?
+     *
+     * @return string
+     */
+    public function getTemplatePath()
+    {
+        return $this->resolveTemplatePath($this->template);
+    }
+
+    /**
      * Converts the slashes in the given string to the ones specific to the platform that the framework runs on
      *
      * @param string $string
@@ -213,7 +225,7 @@ class View
         ob_start();
 
         try {
-            require $this->resolveTemplatePath($this->template);
+            require $this->getTemplatePath();
 
             return ob_get_clean();
         } catch (\Exception $e) {
