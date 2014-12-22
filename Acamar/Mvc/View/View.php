@@ -48,16 +48,14 @@ class View
     protected $viewHelperManager = null;
 
     /**
+     * Magic get method (this is used by the view scripts)
+     *
      * @param string $name
      * @return mixed
      */
     public function __get($name)
     {
-        if ($this->data[$name]) {
-            return $this->data[$name];
-        }
-
-        return null;
+        return $this->get($name);
     }
 
     /**
