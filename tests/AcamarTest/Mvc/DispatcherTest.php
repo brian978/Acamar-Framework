@@ -10,8 +10,10 @@
 namespace AcamarTest\Mvc;
 
 use Acamar\Event\EventManager;
+use Acamar\Http\Response;
 use Acamar\Mvc\Dispatcher;
 use Acamar\Mvc\Event\MvcEvent;
+use Acamar\Mvc\View\View;
 
 /**
  * Class DispatcherTest
@@ -20,39 +22,77 @@ use Acamar\Mvc\Event\MvcEvent;
  */
 class DispatcherTest extends \PHPUnit_Framework_TestCase
 {
-    public function testDispatcherControllerCall()
+    /**
+     * @var Dispatcher
+     */
+    public $dispatcher;
+
+    /**
+     * @var \Acamar\Mvc\Controller\AbstractController|\PHPUnit_Framework_MockObject_MockObject
+     */
+    public $controller;
+
+    /**
+     * Sets up the fixture
+     *
+     * This method is called before a test is executed.
+     *
+     * @return void
+     */
+    public function setUp()
     {
-        $dispatcher = new Dispatcher(new EventManager());
-        $event      = new MvcEvent();
+        $this->dispatcher = new Dispatcher(new EventManager());
 
         /** @var \PHPUnit_Framework_MockObject_MockObject|\Acamar\Mvc\Controller\AbstractController $mockController */
-        $mockController = $this->getMockBuilder('\Acamar\Mvc\Controller\AbstractController')
+        $this->controller = $this->getMockBuilder('\Acamar\Mvc\Controller\AbstractController')
             ->disableOriginalConstructor()
             ->setMethods(['getEvent', 'testAction'])
             ->getMock();
 
-        $mockController->expects($this->any())
+        $this->controller->expects($this->any())
             ->method('getEvent')
-            ->will($this->returnValue($event));
-
-        $mockController->expects($this->any())
-            ->method('testAction')
-            ->will($this->returnCallback(array($this, 'mockTestAction')));
-
-        $dispatcher->call($mockController, 'testAction');
-
-        $this->assertEquals(1, $event->getView()->get('test'));
+            ->will($this->returnValue(new MvcEvent()));
     }
 
-    /**
-     * This method is used to simulate the testAction() method from the mocked controller
-     *
-     * @return array
-     */
-    public function mockTestAction()
+    public function testDispatcherControllerCallWithArray()
     {
-        return [
-            'test' => 1
-        ];
+        $this->controller->expects($this->any())
+            ->method('testAction')
+            ->will($this->returnValue([
+                'test' => 1
+            ]));
+
+        $this->dispatcher->call($this->controller, 'testAction');
+
+        $this->assertEquals(1, $this->controller->getEvent()->getView()->get('test'));
+    }
+
+    public function testDispatcherControllerCallWithResponseObject()
+    {
+        $response = new Response();
+        $response->setBody('test');
+
+        $this->controller->expects($this->any())
+            ->method('testAction')
+            ->will($this->returnValue($response));
+
+        $this->dispatcher->call($this->controller, 'testAction');
+
+        $this->assertEmpty($this->controller->getEvent()->getView());
+        $this->assertEquals('test', $this->controller->getEvent()->getResponse()->getBody());
+    }
+
+    public function testDispatcherControllerCallWithView()
+    {
+        $view = new View();
+        $view->set('test', 1);
+
+        $this->controller->expects($this->any())
+            ->method('testAction')
+            ->will($this->returnValue($view));
+
+        $this->dispatcher->call($this->controller, 'testAction');
+
+        $this->assertEquals(1, $this->controller->getEvent()->getView()->get('test'));
     }
 }
