@@ -31,4 +31,14 @@ class ViewHelperManagerTest extends \PHPUnit_Framework_TestCase
 
         $this->assertInstanceOf('\Acamar\Mvc\View\Helper\Url', $manager->getHelper('url'));
     }
+
+    /**
+     * @covers ViewHelperManager::getHelper
+     */
+    public function testCanReturnHelperWithoutDependencies()
+    {
+        $manager = new ViewHelperManager();
+
+        $this->assertInstanceOf('\Acamar\Mvc\View\Helper\Url', $manager->getHelper('url'));
+    }
 }
