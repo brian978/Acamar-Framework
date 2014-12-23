@@ -170,30 +170,19 @@ class View
     }
 
     /**
-     * @param string $template
-     * @return string
-     * @throws \RuntimeException
-     */
-    protected function resolveTemplatePath($template)
-    {
-        $templatePathname = $this->templatesPath . DIRECTORY_SEPARATOR . trim($template);
-        if (!file_exists($templatePathname)) {
-            throw new \RuntimeException("View cannot render `$template` because the template does not exist");
-        }
-
-        return $templatePathname;
-    }
-
-    /**
      * Calls the resolveTemplatePath() method with the provided template
      *
-     * TODO: should this be changed somehow?
-     *
+     * @throws \RuntimeException
      * @return string
      */
     public function getTemplatePath()
     {
-        return $this->resolveTemplatePath($this->template);
+        $templatePath = $this->templatesPath . DIRECTORY_SEPARATOR . trim($this->template);
+        if (!file_exists($templatePath)) {
+            throw new \RuntimeException("View cannot render `{$this->template}` because the template does not exist");
+        }
+
+        return $templatePath;
     }
 
     /**
