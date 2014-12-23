@@ -12,6 +12,8 @@ namespace Acamar\Mvc\View;
 /**
  * Class View
  *
+ * @method url \Acamar\Mvc\View\Helper\Url
+ *
  * @package Acamar\Mvc\View
  */
 class View

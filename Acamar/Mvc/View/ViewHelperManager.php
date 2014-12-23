@@ -82,11 +82,11 @@ class ViewHelperManager implements ConfigAwareInterface, EventAwareInterface
 
         if (isset(static::$helpers[$name])) {
             $helper = new static::$helpers[$name];
-            if ($helper instanceof ConfigAwareInterface) {
+            if (null !== $this->config && $helper instanceof ConfigAwareInterface) {
                 $helper->setConfig($this->config);
             }
 
-            if ($helper instanceof EventAwareInterface) {
+            if (null !== $this->event && $helper instanceof EventAwareInterface) {
                 $helper->setEvent($this->event);
             }
 
