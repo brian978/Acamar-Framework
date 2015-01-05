@@ -144,14 +144,18 @@ class View
     public function setTemplatesPath($path)
     {
         if (is_string($path)) {
-            $this->templatesPath = $this->convertPath(trim($path));
+            $this->templatesPath = $this->convertPath($path);
+
+            // We need to make sure that the path does not end with a DIRECTORY_SEPARATOR so it won't
+            // cause the getTemplatePath() to fail at finding the template
+            $this->templatesPath = trim($this->templatesPath, DIRECTORY_SEPARATOR);
         }
 
         return $this;
     }
 
     /**
-     * Returns the templates path
+     * Returns the templates path (this is the path were this object will search for a $this->template)
      *
      * @return string
      */
@@ -172,14 +176,15 @@ class View
     }
 
     /**
-     * Calls the resolveTemplatePath() method with the provided template
+     * Concatenates the templates path with the provided template script name, checks if the file exits and then
+     * it returns the full template path
      *
      * @throws \RuntimeException
      * @return string
      */
     public function getTemplatePath()
     {
-        $templatePath = $this->templatesPath . DIRECTORY_SEPARATOR . trim($this->template);
+        $templatePath = $this->templatesPath . DIRECTORY_SEPARATOR . $this->template;
         if (!file_exists($templatePath)) {
             throw new \RuntimeException("View cannot render `{$this->template}` because the template does not exist");
         }
@@ -201,10 +206,12 @@ class View
             $string = str_replace('\\', DIRECTORY_SEPARATOR, $string);
         }
 
-        return $string;
+        return trim($string);
     }
 
     /**
+     * The method creates a sandbox for the view script file to run in
+     *
      * Using only a require in this method prevents the view from accessing anything we do not want from the render
      * method
      *
