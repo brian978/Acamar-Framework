@@ -70,7 +70,7 @@ class ViewRenderer
             $viewHelperManager->setConfig($config);
             $viewHelperManager->setEvent($this->event);
 
-            // Configure the template
+            // Configure the View with the template
             if(isset($config['view']['paths'][$route->getModuleName()])) {
                 $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
             }
