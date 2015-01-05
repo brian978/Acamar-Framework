@@ -31,11 +31,17 @@ class ViewRenderer
     protected $event = null;
 
     /**
+     * @var \Acamar\Config\Config
+     */
+    protected $config = null;
+
+    /**
      * @param MvcEvent $event
      */
     public function __construct(MvcEvent $event)
     {
-        $this->event = $event;
+        $this->event  = $event;
+        $this->config = $event->getTarget()->getConfig();
     }
 
     /**
@@ -60,19 +66,15 @@ class ViewRenderer
         if ($view instanceof View) {
             $this->renderingStrategy->setView($view);
 
-            /** @var $application \Acamar\Mvc\Application */
-            $application = $this->event->getTarget();
-            $config      = $application->getConfig();
-            $route       = $this->event->getRoute();
-
             // Configure the ViewHelperManager
             $viewHelperManager = $view->getViewHelperManager();
-            $viewHelperManager->setConfig($config);
+            $viewHelperManager->setConfig($this->config);
             $viewHelperManager->setEvent($this->event);
 
             // Configure the View with the template
-            if(isset($config['view']['paths'][$route->getModuleName()])) {
-                $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
+            $route = $this->event->getRoute();
+            if (isset($this->config['view']['paths'][$route->getModuleName()])) {
+                $view->setTemplatesPath($this->config['view']['paths'][$route->getModuleName()]);
             }
 
             $view->setTemplate($route->getControllerName() . DIRECTORY_SEPARATOR . $route->getActionName());
