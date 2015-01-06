@@ -9,6 +9,11 @@
 
 namespace Acamar\Collection;
 
+/**
+ * Class AbstractCollection
+ *
+ * @package Acamar\Collection
+ */
 abstract class AbstractCollection implements CollectionInterface
 {
     /**

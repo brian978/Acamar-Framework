@@ -14,7 +14,12 @@ use Acamar\Model\Entity\EntityCollectionInterface;
 use Acamar\Model\Entity\EntityInterface;
 use Acamar\Model\Mapper\Exception\WrongDataTypeException;
 
-class AbstractMapper implements MapperInterface
+/**
+ * Class AbstractMapper
+ *
+ * @package Acamar\Model\Mapper
+ */
+abstract class AbstractMapper implements MapperInterface
 {
     /**
      * @var MapCollection
