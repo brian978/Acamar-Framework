@@ -152,12 +152,16 @@ class Request
     /**
      * Returns a value from the GET/Query parameters based on $name
      *
-     * @param string $name
+     * @param string|null $name
      * @param mixed $default
      * @return mixed
      */
-    public function getQuery($name, $default = null)
+    public function getQuery($name = null, $default = null)
     {
+        if (null === $name) {
+            return $this->queryParams;
+        }
+
         if (isset($this->queryParams[$name])) {
             return $this->queryParams[$name];
         }
@@ -199,12 +203,16 @@ class Request
     /**
      * Returns a value from the POST parameters based on $name
      *
-     * @param string $name
+     * @param string|null $name
      * @param mixed $default
      * @return mixed
      */
-    public function getPost($name, $default = null)
+    public function getPost($name = null, $default = null)
     {
+        if (null === $name) {
+            return $this->postParams;
+        }
+
         if (isset($this->postParams[$name])) {
             return $this->postParams[$name];
         }
@@ -279,6 +287,6 @@ class Request
      */
     public function isOptions()
     {
-        return (Request::METHOD_OPTIONS  == $this->method);
+        return (Request::METHOD_OPTIONS == $this->method);
     }
 }
