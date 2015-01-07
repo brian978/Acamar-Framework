@@ -32,6 +32,7 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
 
         // We will need a layout
         $layout = new View();
+        $layout->setViewHelperManager($this->view->getViewHelperManager());
         $layout->setTemplatesPath($this->view->getTemplatesPath());
         $layout->setTemplate('layout\layout.phtml');
         $layout->set('content', $this->view->getContents());
