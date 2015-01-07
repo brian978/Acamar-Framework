@@ -9,15 +9,15 @@
 
 namespace AcamarTests\Model\Mapper;
 
+use Acamar\Model\Mapper\ObjectMapper;
 use TestHelpers\AbstractTest;
 use TestHelpers\Model\Mapper\MockedMapCollection;
-use TestHelpers\Model\Mapper\MockMapper;
 
 class MapperTest extends AbstractTest
 {
     public function testCanUseTheMapToLinkObjects()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             'id' => 1,
             'field1' => 'test',
@@ -34,7 +34,7 @@ class MapperTest extends AbstractTest
 
     public function testCanMapMultipleArrayToObjects()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             array(
                 'id' => 1,
@@ -105,7 +105,7 @@ class MapperTest extends AbstractTest
 
     public function testWillIgnoreUnidentifiableData()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             array(
                 'id' => 3,
@@ -136,7 +136,7 @@ class MapperTest extends AbstractTest
 
     public function testWillFindObjectByComposedKey()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             array(
                 'someId1' => 1,
@@ -176,7 +176,7 @@ class MapperTest extends AbstractTest
 
     public function testCanMapToArrayProperty()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             array(
                 'id' => 1,
@@ -208,7 +208,7 @@ class MapperTest extends AbstractTest
 
     public function testCanMapToArrayAndCollectionProperty()
     {
-        $mapper = new MockMapper(new MockedMapCollection());
+        $mapper = new ObjectMapper(new MockedMapCollection());
         $data   = array(
             array(
                 'id' => 1,
