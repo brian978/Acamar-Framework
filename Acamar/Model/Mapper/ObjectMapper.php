@@ -19,7 +19,7 @@ use Acamar\Model\Mapper\Exception\WrongDataTypeException;
  *
  * @package Acamar\Model\Mapper
  */
-abstract class AbstractMapper implements MapperInterface
+class ObjectMapper implements MapperInterface
 {
     /**
      * @var MapCollection
@@ -225,7 +225,7 @@ abstract class AbstractMapper implements MapperInterface
             $methodName = null;
 
             // We set this to false so we don't create the setter name again next time
-            // since the method will still be uncallable
+            // since the method will still be not callable
             $callableMethods[$propertyName] = false;
         }
 

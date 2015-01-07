@@ -9,8 +9,8 @@
 
 namespace TestHelpers\Model\Mapper;
 
-use Acamar\Model\Mapper\AbstractMapper;
+use Acamar\Model\Mapper\ObjectMapper;
 
-class MockMapper extends AbstractMapper
+class MockMapper extends ObjectMapper
 {
 }
