@@ -11,7 +11,7 @@ framework.
 * Event based architecture
 * Light and fast
 * Flexible
-* Decoupled a much as possible (the Mvc package si an exception)
+* Decoupled a much as possible (the Mvc package is an exception)
 * Some features load ONLY on demand
 
 # Minimum requirements
