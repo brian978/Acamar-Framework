@@ -293,7 +293,7 @@ class ObjectMapper implements MapperInterface
     {
         if (!is_array($data) && $data instanceof \ArrayIterator === false) {
             $message = 'The $data argument must be either an array or an instance of \ArrayIterator';
-            $message .= gettype($data) . ' given';
+            $message .= ' ' . gettype($data) . ' given';
 
             throw new WrongDataTypeException($message);
         }
