@@ -177,11 +177,26 @@ class Request
      */
     public function setPostParams(array $params)
     {
-        array_map('trim', $params);
-
+        $this->trimPost($params);
         $this->postParams = $params;
 
         return $this;
+    }
+
+    /**
+     * The method trims the whitespace from the POST values
+     *
+     * @param $params
+     */
+    private function trimPost(&$params)
+    {
+        foreach ($params as &$param) {
+            if (is_array($param)) {
+                $this->trimPost($param);
+            } else {
+                $param = trim($param);
+            }
+        }
     }
 
     /**

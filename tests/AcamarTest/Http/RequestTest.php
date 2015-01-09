@@ -64,7 +64,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     /**
      * @dataProvider requestQuerySetterDataProvider
-     * @covers Request::setQuery
+     * @covers Request::setPost
      */
     public function testPostSetterAcceptsOnlyStringOrNumber($name, $value, $assertValue)
     {
@@ -72,5 +72,20 @@ class RequestTest extends \PHPUnit_Framework_TestCase
         $request->setPost($name, $value);
 
         $this->assertEquals($assertValue, $request->getPost($name));
+    }
+
+    public function testSetPostParamsCanHandleArrays()
+    {
+        $params = [
+            'id' => 1,
+            'book' => array(
+                'bookId' => '10   ',
+            )
+        ];
+
+        $request = new Request();
+        $request->setPostParams($params);
+
+        $this->assertEquals('10', $request->getPost('book')['bookId']);
     }
 }
