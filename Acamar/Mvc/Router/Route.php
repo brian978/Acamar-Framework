@@ -85,13 +85,13 @@ class Route
      *
      * @var array
      */
-    protected $acceptedHttpMethods = array(
+    protected $acceptedHttpMethods = [
         Request::METHOD_GET,
         Request::METHOD_POST,
         Request::METHOD_PUT,
         Request::METHOD_DELETE,
         Request::METHOD_OPTIONS
-    );
+    ];
 
     /**
      * Factory method for the route object
@@ -131,7 +131,7 @@ class Route
      * @param array $defaults
      * @param array $options
      */
-    public function __construct($name, $pattern, array $defaults = array(), array $options = array())
+    public function __construct($name, $pattern, array $defaults = [], array $options = [])
     {
         $this->setName($name);
         $this->setPattern($pattern);
@@ -299,8 +299,8 @@ class Route
     protected function parseRoute($pattern)
     {
         $currentPos = 0;
-        $length     = strlen($pattern);
-        $parts      = [];
+        $length = strlen($pattern);
+        $parts = [];
 
         while ($currentPos < $length) {
             preg_match('#(?P<literal>[^:\(\)]*)(?P<token>[:\(\)]?)#', $pattern, $matches, 0, $currentPos);
@@ -309,10 +309,10 @@ class Route
 
             // Literal
             if (!empty($matches['literal'])) {
-                $parts[] = array(
+                $parts[] = [
                     'type' => 'literal',
                     'comp' => $matches['literal']
-                );
+                ];
             }
 
             switch ($matches['token']) {
@@ -322,10 +322,10 @@ class Route
                         throw new \RuntimeException('Empty parameter found');
                     }
 
-                    $parts[] = array(
+                    $parts[] = [
                         'type' => 'parameter',
                         'comp' => $matches['param']
-                    );
+                    ];
 
                     // We need to keep track of the parameter names as well
                     // so we can extract them after a match
@@ -338,22 +338,22 @@ class Route
                 case '(':
                     // We need the optional array so we can reference part of it
                     // without counting the existing parts
-                    $opt = array(
+                    $opt = [
                         'type' => 'optional',
-                        'comp' => array(
+                        'comp' => [
                             'ref' => &$parts // We keep a reference to know where to get back
-                        )
-                    );
+                        ]
+                    ];
 
                     // Now we swap the arrays
                     $parts[] = $opt;
-                    $parts   = & $opt['comp'];
+                    $parts = &$opt['comp'];
                     break;
 
                 // End optional parameter
                 case ')':
                     // We need this to make the array swap
-                    $parentParts = & $parts['ref'];
+                    $parentParts = &$parts['ref'];
 
                     // Don't need this anymore
                     unset($parts['ref']);
@@ -362,13 +362,13 @@ class Route
                     array_pop($parentParts);
 
                     // Copying what we have so far into the parents
-                    $parentParts[] = array(
+                    $parentParts[] = [
                         'type' => 'optional',
                         'comp' => & $parts
-                    );
+                    ];
 
                     // Making the swap so we can go up one level
-                    $parts = & $parentParts;
+                    $parts = &$parentParts;
                     break;
             }
         }
@@ -430,12 +430,12 @@ class Route
      */
     protected function validateWildcard(array $routeMatches)
     {
-        $wildcard       = ltrim($routeMatches['wildcard'], '/');
+        $wildcard = ltrim($routeMatches['wildcard'], '/');
         $wildcardPieces = explode('/', $wildcard);
-        $piecesCount    = count($wildcardPieces);
+        $piecesCount = count($wildcardPieces);
         if ($piecesCount % 2 === 0) {
             for ($i = 0; $i < $piecesCount - 1; $i += 2) {
-                $this->paramNames[]                = $wildcardPieces[$i];
+                $this->paramNames[] = $wildcardPieces[$i];
                 $routeMatches[$wildcardPieces[$i]] = $wildcardPieces[$i + 1];
             }
         }
@@ -501,7 +501,18 @@ class Route
             $this->parseRoute($this->pattern);
         }
 
-        return $this->assembleUriParts($this->parts, $params);
+        // The built URL will contain ONLY the parameters from the route and not wildcards
+        $url = $this->assembleUriParts($this->parts, $params);
+
+        // Adding the wildcard parameters
+        $wildcardParams = array_diff_key($params, array_flip($this->paramNames));
+        if (!empty($wildcardParams)) {
+            foreach ($wildcardParams as $name => $value) {
+                $url .= '/' . $name . '/' . $value;
+            }
+        }
+
+        return $url;
     }
 
     /**
@@ -514,7 +525,7 @@ class Route
      */
     protected function assembleUriParts(array $parts, array $params)
     {
-        $string         = '';
+        $string = '';
         $pendingLiteral = '';
         $parameterCount = 0;
 
@@ -529,8 +540,8 @@ class Route
                     break;
 
                 case 'optional':
-                    $subString      = $this->assembleUriParts($part['comp'], $params);
-                    $subString      = $pendingLiteral . $subString;
+                    $subString = $this->assembleUriParts($part['comp'], $params);
+                    $subString = $pendingLiteral . $subString;
                     $pendingLiteral = '';
 
                     $string .= $subString;

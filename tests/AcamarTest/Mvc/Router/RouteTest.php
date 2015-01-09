@@ -202,6 +202,21 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers Acamar\Mvc\Router\Route::assemble
      */
+    public function testCanAssembleSimpleRouteWithWildcard()
+    {
+        $route = new Route('test', '/some-module/:controller(/:action)', array(
+            'controller' => 'index',
+            'action' => 'index'
+        ));
+
+        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 5));
+
+        $this->assertEquals('/some-module/products/list/id/5', $url);
+    }
+
+    /**
+     * @covers Acamar\Mvc\Router\Route::assemble
+     */
     public function testCanAssembleSimpleRouteAndIgnoreOptionalParameters()
     {
         $route = new Route('test', '/some-module/:controller(/:action)', array(
