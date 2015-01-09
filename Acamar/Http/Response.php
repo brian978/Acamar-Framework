@@ -238,7 +238,7 @@ class Response
      * @param \Acamar\Http\Headers $headers
      * @return $this
      */
-    public function setHeaders($headers)
+    public function setHeaders(Headers $headers)
     {
         $this->headers = $headers;
 
