@@ -126,8 +126,7 @@ class Request
      */
     public function setQueryParams(array $params)
     {
-        array_map('trim', $params);
-
+        $this->trimValues($params);
         $this->queryParams = $params;
 
         return $this;
@@ -177,24 +176,24 @@ class Request
      */
     public function setPostParams(array $params)
     {
-        $this->trimPost($params);
+        $this->trimValues($params);
         $this->postParams = $params;
 
         return $this;
     }
 
     /**
-     * The method trims the whitespace from the POST values
+     * The method trims the whitespace from the given $array
      *
-     * @param $params
+     * @param $array
      */
-    private function trimPost(&$params)
+    private function trimValues(&$array)
     {
-        foreach ($params as &$param) {
-            if (is_array($param)) {
-                $this->trimPost($param);
+        foreach ($array as &$value) {
+            if (is_array($value)) {
+                $this->trimValues($value);
             } else {
-                $param = trim($param);
+                $value = trim($value);
             }
         }
     }
