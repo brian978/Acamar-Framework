@@ -82,20 +82,18 @@ class Dispatcher
         $return = $controller->$method();
 
         // The return type of the action can be of the following types: Response, View, array, NULL
-        if (!$return instanceof Response) {
-            if (!$return instanceof View) {
+        if (is_array($return) || $return instanceof View) {
+            if (is_array($return)) {
                 $view = new View();
-                if (is_array($return)) {
-                    foreach ($return as $key => $value) {
-                        $view->set($key, $value);
-                    }
+                foreach ($return as $key => $value) {
+                    $view->set($key, $value);
                 }
-            } else {
-                $view = $return;
+
+                $return = $view;
             }
 
-            $controller->getEvent()->setView($view);
-        } else {
+            $controller->getEvent()->setView($return);
+        } elseif ($return instanceof Response) {
             // Although an event object is already created in the event, there is a chance we
             // might want to return an response object of our own
             $controller->getEvent()->setResponse($return);
