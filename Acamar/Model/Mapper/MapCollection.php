@@ -14,6 +14,8 @@ use Acamar\Collection\AbstractCollection;
 class MapCollection extends AbstractCollection
 {
     /**
+     * Tries to locate a map in the collection and returns it
+     *
      * @param string $name
      * @return array|null
      */
@@ -27,6 +29,8 @@ class MapCollection extends AbstractCollection
     }
 
     /**
+     * Reverses a map so instead of mapping from "id" to "someId" it will map from "someId" to "id"
+     *
      * @param array $map
      * @return array
      */
@@ -43,5 +47,21 @@ class MapCollection extends AbstractCollection
         }
 
         return $flipped;
+    }
+
+    /**
+     * Returns the identification field for a map (for databases this is usually the primary key)
+     *
+     * @param string $map The name of the map from which to return the identification field
+     * @return string|null
+     */
+    public function getIdentField($map)
+    {
+        $map = $this->findMap($map);
+        if(null !== $map) {
+            return $map['identField'];
+        }
+
+        return null;
     }
 }
