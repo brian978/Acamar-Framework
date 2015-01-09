@@ -37,10 +37,3 @@ The framework can also be installed via composer:
 The framework uses a specific file structure (which can be found in the documentation).
 If you don't want to create the structure manually you can use the skeleton application
 from [HERE](https://github.com/brian978/Acamar-SkeletonApplication).
-
-# Development state
-
-Since the framework is only implemented in
-the [skeleton application](https://github.com/brian978/Acamar-SkeletonApplication) I will keep it in Alpha stage for
-now. After the propel integration is done I will move it to Beta stage. I'll will set it to Stable only after I
-implement a bookstore application (as a usage example) on the skeleton application.
