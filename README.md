@@ -28,7 +28,7 @@ The framework can also be installed via composer:
 
     {
         "require": {
-                "brian978/acamar": "dev-master"
+                "brian978/acamar": "1.*"
             }
     }
 
