@@ -27,6 +27,8 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
     public function __construct(MvcEvent $event)
     {
         parent::__construct($event);
+
+        $this->configureTheView();
     }
 
     /**
