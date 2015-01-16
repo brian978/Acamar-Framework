@@ -17,12 +17,16 @@ use Acamar\Mvc\Event\MvcEvent;
 abstract class AbstractController
 {
     /**
+     * Contains the main event that was triggered by the application
+     *
      * @var \Acamar\Mvc\Event\MvcEvent
      */
     protected $event = null;
 
     /**
-     * @var null
+     * The configuration object of the application
+     *
+     * @var \Acamar\Config\Config
      */
     protected $config = null;
 
