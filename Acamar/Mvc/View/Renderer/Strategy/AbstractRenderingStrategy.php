@@ -30,6 +30,8 @@ abstract class AbstractRenderingStrategy implements RenderingStrategyInterface
     protected $event = null;
 
     /**
+     * Constructs a rendering strategy object
+     *
      * @param MvcEvent $event
      */
     public function __construct(MvcEvent $event)
