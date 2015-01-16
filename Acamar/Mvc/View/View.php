@@ -31,6 +31,13 @@ class View
     protected $templatesPath = '';
 
     /**
+     * Identifies the template that will be used to render a layout that will "surround" this view
+     *
+     * @var string
+     */
+    protected $layoutTemplate = '';
+
+    /**
      * Identifies the template that will be used to render this view
      *
      * @var string
@@ -166,6 +173,27 @@ class View
 
     /**
      * @param string $template
+     * @return View
+     */
+    public function setLayoutTemplate($template)
+    {
+        $this->layoutTemplate = $this->convertPath(strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
+
+        return $this;
+    }
+
+    /**
+     * Returns the layout template that will be used to render the template
+     *
+     * @return string
+     */
+    public function getLayoutTemplate()
+    {
+        return $this->layoutTemplate;
+    }
+
+    /**
+     * @param string $template
      * @return $this
      */
     public function setTemplate($template)
@@ -173,6 +201,16 @@ class View
         $this->template = $this->convertPath(strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
 
         return $this;
+    }
+
+    /**
+     * Returns the relative path of the template file that will be used by the view
+     *
+     * @return string
+     */
+    public function getTemplate()
+    {
+        return $this->template;
     }
 
     /**
@@ -233,6 +271,8 @@ class View
     }
 
     /**
+     * Sets a ViewHelperManager object
+     *
      * @param \Acamar\Mvc\View\ViewHelperManager $viewHelperManager
      * @return $this
      */
@@ -244,6 +284,7 @@ class View
     }
 
     /**
+     * Returns the ViewHelperManager object that the view uses (if none exists, it will create one)
      *
      * @return ViewHelperManager
      */
