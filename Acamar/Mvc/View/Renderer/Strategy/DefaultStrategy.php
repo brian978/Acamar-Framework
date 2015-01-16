@@ -54,8 +54,12 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
                 $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
             }
 
-            if ('' === $view->getLayoutTemplate() && isset($config['view']['layout'][$route->getModuleName()])) {
-                $view->setLayoutTemplate($config['view']['layout'][$route->getModuleName()]);
+            if ('' === $view->getLayoutTemplate()) {
+                if(isset($config['view']['layout'][$route->getModuleName()])) {
+                    $view->setLayoutTemplate($config['view']['layout'][$route->getModuleName()]);
+                } else {
+                    $view->setLayoutTemplate('layout/layout.phtml');
+                }
             }
 
             if ('' === $view->getTemplate()) {
