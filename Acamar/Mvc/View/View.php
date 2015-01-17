@@ -177,7 +177,15 @@ class View
      */
     public function setLayoutTemplate($template)
     {
-        $this->layoutTemplate = $this->convertPath(strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
+        if (null !== $template && !is_string($template)) {
+            return $this;
+        }
+
+        if (is_string($template)) {
+            $template = $this->convertPath(strpos($template, '.phtml') > 0 ? $template : $template . '.phtml');
+        }
+
+        $this->layoutTemplate = $template;
 
         return $this;
     }
