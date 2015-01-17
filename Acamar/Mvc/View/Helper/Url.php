@@ -67,7 +67,7 @@ class Url implements ConfigAwareInterface, EventAwareInterface, HelperInterface
      * @throws \RuntimeException
      * @return string
      */
-    public function __invoke($routeName, $params = array(), $reuseParameters = false)
+    public function __invoke($routeName, $params = [], $reuseParameters = false)
     {
         if (!is_string($routeName) || !isset($this->config['routes'][$routeName])) {
             throw new \RuntimeException('Invalid route');

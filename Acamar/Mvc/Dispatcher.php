@@ -29,7 +29,7 @@ class Dispatcher
     public function __construct(EventManager $eventManager)
     {
         $this->eventManager = $eventManager;
-        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'dispatch'));
+        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH, [$this, 'dispatch']);
     }
 
     /**
@@ -42,16 +42,16 @@ class Dispatcher
     public function dispatch(MvcEvent $e)
     {
         $dispatched = false;
-        $eventName  = MvcEvent::EVENT_RENDER;
+        $eventName = MvcEvent::EVENT_RENDER;
 
-        $route           = $e->getRoute();
+        $route = $e->getRoute();
         $controllerClass = $route->getControllerClass();
-        $actionMethod    = $route->getAction();
+        $actionMethod = $route->getAction();
 
         if (class_exists($controllerClass)) {
             /** @var $controller \Acamar\Mvc\Controller\AbstractController */
             $controller = new $controllerClass($e);
-            if (is_callable(array($controller, $actionMethod))) {
+            if (is_callable([$controller, $actionMethod])) {
                 $this->call($controller, $actionMethod);
                 $dispatched = true;
             }
@@ -78,7 +78,7 @@ class Dispatcher
         // Running the method in the controller and capturing any potential echoed data
         ob_start();
 
-        $view   = null;
+        $view = null;
         $return = $controller->$method();
 
         // The return type of the action can be of the following types: Response, View, array, NULL

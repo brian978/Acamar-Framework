@@ -23,43 +23,43 @@ class Headers implements Countable, Iterator
      * Common headers fields (Request & Response)
      *
      */
-    const CACHE_CONTROL       = 'Cache-Control';
-    const CONNECTION          = 'Connection';
-    const CONTENT_LENGTH      = 'Content-Length';
-    const CONTENT_MD5         = 'Content-MD5';
-    const CONTENT_TYPE        = 'Content-Type';
-    const DATE                = 'Date';
-    const PRAGMA              = 'Pragma';
+    const CACHE_CONTROL = 'Cache-Control';
+    const CONNECTION = 'Connection';
+    const CONTENT_LENGTH = 'Content-Length';
+    const CONTENT_MD5 = 'Content-MD5';
+    const CONTENT_TYPE = 'Content-Type';
+    const DATE = 'Date';
+    const PRAGMA = 'Pragma';
     const PROXY_AUTHORIZATION = 'Proxy-Authorization';
-    const UPGRADE             = 'Upgrade';
-    const VIA                 = 'Via';
+    const UPGRADE = 'Upgrade';
+    const VIA = 'Via';
 
     /**
      * Request fields
      *
      */
-    const ACCEPT              = 'Accept';
-    const ACCEPT_CHARSET      = 'Accept-Charset';
-    const ACCEPT_ENCODING     = 'Accept-Encoding';
-    const ACCEPT_LANGUAGE     = 'Accept-Language';
-    const ACCEPT_DATETIME     = 'Accept-Datetime';
-    const AUTHORIZATION       = 'Authorization';
-    const COOKIE              = 'Cookie';
-    const EXPECT              = 'Expect';
-    const FROM                = 'From';
-    const HOST                = 'Host';
-    const IF_MATCH            = 'If-Match';
-    const IF_MODIFIED_SINCE   = 'If-Modified-Since';
-    const IF_NONE_MATCH       = 'If-None-Match';
-    const IF_RANGE            = 'If-Range';
+    const ACCEPT = 'Accept';
+    const ACCEPT_CHARSET = 'Accept-Charset';
+    const ACCEPT_ENCODING = 'Accept-Encoding';
+    const ACCEPT_LANGUAGE = 'Accept-Language';
+    const ACCEPT_DATETIME = 'Accept-Datetime';
+    const AUTHORIZATION = 'Authorization';
+    const COOKIE = 'Cookie';
+    const EXPECT = 'Expect';
+    const FROM = 'From';
+    const HOST = 'Host';
+    const IF_MATCH = 'If-Match';
+    const IF_MODIFIED_SINCE = 'If-Modified-Since';
+    const IF_NONE_MATCH = 'If-None-Match';
+    const IF_RANGE = 'If-Range';
     const IF_UNMODIFIED_SINCE = 'If-Unmodified-Since';
-    const MAX_FORWARDS        = 'Max-Forwards';
-    const ORIGIN              = 'Origin';
-    const RANGE               = 'Range';
-    const REFERER             = 'Referer';
-    const TE                  = 'TE';
-    const USER_AGENT          = 'User-Agent';
-    const WARNING             = 'Warning';
+    const MAX_FORWARDS = 'Max-Forwards';
+    const ORIGIN = 'Origin';
+    const RANGE = 'Range';
+    const REFERER = 'Referer';
+    const TE = 'TE';
+    const USER_AGENT = 'User-Agent';
+    const WARNING = 'Warning';
 
 
     /**
@@ -68,19 +68,19 @@ class Headers implements Countable, Iterator
      * TODO: Add all
      */
     const ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
-    const ACCEPT_RANGES               = 'Accept-Ranges';
-    const AGE                         = 'Age';
-    const ALLOW                       = 'Allow';
-    const CONTENT_ENCODING            = 'Content-Encoding';
-    const CONTENT_LANGUAGE            = 'Content-Language';
-    const ETAG                        = 'ETag';
+    const ACCEPT_RANGES = 'Accept-Ranges';
+    const AGE = 'Age';
+    const ALLOW = 'Allow';
+    const CONTENT_ENCODING = 'Content-Encoding';
+    const CONTENT_LANGUAGE = 'Content-Language';
+    const ETAG = 'ETag';
 
     /**
      * List of headers
      *
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Creates a Headers object from a string
@@ -154,7 +154,7 @@ class Headers implements Countable, Iterator
      */
     protected static function normalizeHeader($name)
     {
-        $name   = str_replace('HTTP_', '', $name);
+        $name = str_replace('HTTP_', '', $name);
         $pieces = explode('_', $name);
 
         foreach ($pieces as &$piece) {
@@ -182,10 +182,10 @@ class Headers implements Countable, Iterator
             $this->headers[$name] = $value;
         } elseif (false === $replace) {
             if (!is_array($this->headers[$name])) {
-                $this->headers[$name] = array(
+                $this->headers[$name] = [
                     $this->headers[$name],
                     $value
-                );
+                ];
             } else {
                 $this->headers[$name][] = $value;
             }
@@ -222,6 +222,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the current element
+     *
      * @link http://php.net/manual/en/iterator.current.php
      * @return mixed Can return any type.
      */
@@ -233,6 +234,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Move forward to next element
+     *
      * @link http://php.net/manual/en/iterator.next.php
      * @return void Any returned value is ignored.
      */
@@ -244,6 +246,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Return the key of the current element
+     *
      * @link http://php.net/manual/en/iterator.key.php
      * @return mixed scalar on success, or null on failure.
      */
@@ -255,6 +258,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Checks if current position is valid
+     *
      * @link http://php.net/manual/en/iterator.valid.php
      * @return boolean The return value will be casted to boolean and then evaluated.
      * Returns true on success or false on failure.
@@ -267,6 +271,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.0.0)<br/>
      * Rewind the Iterator to the first element
+     *
      * @link http://php.net/manual/en/iterator.rewind.php
      * @return void Any returned value is ignored.
      */
@@ -278,6 +283,7 @@ class Headers implements Countable, Iterator
     /**
      * (PHP 5 &gt;= 5.1.0)<br/>
      * Count elements of an object
+     *
      * @link http://php.net/manual/en/countable.count.php
      * @return int The custom count as an integer.
      * </p>

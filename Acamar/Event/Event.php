@@ -29,7 +29,7 @@ class Event
     /**
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * @var bool
@@ -119,7 +119,7 @@ class Event
      */
     public function setName($name)
     {
-        $this->name = (string)$name;
+        $this->name = (string) $name;
 
         return $this;
     }
@@ -159,7 +159,7 @@ class Event
      */
     public function stopPropagation($flag = true)
     {
-        $this->stopPropagation = (bool)$flag;
+        $this->stopPropagation = (bool) $flag;
     }
 
     /**

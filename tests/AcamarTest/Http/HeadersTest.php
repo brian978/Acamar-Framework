@@ -63,13 +63,13 @@ class HeadersTest extends \PHPUnit_Framework_TestCase
     {
         $headers = Headers::fromServerArray(require realpath(__DIR__ . '/_files/request_headers.php'));
 
-        return array(
-            array($headers)
-        );
+        return [
+            [$headers]
+        ];
     }
 
     /**
-     * @covers Acamar\Http\Headers::fromServerArray
+     * @covers       Acamar\Http\Headers::fromServerArray
      * @dataProvider canParseRequestHeaders
      */
     public function testParseOnlyValidHeaders(Headers $headers)
@@ -78,7 +78,7 @@ class HeadersTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * @covers Acamar\Http\Headers::fromServerArray
+     * @covers       Acamar\Http\Headers::fromServerArray
      * @dataProvider canParseRequestHeaders
      */
     public function testParseRequestHeadersProperly(Headers $headers)

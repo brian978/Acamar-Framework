@@ -31,16 +31,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function requestQuerySetterDataProvider()
     {
-        return array(
-            array('test', new \stdClass(), null),
-            array('test2', 'testString', 'testString'),
-            array('test3', 12345, '12345')
-        );
+        return [
+            ['test', new \stdClass(), null],
+            ['test2', 'testString', 'testString'],
+            ['test3', 12345, '12345']
+        ];
     }
 
     /**
      * @dataProvider requestQuerySetterDataProvider
-     * @covers Request::setQuery
+     * @covers       Request::setQuery
      */
     public function testQuerySetterAcceptsOnlyStringOrNumber($name, $value, $assertValue)
     {
@@ -55,16 +55,16 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function requestPostSetterDataProvider()
     {
-        return array(
-            array('test', new \stdClass(), null),
-            array('test2', 'testString', 'testString'),
-            array('test3', 12345, '12345')
-        );
+        return [
+            ['test', new \stdClass(), null],
+            ['test2', 'testString', 'testString'],
+            ['test3', 12345, '12345']
+        ];
     }
 
     /**
      * @dataProvider requestQuerySetterDataProvider
-     * @covers Request::setPost
+     * @covers       Request::setPost
      */
     public function testPostSetterAcceptsOnlyStringOrNumber($name, $value, $assertValue)
     {
@@ -78,9 +78,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $params = [
             'id' => 1,
-            'book' => array(
+            'book' => [
                 'bookId' => '10   ',
-            )
+            ]
         ];
 
         $request = new Request();

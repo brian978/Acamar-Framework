@@ -68,7 +68,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('test', '/:controller/:action');
 
         $this->assertTrue($route->matches('/index/some-action'));
-        $this->assertEquals(array('controller' => 'index', 'action' => 'some-action'), $route->getParams());
+        $this->assertEquals(['controller' => 'index', 'action' => 'some-action'], $route->getParams());
     }
 
     /**
@@ -79,7 +79,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $route = new Route('test', '/:controller/:action');
         $route->matches('/index/some-action/id/1');
 
-        $this->assertEquals(array('controller' => 'index', 'action' => 'some-action', 'id' => 1), $route->getParams());
+        $this->assertEquals(['controller' => 'index', 'action' => 'some-action', 'id' => 1], $route->getParams());
     }
 
     /**
@@ -87,10 +87,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteIgnoresOptionalParameters()
     {
-        $route = new Route('test', '/:controller(/:action/:id(/:someParam))', array('action' => 'index'));
+        $route = new Route('test', '/:controller(/:action/:id(/:someParam))', ['action' => 'index']);
         $route->matches('/products/index/1');
 
-        $this->assertEquals(array('controller' => 'products', 'action' => 'index', 'id' => 1), $route->getParams());
+        $this->assertEquals(['controller' => 'products', 'action' => 'index', 'id' => 1], $route->getParams());
     }
 
     /**
@@ -98,10 +98,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteCapturesOptionalParameters()
     {
-        $route = new Route('test', '/:controller(/:action)', array('action' => 'index'));
+        $route = new Route('test', '/:controller(/:action)', ['action' => 'index']);
         $route->matches('/products/list');
 
-        $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
+        $this->assertEquals(['controller' => 'products', 'action' => 'list'], $route->getParams());
     }
 
     /**
@@ -109,10 +109,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteCapturesOptionalParametersEventWithSlashesOutsideOptional()
     {
-        $route = new Route('test', '/:controller/(:action)', array('action' => 'index'));
+        $route = new Route('test', '/:controller/(:action)', ['action' => 'index']);
         $route->matches('/products/list');
 
-        $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
+        $this->assertEquals(['controller' => 'products', 'action' => 'list'], $route->getParams());
     }
 
     /**
@@ -120,10 +120,10 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteCapturesOptionalParametersEventWithSlashesAtEndOfOptional()
     {
-        $route = new Route('test', '/:controller/(:action/)', array('action' => 'index'));
+        $route = new Route('test', '/:controller/(:action/)', ['action' => 'index']);
         $route->matches('/products/list/');
 
-        $this->assertEquals(array('controller' => 'products', 'action' => 'list'), $route->getParams());
+        $this->assertEquals(['controller' => 'products', 'action' => 'list'], $route->getParams());
     }
 
     /**
@@ -131,7 +131,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteAcceptsHttpMethod()
     {
-        $route = new Route('test', '/:controller(/:action)', array('action' => 'index'));
+        $route = new Route('test', '/:controller(/:action)', ['action' => 'index']);
 
         $this->assertTrue($route->acceptsHttpMethod('GET'));
     }
@@ -141,13 +141,13 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteRefusesHttpMethod()
     {
-        $options = array(
-            'acceptedHttpMethods' => array(
+        $options = [
+            'acceptedHttpMethods' => [
                 'POST',
-            )
-        );
+            ]
+        ];
 
-        $route = new Route('test', '/:controller(/:action)', array('action' => 'index'), $options);
+        $route = new Route('test', '/:controller(/:action)', ['action' => 'index'], $options);
 
         $this->assertFalse($route->acceptsHttpMethod('GET'));
     }
@@ -157,7 +157,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteCanPartiallyMatchMultipleOptionalParams()
     {
-        $route = new Route('test', '/:controller(/:action(/:id))', array('action' => 'index'));
+        $route = new Route('test', '/:controller(/:action(/:id))', ['action' => 'index']);
         $route->matches('/products/random-action');
 
 
@@ -169,7 +169,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteCanMatchRouteThatContainsLiterals()
     {
-        $route = new Route('test', '/some-module/:controller(/:action)', array('action' => 'index'));
+        $route = new Route('test', '/some-module/:controller(/:action)', ['action' => 'index']);
 
         $this->assertTrue($route->matches('/some-module/products/random-action'));
     }
@@ -179,7 +179,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testRouteDoesNotMatchRouteThatContainsLiterals()
     {
-        $route = new Route('test', '/some-module/:controller(/:action)', array('action' => 'index'));
+        $route = new Route('test', '/some-module/:controller(/:action)', ['action' => 'index']);
 
         $this->assertFalse($route->matches('/another-module/products/random-action'));
     }
@@ -189,12 +189,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanAssembleSimpleRoute()
     {
-        $route = new Route('test', '/some-module/:controller(/:action)', array(
+        $route = new Route('test', '/some-module/:controller(/:action)', [
             'controller' => 'index',
             'action' => 'index'
-        ));
+        ]);
 
-        $url = $route->assemble(array('controller' => 'products', 'action' => 'list'));
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list']);
 
         $this->assertEquals('/some-module/products/list', $url);
     }
@@ -204,12 +204,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanAssembleSimpleRouteWithWildcard()
     {
-        $route = new Route('test', '/some-module/:controller(/:action)', array(
+        $route = new Route('test', '/some-module/:controller(/:action)', [
             'controller' => 'index',
             'action' => 'index'
-        ));
+        ]);
 
-        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 5));
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list', 'id' => 5]);
 
         $this->assertEquals('/some-module/products/list/id/5', $url);
     }
@@ -219,12 +219,12 @@ class RouteTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanAssembleSimpleRouteAndIgnoreOptionalParameters()
     {
-        $route = new Route('test', '/some-module/:controller(/:action)', array(
+        $route = new Route('test', '/some-module/:controller(/:action)', [
             'controller' => 'index',
             'action' => 'index'
-        ));
+        ]);
 
-        $url = $route->assemble(array('controller' => 'products'));
+        $url = $route->assemble(['controller' => 'products']);
 
         $this->assertEquals('/some-module/products', $url);
     }
@@ -236,7 +236,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
 
-        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e']);
 
         $this->assertEquals('/products/list/1/some-literal/e', $url);
     }
@@ -248,7 +248,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
 
-        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e']);
 
         $this->assertEquals('/products/list/1/some-literal/e', $url);
     }
@@ -262,7 +262,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $route = new Route('test', '/:controller(/:action/:id(/:someParam))/some-literal/:test');
 
-        $route->assemble(array('controller' => 'products', 'action' => 'list', 'test' => 'e'));
+        $route->assemble(['controller' => 'products', 'action' => 'list', 'test' => 'e']);
     }
 
     /**
@@ -272,7 +272,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
     {
         $route = new Route('test', '/:controller/(:action/:id(:someParam)/)some-literal/:test');
 
-        $url = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e'));
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list', 'id' => 1, 'test' => 'e']);
 
         $this->assertEquals('/products/list/1/some-literal/e', $url);
         $this->assertTrue($route->matches($url));
@@ -287,7 +287,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $oldRoute->matches('/products/index');
 
         $route = new Route('random', '/:controller/:action/:id');
-        $url   = $route->assemble(array('controller' => 'products', 'action' => 'list', 'id' => 1), $oldRoute);
+        $url = $route->assemble(['controller' => 'products', 'action' => 'list', 'id' => 1], $oldRoute);
 
         $this->assertEquals('/products/list/1', $url);
     }
@@ -301,7 +301,7 @@ class RouteTest extends \PHPUnit_Framework_TestCase
         $oldRoute->matches('/products/index');
 
         $route = new Route('random', '/:controller/:action/:id');
-        $url   = $route->assemble(array('controller' => 'index', 'id' => 1), $oldRoute);
+        $url = $route->assemble(['controller' => 'index', 'id' => 1], $oldRoute);
 
         $this->assertEquals('/index/index/1', $url);
     }

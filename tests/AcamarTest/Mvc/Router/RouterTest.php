@@ -29,7 +29,7 @@ class RouterTest extends \PHPUnit_Framework_TestCase
     public function testRouterCanTriggerDispatch()
     {
         $eventManager = new EventManager();
-        $router       = new Router($eventManager);
+        $router = new Router($eventManager);
         $router->addRoute(new Route('app', '/:controller'));
 
         $request = new Request();

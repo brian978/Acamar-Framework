@@ -30,7 +30,7 @@ class Router
      *
      * @var array
      */
-    protected $routes = array();
+    protected $routes = [];
 
     /**
      * @var string
@@ -55,7 +55,7 @@ class Router
     public function onRoute(MvcEvent $e)
     {
         $request = $e->getRequest();
-        $route   = $this->match($request);
+        $route = $this->match($request);
 
         if ($route === null) {
             throw new \RuntimeException('Invalid request');

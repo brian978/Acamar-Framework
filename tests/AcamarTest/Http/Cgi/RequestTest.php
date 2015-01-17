@@ -27,15 +27,15 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $server = require realpath(__DIR__ . '/_files/server.php');
 
-        return array(
-            array($server)
-        );
+        return [
+            [$server]
+        ];
     }
 
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::getMethod
+     * @covers       Request::getMethod
      */
     public function testCanGetRequestMethod(array $server)
     {
@@ -47,7 +47,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::setPathInfo
+     * @covers       Request::setPathInfo
      */
     public function testCanGetUri(array $server)
     {
@@ -59,7 +59,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::setPathInfo
+     * @covers       Request::setPathInfo
      */
     public function testCanGetUriWithNoBaseFolder(array $server)
     {
@@ -75,7 +75,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::setPathInfo
+     * @covers       Request::setPathInfo
      */
     public function testCanGetUriWithNoBaseFolderAndNoQueryString(array $server)
     {
@@ -92,7 +92,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::setPathInfo
+     * @covers       Request::setPathInfo
      */
     public function testCanGetUriFromRootWithNoBaseFolder(array $server)
     {
@@ -109,7 +109,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::setPathInfo
+     * @covers       Request::setPathInfo
      */
     public function testCanGetUriFromRootWithBaseFolder(array $server)
     {
@@ -126,7 +126,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::getBaseUri
+     * @covers       Request::getBaseUri
      */
     public function testCanGetBaseUri(array $server)
     {
@@ -138,7 +138,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers Request::getBaseUri
+     * @covers       Request::getBaseUri
      */
     public function testCanGetBaseUriFromRoot(array $server)
     {
@@ -155,7 +155,7 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     /**
      * @param array $server
      * @dataProvider serverDataProvider
-     * @covers RemoteAddress::getResolved
+     * @covers       RemoteAddress::getResolved
      */
     public function testCanGetRemoteAddress(array $server)
     {

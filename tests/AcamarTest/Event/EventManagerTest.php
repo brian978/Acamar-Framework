@@ -22,7 +22,7 @@ class EventManagerTest extends PHPUnit_Framework_TestCase
 {
     public function testEventsCanBeAttachedAndTriggered()
     {
-        $someVar      = 0;
+        $someVar = 0;
         $eventManager = new EventManager();
 
         $eventManager->attach("test", function () use (&$someVar) {
@@ -36,7 +36,7 @@ class EventManagerTest extends PHPUnit_Framework_TestCase
 
     public function testCanForwardEvent()
     {
-        $someVar      = 0;
+        $someVar = 0;
         $eventManager = new EventManager();
 
         $eventManager->attach("test", function (Event $event) use (&$someVar, $eventManager) {
@@ -55,7 +55,7 @@ class EventManagerTest extends PHPUnit_Framework_TestCase
 
     public function testCanStopEventForwarding()
     {
-        $someVar      = 0;
+        $someVar = 0;
         $eventManager = new EventManager();
 
         $eventManager->attach("test", function (Event $event) use (&$someVar, $eventManager) {

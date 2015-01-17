@@ -24,7 +24,7 @@ class PSR0Autoloader implements LoaderInterface
      *
      * @var array
      */
-    protected $namespaces = array();
+    protected $namespaces = [];
 
     /**
      * @var bool
@@ -38,7 +38,7 @@ class PSR0Autoloader implements LoaderInterface
     public function register()
     {
         if ($this->registered === false) {
-            $this->registered = spl_autoload_register(array($this, 'loadClass'));
+            $this->registered = spl_autoload_register([$this, 'loadClass']);
         }
     }
 
@@ -48,7 +48,7 @@ class PSR0Autoloader implements LoaderInterface
      * @param array $namespaces
      * @return $this
      */
-    public function registerNamespaces(array $namespaces = array())
+    public function registerNamespaces(array $namespaces = [])
     {
         foreach ($namespaces as $namespace => $path) {
             $this->registerNamespace($namespace, $path);

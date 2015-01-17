@@ -25,7 +25,7 @@ class Request extends BasicRequest
      *
      * @var array
      */
-    protected $server = array();
+    protected $server = [];
 
     /**
      * @var string
@@ -118,7 +118,7 @@ class Request extends BasicRequest
     public function getBaseUri()
     {
         if (null === $this->baseUri) {
-            $requestUri    = explode('?', $this->server['REQUEST_URI'])[0];
+            $requestUri = explode('?', $this->server['REQUEST_URI'])[0];
             $this->baseUri = substr($requestUri, 0, strrpos($requestUri, $this->uri));
         }
 

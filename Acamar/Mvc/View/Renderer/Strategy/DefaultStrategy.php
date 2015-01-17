@@ -55,7 +55,7 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
             }
 
             if ('' === $view->getLayoutTemplate()) {
-                if(isset($config['view']['layout'][$route->getModuleName()])) {
+                if (isset($config['view']['layout'][$route->getModuleName()])) {
                     $view->setLayoutTemplate($config['view']['layout'][$route->getModuleName()]);
                 } else {
                     $view->setLayoutTemplate('layout/layout.phtml');

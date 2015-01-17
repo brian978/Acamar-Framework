@@ -23,10 +23,10 @@ use Acamar\Mvc\View\Renderer\ViewRenderer;
 
 class Application implements ApplicationInterface
 {
-    const ENV_PHPUNIT     = 'phpunit';
+    const ENV_PHPUNIT = 'phpunit';
     const ENV_DEVELOPMENT = 'development';
-    const ENV_STAGING     = 'staging';
-    const ENV_PRODUCTION  = 'production';
+    const ENV_STAGING = 'staging';
+    const ENV_PRODUCTION = 'production';
 
     /**
      * @var PSR0Autoloader
@@ -66,15 +66,15 @@ class Application implements ApplicationInterface
      */
     public function __construct($env = self::ENV_PRODUCTION, LoaderInterface $autoloader)
     {
-        $this->env          = $env;
-        $this->autoloader   = $autoloader;
+        $this->env = $env;
+        $this->autoloader = $autoloader;
         $this->eventManager = new EventManager();
-        $this->router       = new Router($this->eventManager);
-        $this->dispatcher   = new Dispatcher($this->eventManager);
-        $this->config       = new Config();
+        $this->router = new Router($this->eventManager);
+        $this->dispatcher = new Dispatcher($this->eventManager);
+        $this->config = new Config();
 
         // registering the error handler
-        set_exception_handler(array($this, 'handleException'));
+        set_exception_handler([$this, 'handleException']);
     }
 
     /**
@@ -113,7 +113,7 @@ class Application implements ApplicationInterface
      */
     protected function registerNamespaces()
     {
-        $namespaces  = [];
+        $namespaces = [];
         $modulesPath = $this->config['modulesPath'];
 
         // The autoloader will call the "realpath" function on all the provided paths
@@ -167,7 +167,7 @@ class Application implements ApplicationInterface
 
             if (time() - $cachedConfig['cacheCreateTime'] < $appConfig['configCache']['lifetime']) {
                 $configCached = true;
-                $appConfig    = & $cachedConfig;
+                $appConfig = &$cachedConfig;
             }
         }
 
@@ -193,17 +193,17 @@ class Application implements ApplicationInterface
      */
     protected function loadModuleConfigs()
     {
-        $modulesPath        = $this->config['modulesPath'];
+        $modulesPath = $this->config['modulesPath'];
         $defaultConfigFiles = $this->config['modulesConfigs'];
 
         foreach ($this->config['modules'] as $module => $setup) {
             $configFiles = null;
             if (isset($setup['configs'])) {
-                $configFiles = & $setup['configs'];
+                $configFiles = &$setup['configs'];
             }
 
             if (!is_array($configFiles)) {
-                $configFiles = & $defaultConfigFiles;
+                $configFiles = &$defaultConfigFiles;
             } elseif (empty($configFiles)) {
                 continue;
             }
@@ -226,7 +226,7 @@ class Application implements ApplicationInterface
     protected function cacheConfig()
     {
         // We need to add the cache create time so we can determine when the cache should expire
-        $config                    = $this->config->getArrayCopy();
+        $config = $this->config->getArrayCopy();
         $config['cacheCreateTime'] = time();
 
         // Saving the cache file

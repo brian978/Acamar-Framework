@@ -19,6 +19,6 @@ class EntityTest extends PHPUnit_Framework_TestCase
         $mock = new MockEntity();
         $mock->setId(1);
 
-        $this->assertEquals(array('id' => 1, 'testField1' => '', 'testField2' => ''), $mock->toArray());
+        $this->assertEquals(['id' => 1, 'testField1' => '', 'testField2' => ''], $mock->toArray());
     }
 }

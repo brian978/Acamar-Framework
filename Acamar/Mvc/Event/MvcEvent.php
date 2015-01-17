@@ -22,12 +22,12 @@ use Acamar\Mvc\View\View;
  */
 class MvcEvent extends Event
 {
-    const EVENT_BOOTSTRAP      = "bootstrap";
-    const EVENT_ROUTE          = "route";
-    const EVENT_DISPATCH       = "dispatch";
+    const EVENT_BOOTSTRAP = "bootstrap";
+    const EVENT_ROUTE = "route";
+    const EVENT_DISPATCH = "dispatch";
     const EVENT_DISPATCH_ERROR = "dispatch.error";
-    const EVENT_RENDER         = "render";
-    const EVENT_RENDERED       = "rendered";
+    const EVENT_RENDER = "render";
+    const EVENT_RENDERED = "rendered";
 
     /**
      * Overwritten only for the type hint

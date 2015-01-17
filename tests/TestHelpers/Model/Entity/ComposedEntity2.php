@@ -11,7 +11,6 @@ namespace TestHelpers\Model\Entity;
 
 
 use Acamar\Model\Entity\AbstractEntity;
-use Acamar\Model\Entity\EntityCollection;
 
 class ComposedEntity2 extends AbstractEntity
 {

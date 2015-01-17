@@ -40,9 +40,9 @@ abstract class AbstractController
             throw new \RuntimeException('Invalid event target type');
         }
 
-        $this->event   = $event;
+        $this->event = $event;
         $this->request = $event->getRequest();
-        $this->config  = $event->getTarget()->getConfig();
+        $this->config = $event->getTarget()->getConfig();
     }
 
     /**

@@ -34,14 +34,14 @@ class ViewHelperManager implements ConfigAwareInterface, EventAwareInterface
     /**
      * @var array
      */
-    protected static $helpers = array(
+    protected static $helpers = [
         'url' => '\Acamar\Mvc\View\Helper\Url',
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $helperInstances = array();
+    protected $helperInstances = [];
 
     /**
      * Inject the configuration object

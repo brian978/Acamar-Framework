@@ -21,7 +21,7 @@ class Response
      *
      * @var array
      */
-    protected static $statusCodePhrases = array(
+    protected static $statusCodePhrases = [
         // Informational codes
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -83,7 +83,7 @@ class Response
         507 => 'Insufficient Storage',
         508 => 'Loop Detected',
         511 => 'Network Authentication Required',
-    );
+    ];
 
     /**
      * @var string
@@ -125,11 +125,11 @@ class Response
             $lines = explode("\n", $string);
         }
 
-        $httpVersion  = '';
-        $statusCode   = 0;
+        $httpVersion = '';
+        $statusCode = 0;
         $statusPhrase = '';
-        $headers      = Headers::fromArray($lines);
-        $body         = '';
+        $headers = Headers::fromArray($lines);
+        $body = '';
 
         if (count($lines)) {
             $line = array_shift($lines);
@@ -142,8 +142,8 @@ class Response
 
                 // Matching the header name and value
                 if ($matched) {
-                    $httpVersion  = $matches['version'];
-                    $statusCode   = $matches['status'];
+                    $httpVersion = $matches['version'];
+                    $statusCode = $matches['status'];
                     $statusPhrase = $matches['statusPhrase'];
                 } else if (!preg_match('/^\s*$/', $line)) {
                     break;

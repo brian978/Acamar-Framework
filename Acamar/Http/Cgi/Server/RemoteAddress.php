@@ -62,12 +62,12 @@ class RemoteAddress
      */
     public function getResolved()
     {
-        if(null === $this->resolved) {
-            if(true === $this->useProxy) {
+        if (null === $this->resolved) {
+            if (true === $this->useProxy) {
                 $this->resolved = $this->getIpFromProxy();
             }
 
-            if(empty($this->resolved)) {
+            if (empty($this->resolved)) {
                 $this->resolved = $this->request->getServer('REMOTE_ADDR');
             }
         }

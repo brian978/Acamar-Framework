@@ -36,7 +36,7 @@ class MapCollection extends AbstractCollection
      */
     public function flip($map)
     {
-        $flipped = array();
+        $flipped = [];
 
         if ($map !== null) {
             foreach ($map['specs'] as $fromField => $toField) {
@@ -58,7 +58,7 @@ class MapCollection extends AbstractCollection
     public function getIdentField($map)
     {
         $map = $this->findMap($map);
-        if(null !== $map) {
+        if (null !== $map) {
             return $map['identField'];
         }
 

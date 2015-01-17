@@ -21,7 +21,7 @@ abstract class AbstractCollection implements CollectionInterface
      *
      * @var array
      */
-    protected $collection = array();
+    protected $collection = [];
 
     /**
      * @return int
@@ -38,7 +38,7 @@ abstract class AbstractCollection implements CollectionInterface
      */
     public function flush()
     {
-        $this->collection = array();
+        $this->collection = [];
 
         return $this;
     }

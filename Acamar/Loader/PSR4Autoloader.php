@@ -103,8 +103,8 @@ class PSR4Autoloader implements LoaderInterface
     public function loadClass($class)
     {
         if ($this->resolveNamespace($class)) {
-            $namespace = & $this->resolved[$class]['ns'];
-            $class     = & $this->resolved[$class]['class'];
+            $namespace = &$this->resolved[$class]['ns'];
+            $class = &$this->resolved[$class]['class'];
 
             foreach ($this->namespaces[$namespace] as $path) {
                 $file = $path;
@@ -132,8 +132,8 @@ class PSR4Autoloader implements LoaderInterface
             return $this->resolved[$class]['ns'];
         }
 
-        $resolved  = false;
-        $pieces    = explode('\\', $class);
+        $resolved = false;
+        $pieces = explode('\\', $class);
         $namespace = '';
 
         do {

@@ -38,16 +38,16 @@ class UrlTest extends \PHPUnit_Framework_TestCase
     {
         // The application contains a config object
         $config = new Config();
-        $config->add(array(
-            'routes' => array(
-                'mvc' => array(
+        $config->add([
+            'routes' => [
+                'mvc' => [
                     'pattern' => '/:controller(/:action)',
-                    'defaults' => array(
+                    'defaults' => [
                         'module' => 'Application'
-                    )
-                )
-            )
-        ));
+                    ]
+                ]
+            ]
+        ]);
 
         // The application contains a router
         $router = new Router(new EventManager());
@@ -77,13 +77,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanGenerateUrl()
     {
-        $request = new Request(array(
+        $request = new Request([
             'REQUEST_METHOD' => 'GET',
             'SCRIPT_NAME' => '/folder/BasePath/index.php',
             'REQUEST_URI' => '/folder/BasePath/products/index?test=1',
             'QUERY_STRING' => 'test=1',
             'REMOTE_ADDR' => '127.0.0.1'
-        ));
+        ]);
 
         $this->event->expects($this->any())
             ->method('getRequest')
@@ -104,13 +104,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanGenerateUrlWithBasePath()
     {
-        $request = new Request(array(
+        $request = new Request([
             'REQUEST_METHOD' => 'GET',
             'SCRIPT_NAME' => '/folder/BasePath/index.php',
             'REQUEST_URI' => '/folder/BasePath/',
             'QUERY_STRING' => '',
             'REMOTE_ADDR' => '127.0.0.1'
-        ));
+        ]);
 
         $this->event->expects($this->any())
             ->method('getRequest')
@@ -131,13 +131,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanGenerateUrlWithNoBasePath()
     {
-        $request = new Request(array(
+        $request = new Request([
             'REQUEST_METHOD' => 'GET',
             'SCRIPT_NAME' => '/index.php',
             'REQUEST_URI' => '/products/index?test=1',
             'QUERY_STRING' => 'test=1',
             'REMOTE_ADDR' => '127.0.0.1'
-        ));
+        ]);
 
         $this->event->expects($this->any())
             ->method('getRequest')
@@ -158,13 +158,13 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      */
     public function testCanGenerateUrlFromRoot()
     {
-        $request = new Request(array(
+        $request = new Request([
             'REQUEST_METHOD' => 'GET',
             'SCRIPT_NAME' => '/index.php',
             'REQUEST_URI' => '/?test=1',
             'QUERY_STRING' => 'test=1',
             'REMOTE_ADDR' => '127.0.0.1'
-        ));
+        ]);
 
         $this->event->expects($this->any())
             ->method('getRequest')
