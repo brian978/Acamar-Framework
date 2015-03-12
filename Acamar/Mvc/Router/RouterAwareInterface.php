@@ -4,7 +4,7 @@
  *
  * @link https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE.txt New BSD License
+ * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace Acamar\Mvc\Router;
@@ -23,4 +23,4 @@ interface RouterAwareInterface
      * @return mixed
      */
     public function setRouter(Router $router);
-} 
+}
