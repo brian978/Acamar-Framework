@@ -606,7 +606,7 @@ class ObjectMapper implements MapperInterface
                 if (isset($specs[$identField])
                     && is_string($specs[$identField])
                     && isset($data[$identField])
-                    && $data[$identField] != null
+                    && $data[$identField] !== null
                 ) {
                     $idData[$specs[$identField]] = $data[$identField];
                 }
@@ -615,7 +615,7 @@ class ObjectMapper implements MapperInterface
             if (isset($specs[$map['identField']])
                 && is_string($specs[$map['identField']])
                 && isset($data[$map['identField']])
-                && $data[$map['identField']] != null
+                && $data[$map['identField']] !== null
             ) {
                 $idData[$specs[$map['identField']]] = $data[$map['identField']];
             }
