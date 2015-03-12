@@ -1,3 +1,6 @@
+![](https://travis-ci.org/brian978/Acamar-Framework.svg?branch=master "Travis status")
+
+
 # About
 
 The Acamar framework is not intended as a full stack framework and it will never be one. The main purpose of the
