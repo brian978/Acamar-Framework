@@ -1,4 +1,5 @@
 ![](https://travis-ci.org/brian978/Acamar-Framework.svg?branch=master "Travis status")
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/f7a0d15f-6fa2-4c24-844e-2dad70c2a950/small.png)](https://insight.sensiolabs.com/projects/f7a0d15f-6fa2-4c24-844e-2dad70c2a950)
 
 
 # About
