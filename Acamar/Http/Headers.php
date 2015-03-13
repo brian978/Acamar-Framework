@@ -30,9 +30,9 @@ class Headers implements Countable, Iterator
     const CONTENT_TYPE = 'Content-Type';
     const DATE = 'Date';
     const PRAGMA = 'Pragma';
-    const PROXY_AUTHORIZATION = 'Proxy-Authorization';
     const UPGRADE = 'Upgrade';
     const VIA = 'Via';
+    const WARNING = 'Warning';
 
     /**
      * Request fields
@@ -55,25 +55,42 @@ class Headers implements Countable, Iterator
     const IF_UNMODIFIED_SINCE = 'If-Unmodified-Since';
     const MAX_FORWARDS = 'Max-Forwards';
     const ORIGIN = 'Origin';
+    const PROXY_AUTHORIZATION = 'Proxy-Authorization';
     const RANGE = 'Range';
     const REFERER = 'Referer';
     const TE = 'TE';
     const USER_AGENT = 'User-Agent';
-    const WARNING = 'Warning';
-
 
     /**
      * Response fields
      *
-     * TODO: Add all
      */
     const ACCESS_CONTROL_ALLOW_ORIGIN = 'Access-Control-Allow-Origin';
+    const ACCEPT_PATH = 'Accept-Patch';
     const ACCEPT_RANGES = 'Accept-Ranges';
     const AGE = 'Age';
     const ALLOW = 'Allow';
+    const CONTENT_DISPOSITION = 'Content-Disposition';
     const CONTENT_ENCODING = 'Content-Encoding';
     const CONTENT_LANGUAGE = 'Content-Language';
+    const CONTENT_LOCATION = 'Content-Location';
     const ETAG = 'ETag';
+    const EXPIRES = 'Expires';
+    const LAST_MODIFIED = 'Last-Modified';
+    const LINK = 'Link';
+    const LOCATION = 'Location';
+    const P3P = 'P3P';
+    const PROXY_AUTHENTICATE = 'Proxy-Authenticate';
+    const REFRESH = 'Refresh';
+    const RETRY_AFTER = 'Retry-After';
+    const SERVER = 'Server';
+    const SET_COOKIE = 'Set-Cookie';
+    const STATUS = 'Status';
+    const STRICT_TRANSPORT_SECURITY = 'Strict-Transport-Security';
+    const TRAILER = 'Trailer';
+    const TRANSFER_ENCODING = 'Transfer-Encoding';
+    const VARY = 'Vary';
+    const WWW_AUTHENTICATE = 'WWW-Authenticate';
 
     /**
      * List of headers
