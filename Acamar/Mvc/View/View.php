@@ -155,7 +155,7 @@ class View
 
             // We need to make sure that the path does not end with a DIRECTORY_SEPARATOR so it won't
             // cause the getTemplatePath() to fail at finding the template
-            $this->templatesPath = trim($this->templatesPath, DIRECTORY_SEPARATOR);
+            $this->templatesPath = rtrim($this->templatesPath, DIRECTORY_SEPARATOR);
         }
 
         return $this;
