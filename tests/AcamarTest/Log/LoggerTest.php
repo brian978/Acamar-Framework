@@ -44,6 +44,6 @@ class LoggerTest extends \PHPUnit_Framework_TestCase
         $logger->debug("Debug message");
         $output = ob_get_clean();
 
-        $this->assertEquals(true, (false !== strpos($output, "[debug] - Debug message")));
+        $this->assertTrue(false !== strpos($output, "[debug] - Debug message"));
     }
 } 
