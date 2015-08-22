@@ -2,8 +2,12 @@
     <testsuites>
         <testsuite name="Acamar-Framework Test Suite">
             <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/</directory>
-            <exclude>AcamarTest/Archive/</exclude>
-            <exclude>AcamarTest/Directory/</exclude>
+        </testsuite>
+        <testsuite name="Acamar-Framework - Http">
+            <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/Http/</directory>
+        </testsuite>
+        <testsuite name="Acamar-Framework - Routing">
+            <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/Mvc/Router/</directory>
         </testsuite>
     </testsuites>
 </phpunit>
