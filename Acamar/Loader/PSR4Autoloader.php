@@ -132,25 +132,23 @@ class PSR4Autoloader implements LoaderInterface
             return $this->resolved[$class]['ns'];
         }
 
-        $resolved = false;
         $pieces = explode('\\', $class);
         $namespace = '';
 
         do {
             $namespace .= array_shift($pieces);
             if (isset($this->namespaces[$namespace])) {
-                $resolved = true;
+                $this->resolved[$class] = [
+                    'ns' => $namespace,
+                    'class' => str_replace($namespace . '\\', '', $class)
+                ];
+                
+                return true;
             } else {
                 $namespace .= '\\';
             }
-        } while (!$resolved && !empty($pieces));
+        } while (!empty($pieces));
 
-        // Caching our results
-        $this->resolved[$class] = [
-            'ns' => $namespace,
-            'class' => str_replace($namespace . '\\', '', $class)
-        ];
-
-        return $resolved;
+        return false;
     }
 }
