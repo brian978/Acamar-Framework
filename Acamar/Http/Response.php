@@ -120,6 +120,10 @@ class Response
      */
     public static function fromString($string)
     {
+        if (!is_string($string)) {
+            return new self();
+        }
+
         $lines = explode("\r\n", $string);
         if (empty($lines) || $lines[0] == $string) {
             $lines = explode("\n", $string);
@@ -128,7 +132,6 @@ class Response
         $httpVersion = '';
         $statusCode = 0;
         $statusPhrase = '';
-        $headers = Headers::fromArray($lines);
         $body = '';
 
         if (count($lines)) {
@@ -151,14 +154,18 @@ class Response
 
                 // We need to shift here because the line we are matching may be a header
                 $line = array_shift($lines);
+                if (!empty($line) && strpos($line, "HTTP") !== 0) {
+                    array_unshift($lines, $line);
+                }
             }
-
 
             // The headers must be retrieved only after the response can be populated
             $headers = Headers::fromArray($lines);
 
             // Now that we only have the body we can build it
-            $body = implode("\r\n", $lines);
+            $body = implode("\n", $lines);
+        } else {
+            $headers = new Headers();
         }
 
         /** @var $instance Response */
