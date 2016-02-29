@@ -129,10 +129,8 @@ class Response
             $lines = explode("\n", $string);
         }
 
-        $httpVersion = '';
-        $statusCode = 0;
-        $statusPhrase = '';
-        $body = '';
+        /** @var $instance Response */
+        $instance = new static;
 
         if (count($lines)) {
             $line = array_shift($lines);
@@ -145,9 +143,9 @@ class Response
 
                 // Matching the header name and value
                 if ($matched) {
-                    $httpVersion = $matches['version'];
-                    $statusCode = $matches['status'];
-                    $statusPhrase = $matches['statusPhrase'];
+                    $instance->setHttpVersion($matches['version']);
+                    $instance->setStatusCode($matches['status']);
+                    $instance->setStatusPhrase($matches['statusPhrase']);
                 } else if (!preg_match('/^\s*$/', $line)) {
                     break;
                 }
@@ -160,21 +158,11 @@ class Response
             }
 
             // The headers must be retrieved only after the response can be populated
-            $headers = Headers::fromArray($lines);
+            $instance->setHeaders(Headers::fromArray($lines));
 
             // Now that we only have the body we can build it
-            $body = implode("\n", $lines);
-        } else {
-            $headers = new Headers();
+            $instance->setBody(implode("\n", $lines));
         }
-
-        /** @var $instance Response */
-        $instance = new static;
-        $instance->setHttpVersion($httpVersion);
-        $instance->setStatusCode($statusCode);
-        $instance->setStatusPhrase($statusPhrase);
-        $instance->setHeaders($headers);
-        $instance->setBody($body);
 
         return $instance;
     }
