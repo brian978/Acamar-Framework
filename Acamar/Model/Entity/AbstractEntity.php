@@ -9,6 +9,11 @@
 
 namespace Acamar\Model\Entity;
 
+/**
+ * Class AbstractEntity
+ *
+ * @package Acamar\Model\Entity
+ */
 abstract class AbstractEntity implements EntityInterface
 {
     /**

@@ -11,6 +11,11 @@ namespace Acamar\Model\Mapper;
 
 use Acamar\Model\Entity\EntityInterface;
 
+/**
+ * Interface MapperInterface
+ *
+ * @package Acamar\Model\Mapper
+ */
 interface MapperInterface
 {
     /**

@@ -9,7 +9,6 @@
 
 namespace Acamar\Loader;
 
-// Loading the dependencies
 require_once 'LoaderInterface.php';
 
 /**

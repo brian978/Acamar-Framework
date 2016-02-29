@@ -15,6 +15,11 @@ use Acamar\Mvc\Controller\AbstractController;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\View\View;
 
+/**
+ * Class Dispatcher
+ *
+ * @package Acamar\Mvc
+ */
 class Dispatcher
 {
     /**

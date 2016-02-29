@@ -21,6 +21,11 @@ use Acamar\Mvc\Router\Router;
 use Acamar\Mvc\View\Renderer\Strategy\RenderingStrategyFactory;
 use Acamar\Mvc\View\Renderer\ViewRenderer;
 
+/**
+ * Class Application
+ *
+ * @package Acamar\Mvc
+ */
 class Application implements ApplicationInterface
 {
     const ENV_PHPUNIT = 'phpunit';

@@ -11,6 +11,11 @@ namespace Acamar\Model\Mapper;
 
 use Acamar\Collection\AbstractCollection;
 
+/**
+ * Class MapCollection
+ *
+ * @package Acamar\Model\Mapper
+ */
 class MapCollection extends AbstractCollection
 {
     /**
