@@ -29,7 +29,7 @@ class Event
     /**
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * @var bool

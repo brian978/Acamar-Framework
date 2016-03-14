@@ -24,11 +24,11 @@ class ConfigTest extends PHPUnit_Framework_TestCase
      */
     protected static $configObj;
 
-    protected $initialArray = array(
+    protected $initialArray = [
         'item1' => 1,
         'item2' => 2,
         'item3' => 3
-    );
+    ];
 
     public static function setUpBeforeClass()
     {
@@ -45,10 +45,10 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testUpdateInitialArray()
     {
-        $new = array(
+        $new = [
             'item2' => 10,
             'item4' => 5
-        );
+        ];
 
         self::$configObj->add($new);
 
@@ -60,25 +60,25 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testSimpleValueReplacedByArray()
     {
-        $new = array(
-            'item4' => array(
+        $new = [
+            'item4' => [
                 'subitem1' => 1,
                 'subitem2' => 2
-            )
-        );
+            ]
+        ];
 
         self::$configObj->add($new);
 
         $this->assertEquals(
-            array(
+            [
                 'item1' => 1,
                 'item2' => 10,
                 'item3' => 3,
-                'item4' => array(
+                'item4' => [
                     'subitem1' => 1,
                     'subitem2' => 2
-                )
-            ),
+                ]
+            ],
             self::$configObj->getArrayCopy()
         );
     }
@@ -88,26 +88,26 @@ class ConfigTest extends PHPUnit_Framework_TestCase
      */
     public function testArrayMergeRecursive()
     {
-        $new = array(
-            'item4' => array(
+        $new = [
+            'item4' => [
                 'subitem2' => 5,
                 'subitem3' => 1
-            )
-        );
+            ]
+        ];
 
         self::$configObj->add($new);
 
         $this->assertEquals(
-            array(
+            [
                 'item1' => 1,
                 'item2' => 10,
                 'item3' => 3,
-                'item4' => array(
+                'item4' => [
                     'subitem1' => 1,
                     'subitem2' => 5,
                     'subitem3' => 1
-                )
-            ),
+                ]
+            ],
             self::$configObj->getArrayCopy()
         );
     }
@@ -129,9 +129,9 @@ class ConfigTest extends PHPUnit_Framework_TestCase
 
     public function testCanMergeWithAnotherConfig()
     {
-        $config = new Config(array("item1" => 1));
-        $config->merge(new Config(array("item2" => 2)));
+        $config = new Config(["item1" => 1]);
+        $config->merge(new Config(["item2" => 2]));
 
-        $this->assertEquals(array("item1" => 1, "item2" => 2), $config->getArrayCopy());
+        $this->assertEquals(["item1" => 1, "item2" => 2], $config->getArrayCopy());
     }
 }

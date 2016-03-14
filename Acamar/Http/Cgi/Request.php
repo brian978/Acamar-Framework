@@ -25,7 +25,7 @@ class Request extends BasicRequest
      *
      * @var array
      */
-    protected $server = array();
+    protected $server = [];
 
     /**
      * @var string
@@ -100,8 +100,7 @@ class Request extends BasicRequest
             $scriptPath = preg_replace('#(\/[\w-]+)\.php#', '', $this->server['SCRIPT_NAME']);
 
             // Removing the query string from the request URI as well as parts of the script name
-            $requestPathArr = explode('?', $requestUri);
-            $requestPath = $requestPathArr[0];
+            $requestPath = explode('?', $requestUri)[0];
             if (!empty($scriptPath)) {
                 $requestPath = preg_replace('#.*' . $scriptPath . '#', '', $requestPath);
             }
@@ -119,8 +118,7 @@ class Request extends BasicRequest
     public function getBaseUri()
     {
         if (null === $this->baseUri) {
-            $requestUriArr = explode('?', $this->server['REQUEST_URI']);
-            $requestUri = $requestUriArr[0];
+            $requestUri = explode('?', $this->server['REQUEST_URI'])[0];
             $this->baseUri = substr($requestUri, 0, strrpos($requestUri, $this->uri));
         }
 

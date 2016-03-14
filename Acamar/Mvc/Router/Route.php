@@ -31,23 +31,23 @@ class Route
     /**
      * @var array
      */
-    protected $defaults = array(
+    protected $defaults = [
         'module' => 'Application',
         'controller' => 'index',
         'action' => 'index'
-    );
+    ];
 
     /**
      * @var array
      */
-    protected $options = array();
+    protected $options = [];
 
     /**
      * @var array
      */
-    protected $settableOptions = array(
+    protected $settableOptions = [
         'acceptedHttpMethods',
-    );
+    ];
 
     /**
      * This string will contain the regex that must be applied on a request URI
@@ -68,30 +68,30 @@ class Route
      *
      * @var array
      */
-    protected $parts = array();
+    protected $parts = [];
 
     /**
      * @var array
      */
-    protected $params = array();
+    protected $params = [];
 
     /**
      * @var array
      */
-    protected $paramNames = array();
+    protected $paramNames = [];
 
     /**
      * List of accepted HTTP methods
      *
      * @var array
      */
-    protected $acceptedHttpMethods = array(
+    protected $acceptedHttpMethods = [
         Request::METHOD_GET,
         Request::METHOD_POST,
         Request::METHOD_PUT,
         Request::METHOD_DELETE,
         Request::METHOD_OPTIONS
-    );
+    ];
 
     /**
      * Factory method for the route object
@@ -112,11 +112,11 @@ class Route
         }
 
         if (!isset($config['defaults']) || !is_array($config['defaults'])) {
-            $config['defaults'] = array();
+            $config['defaults'] = [];
         }
 
         if (!isset($config['options']) || !is_array($config['options'])) {
-            $config['options'] = array();
+            $config['options'] = [];
         }
 
 
@@ -131,7 +131,7 @@ class Route
      * @param array $defaults
      * @param array $options
      */
-    public function __construct($name, $pattern, array $defaults = array(), array $options = array())
+    public function __construct($name, $pattern, array $defaults = [], array $options = [])
     {
         $this->setName($name);
         $this->setPattern($pattern);
@@ -174,7 +174,7 @@ class Route
 
         // Resetting all that depend on the pattern
         $this->regex = '';
-        $this->parts = array();
+        $this->parts = [];
 
         return $this;
     }
@@ -199,7 +199,7 @@ class Route
         $defaults = array_merge($this->defaults, $defaults);
 
         // Validating the defaults
-        foreach (array('module', 'controller', 'action') as $key) {
+        foreach (['module', 'controller', 'action'] as $key) {
             if (!isset($defaults[$key]) || empty($defaults[$key]) || !is_string($defaults[$key])) {
                 throw new \InvalidArgumentException(
                     'The default `' . $key . '` for the `' . $this->name . '` route is invalid'
@@ -299,7 +299,7 @@ class Route
     {
         $currentPos = 0;
         $length = strlen($pattern);
-        $parts = array();
+        $parts = [];
 
         while ($currentPos < $length) {
             preg_match('#(?P<literal>[^:\(\)]*)(?P<token>[:\(\)]?)#', $pattern, $matches, 0, $currentPos);
@@ -308,10 +308,10 @@ class Route
 
             // Literal
             if (!empty($matches['literal'])) {
-                $parts[] = array(
+                $parts[] = [
                     'type' => 'literal',
                     'comp' => $matches['literal']
-                );
+                ];
             }
 
             switch ($matches['token']) {
@@ -321,10 +321,10 @@ class Route
                         throw new \RuntimeException('Empty parameter found');
                     }
 
-                    $parts[] = array(
+                    $parts[] = [
                         'type' => 'parameter',
                         'comp' => $matches['param']
-                    );
+                    ];
 
                     // We need to keep track of the parameter names as well
                     // so we can extract them after a match
@@ -337,12 +337,12 @@ class Route
                 case '(':
                     // We need the optional array so we can reference part of it
                     // without counting the existing parts
-                    $opt = array(
+                    $opt = [
                         'type' => 'optional',
-                        'comp' => array(
+                        'comp' => [
                             'ref' => &$parts // We keep a reference to know where to get back
-                        )
-                    );
+                        ]
+                    ];
 
                     // Now we swap the arrays
                     $parts[] = $opt;
@@ -361,10 +361,10 @@ class Route
                     array_pop($parentParts);
 
                     // Copying what we have so far into the parents
-                    $parentParts[] = array(
+                    $parentParts[] = [
                         'type' => 'optional',
                         'comp' => & $parts
-                    );
+                    ];
 
                     // Making the swap so we can go up one level
                     $parts = &$parentParts;

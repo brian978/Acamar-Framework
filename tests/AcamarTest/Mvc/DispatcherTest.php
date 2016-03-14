@@ -46,7 +46,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
         /** @var \PHPUnit_Framework_MockObject_MockObject|\Acamar\Mvc\Controller\AbstractController $mockController */
         $this->controller = $this->getMockBuilder('\Acamar\Mvc\Controller\AbstractController')
             ->disableOriginalConstructor()
-            ->setMethods(array('getEvent', 'testAction'))
+            ->setMethods(['getEvent', 'testAction'])
             ->getMock();
 
         $this->controller->expects($this->any())
@@ -58,9 +58,9 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
     {
         $this->controller->expects($this->any())
             ->method('testAction')
-            ->will($this->returnValue(array(
+            ->will($this->returnValue([
                 'test' => 1
-            )));
+            ]));
 
         $this->dispatcher->call($this->controller, 'testAction');
 

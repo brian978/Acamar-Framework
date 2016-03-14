@@ -30,7 +30,7 @@ class Router
      *
      * @var array
      */
-    protected $routes = array();
+    protected $routes = [];
 
     /**
      * @var string
@@ -43,7 +43,7 @@ class Router
     public function __construct(EventManager $eventManager)
     {
         $this->eventManager = $eventManager;
-        $this->eventManager->attach(MvcEvent::EVENT_ROUTE, array($this, 'onRoute'));
+        $this->eventManager->attach(MvcEvent::EVENT_ROUTE, [$this, 'onRoute']);
     }
 
     /**

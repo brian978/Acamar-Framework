@@ -97,7 +97,7 @@ class Headers implements Countable, Iterator
      *
      * @var array
      */
-    protected $headers = array();
+    protected $headers = [];
 
     /**
      * Creates a Headers object from a string
@@ -199,10 +199,10 @@ class Headers implements Countable, Iterator
             $this->headers[$name] = $value;
         } elseif (false === $replace) {
             if (!is_array($this->headers[$name])) {
-                $this->headers[$name] = array(
+                $this->headers[$name] = [
                     $this->headers[$name],
                     $value
-                );
+                ];
             } else {
                 $this->headers[$name][] = $value;
             }

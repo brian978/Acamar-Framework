@@ -21,7 +21,7 @@ class Response
      *
      * @var array
      */
-    protected static $statusCodePhrases = array(
+    protected static $statusCodePhrases = [
         // Informational codes
         100 => 'Continue',
         101 => 'Switching Protocols',
@@ -83,7 +83,7 @@ class Response
         507 => 'Insufficient Storage',
         508 => 'Loop Detected',
         511 => 'Network Authentication Required',
-    );
+    ];
 
     /**
      * @var string

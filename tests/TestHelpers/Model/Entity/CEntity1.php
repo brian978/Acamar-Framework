@@ -27,7 +27,7 @@ class CEntity1 extends AbstractEntity
     /**
      * @var array
      */
-    protected $arrValues = array();
+    protected $arrValues = [];
 
     /**
      * @var \Acamar\Model\Entity\EntityCollection

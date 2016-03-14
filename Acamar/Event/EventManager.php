@@ -21,7 +21,7 @@ class EventManager
     /**
      * @var array
      */
-    protected $events = array();
+    protected $events = [];
 
     /**
      * @var string
@@ -82,7 +82,7 @@ class EventManager
      * @param null|string|object $target
      * @param array $params
      */
-    public function trigger($event, $target = null, $params = array())
+    public function trigger($event, $target = null, $params = [])
     {
         if ($event instanceof Event) {
             $e = $event;

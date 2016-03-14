@@ -23,10 +23,10 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function toArray()
     {
-        $properties = array();
+        $properties = [];
         $reflectionClass = new \ReflectionClass($this);
         $objectMethods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $objectProperties = array();
+        $objectProperties = [];
 
         // We need the method to be in the order they are declared (not reversed)
         $objectMethods = array_reverse($objectMethods);

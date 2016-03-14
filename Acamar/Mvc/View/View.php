@@ -49,7 +49,7 @@ class View
      *
      * @var array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * @var ViewHelperManager
@@ -72,12 +72,12 @@ class View
      * @param array $arguments
      * @return mixed
      */
-    public function __call($method, array $arguments = array())
+    public function __call($method, array $arguments = [])
     {
         $helper = $this->getViewHelperManager()->getHelper($method);
 
-        if (is_callable(array($helper, '__invoke'))) {
-            return call_user_func_array(array($helper, '__invoke'), $arguments);
+        if (is_callable([$helper, '__invoke'])) {
+            return call_user_func_array([$helper, '__invoke'], $arguments);
         }
 
         return $helper;

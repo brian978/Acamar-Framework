@@ -18,104 +18,104 @@ class MockedMapCollection extends MapCollection
      *
      * @var array
      */
-    protected $collection = array(
-        'default' => array(
+    protected $collection = [
+        'default' => [
             'entity' => '\TestHelpers\Model\Entity\MockEntity',
-            'specs' => array(
+            'specs' => [
                 'id' => 'id',
                 'field1' => 'testField1',
-                'joinedId' => array(
+                'joinedId' => [
                     'toProperty' => 'testField2',
                     'map' => 'defaultJoin'
-                ),
-            )
-        ),
-        'defaultArray' => array(
+                ],
+            ]
+        ],
+        'defaultArray' => [
             'entity' => '\TestHelpers\Model\Entity\ArrayMockEntity',
             'identField' => 'id',
-            'specs' => array(
+            'specs' => [
                 'id' => 'id',
                 'testField1' => 'testField1',
-                'testField2' => array(
+                'testField2' => [
                     'toProperty' => 'testField2',
-                )
-            )
-        ),
-        'defaultJoin' => array(
+                ]
+            ]
+        ],
+        'defaultJoin' => [
             'entity' => '\TestHelpers\Model\Entity\MockEntity',
-            'specs' => array(
+            'specs' => [
                 'joinedId' => 'id',
                 'joinedField1' => 'testField1',
                 'joinedField2' => 'testField2',
-            )
-        ),
-        'collectionDefault' => array(
+            ]
+        ],
+        'collectionDefault' => [
             'entity' => '\TestHelpers\Model\Entity\CEntity1',
             'identField' => 'id',
-            'specs' => array(
+            'specs' => [
                 'id' => 'id',
                 'name' => 'name',
-                'childId' => array(
+                'childId' => [
                     'toProperty' => 'cEntity2',
                     'map' => 'collectionJoinCEntity2'
-                ),
-            )
-        ),
-        'collectionJoinCEntity2' => array(
+                ],
+            ]
+        ],
+        'collectionJoinCEntity2' => [
             'entity' => '\TestHelpers\Model\Entity\CEntity2',
             'identField' => 'childId',
-            'specs' => array(
+            'specs' => [
                 'childId' => 'id',
                 'childName' => 'name',
                 'childTypeId' => 'typeId',
-                'childId2' => array(
+                'childId2' => [
                     'toProperty' => 'cEntity3',
                     'map' => 'collectionJoinCEntity3'
-                ),
-            )
-        ),
-        'collectionJoinCEntity3' => array(
+                ],
+            ]
+        ],
+        'collectionJoinCEntity3' => [
             'entity' => '\TestHelpers\Model\Entity\CEntity3',
             'identField' => 'childId2',
-            'specs' => array(
+            'specs' => [
                 'childId2' => 'id',
                 'childName2' => 'name'
-            )
-        ),
-        'collectionJoinComposedEntity1' => array(
+            ]
+        ],
+        'collectionJoinComposedEntity1' => [
             'entity' => '\TestHelpers\Model\Entity\ComposedEntity1',
-            'identField' => array('someId1', 'someId2'),
-            'specs' => array(
+            'identField' => ['someId1', 'someId2'],
+            'specs' => [
                 'someId1' => 'id1',
                 'someId2' => 'id2',
-                'foreignField' => array(
+                'foreignField' => [
                     'toProperty' => 'collectionField',
                     'map' => 'collectionJoinComposedEntity2'
-                )
-            )
-        ),
-        'collectionJoinComposedEntity2' => array(
+                ]
+            ]
+        ],
+        'collectionJoinComposedEntity2' => [
             'entity' => '\TestHelpers\Model\Entity\ComposedEntity2',
-            'identField' => array('fId'),
-            'specs' => array(
+            'identField' => ['fId'],
+            'specs' => [
                 'fId' => 'id',
                 'foreignField' => 'field',
-            )
-        ),
-        'collectionArrayDefault' => array(
+            ]
+        ],
+        'collectionArrayDefault' => [
             'entity' => '\TestHelpers\Model\Entity\CEntity1',
             'identField' => 'id',
-            'specs' => array(
+            'specs' => [
                 'id' => 'id',
                 'name' => 'name',
-                'arrValues' => array(
+                'arrValues' => [
                     'toProperty' => 'arrValues',
-                ),
-                'childId' => array(
+                ],
+                'childId' => [
                     'toProperty' => 'cEntity2',
                     'map' => 'collectionJoinCEntity2'
-                ),
-            )
-        ),
-    );
+                ],
+            ]
+        ],
+    ];
 }
