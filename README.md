@@ -19,7 +19,7 @@ framework.
 * Some features load ONLY on demand
 
 # Minimum requirements
-* PHP 5.4
+* PHP 5.6.19
 * Nginx / Apache web server (it's not yet tested on others)
 
 # Documentation
@@ -32,7 +32,7 @@ The framework can also be installed via composer:
 
     {
         "require": {
-                "brian978/acamar": "1.*"
+                "brian978/acamar": "2.*"
             }
     }
 
