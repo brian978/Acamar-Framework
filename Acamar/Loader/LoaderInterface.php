@@ -29,7 +29,7 @@ interface LoaderInterface
      * @param array $namespaces
      * @return $this
      */
-    public function registerNamespaces(array $namespaces = []);
+    public function registerNamespaces(array $namespaces = array());
 
     /**
      * Registers a given namespace

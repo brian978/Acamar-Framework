@@ -41,7 +41,7 @@ class MapCollection extends AbstractCollection
      */
     public function flip($map)
     {
-        $flipped = [];
+        $flipped = array();
 
         if ($map !== null) {
             foreach ($map['specs'] as $fromField => $toField) {

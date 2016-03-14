@@ -14,10 +14,10 @@ $path = realpath(dirname(__DIR__));
 include $path . '/Acamar/Loader/PSR0Autoloader.php';
 
 $autoloader = new PSR0Autoloader();
-$autoloader->registerNamespaces([
+$autoloader->registerNamespaces(array(
     'Acamar' => $path,
     'AcamarTest' => __DIR__,
     'TestHelpers' => __DIR__
-]);
+));
 
 $autoloader->register();

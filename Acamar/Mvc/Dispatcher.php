@@ -34,7 +34,7 @@ class Dispatcher
     public function __construct(EventManager $eventManager)
     {
         $this->eventManager = $eventManager;
-        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH, [$this, 'dispatch']);
+        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH, array($this, 'dispatch'));
     }
 
     /**
@@ -56,7 +56,7 @@ class Dispatcher
         if (class_exists($controllerClass)) {
             /** @var $controller \Acamar\Mvc\Controller\AbstractController */
             $controller = new $controllerClass($e);
-            if (is_callable([$controller, $actionMethod])) {
+            if (is_callable(array($controller, $actionMethod))) {
                 $this->call($controller, $actionMethod);
                 $dispatched = true;
             }

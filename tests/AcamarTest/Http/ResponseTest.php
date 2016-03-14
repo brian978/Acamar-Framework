@@ -46,9 +46,9 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
      */
     public function responseProvider()
     {
-        return [
-            [Response::fromString(file_get_contents(realpath(__DIR__ . '/_files/response_multi_headers.txt')))]
-        ];
+        return array(
+            array(Response::fromString(file_get_contents(realpath(__DIR__ . '/_files/response_multi_headers.txt'))))
+        );
     }
 
     /**

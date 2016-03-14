@@ -14,7 +14,7 @@ class ArrayMockEntity extends MockEntity
     /**
      * @var string
      */
-    protected $testField2 = [];
+    protected $testField2 = array();
 
     /**
      * @param string $testField2

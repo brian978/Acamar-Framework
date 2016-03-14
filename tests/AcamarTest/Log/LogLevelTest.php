@@ -20,7 +20,7 @@ class LogLevelTest extends \PHPUnit_Framework_TestCase
 {
     public function testLogLevelPriority()
     {
-        $this->assertEquals([
+        $this->assertEquals(array(
                 LogLevel::EMERGENCY,
                 LogLevel::ALERT,
                 LogLevel::CRITICAL,
@@ -29,19 +29,19 @@ class LogLevelTest extends \PHPUnit_Framework_TestCase
                 LogLevel::NOTICE,
                 LogLevel::INFO,
                 LogLevel::DEBUG
-            ],
+        ),
             LogLevel::getLevels()
         );
     }
 
     public function testLogLevelMaximumLevel()
     {
-        $this->assertEquals([
+        $this->assertEquals(array(
                 LogLevel::WARNING,
                 LogLevel::NOTICE,
                 LogLevel::INFO,
                 LogLevel::DEBUG
-            ],
+        ),
             array_values(LogLevel::getLevels(LogLevel::WARNING))
         );
     }
