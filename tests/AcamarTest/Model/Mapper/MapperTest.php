@@ -79,6 +79,7 @@ class MapperTest extends AbstractTest
                 'childTypeId' => 1,
                 'childName' => 'row 4 table 2',
                 'childId2' => 5,
+                'childName2' => 'row 5 table 3',
             ),
             array(
                 'id' => 3,
