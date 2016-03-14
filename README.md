@@ -19,7 +19,7 @@ framework.
 * Some features load ONLY on demand
 
 # Minimum requirements
-* PHP 5.4
+* PHP 5.3.29
 * Nginx / Apache web server (it's not yet tested on others)
 
 # Documentation

@@ -1,13 +1,13 @@
 <phpunit bootstrap="Bootstrap.php">
     <testsuites>
         <testsuite name="Acamar-Framework Test Suite">
-            <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/</directory>
+            <directory phpVersion="5.3.29" phpVersionOperator=">=">AcamarTest/</directory>
         </testsuite>
         <testsuite name="Acamar-Framework - Http">
-            <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/Http/</directory>
+            <directory phpVersion="5.3.29" phpVersionOperator=">=">AcamarTest/Http/</directory>
         </testsuite>
         <testsuite name="Acamar-Framework - Routing">
-            <directory phpVersion="5.4.0" phpVersionOperator=">=">AcamarTest/Mvc/Router/</directory>
+            <directory phpVersion="5.3.29" phpVersionOperator=">=">AcamarTest/Mvc/Router/</directory>
         </testsuite>
     </testsuites>
 </phpunit>

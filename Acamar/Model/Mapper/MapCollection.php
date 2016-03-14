@@ -11,6 +11,11 @@ namespace Acamar\Model\Mapper;
 
 use Acamar\Collection\AbstractCollection;
 
+/**
+ * Class MapCollection
+ *
+ * @package Acamar\Model\Mapper
+ */
 class MapCollection extends AbstractCollection
 {
     /**
@@ -36,7 +41,7 @@ class MapCollection extends AbstractCollection
      */
     public function flip($map)
     {
-        $flipped = [];
+        $flipped = array();
 
         if ($map !== null) {
             foreach ($map['specs'] as $fromField => $toField) {

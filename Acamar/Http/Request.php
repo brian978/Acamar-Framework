@@ -41,12 +41,12 @@ class Request
     /**
      * @var array
      */
-    protected $queryParams = [];
+    protected $queryParams = array();
 
     /**
      * @var array
      */
-    protected $postParams = [];
+    protected $postParams = array();
 
     /**
      * @param \Acamar\Http\Headers $headers

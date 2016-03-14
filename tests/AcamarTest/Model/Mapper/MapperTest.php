@@ -18,13 +18,13 @@ class MapperTest extends AbstractTest
     public function testCanUseTheMapToLinkObjects()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
+        $data = array(
             'id' => 1,
             'field1' => 'test',
             'joinedId' => 2,
             'joinedField1' => 'test_joined',
             'joinedField2' => 'test_joined2'
-        ];
+        );
 
         $object = $mapper->populate($data);
         $extracted = $mapper->extract($object);
@@ -35,8 +35,8 @@ class MapperTest extends AbstractTest
     public function testCanMapMultipleArrayToObjects()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
-            [
+        $data = array(
+            array(
                 'id' => 1,
                 'name' => 'row 1 table 1',
                 'childId' => 1,
@@ -44,8 +44,8 @@ class MapperTest extends AbstractTest
                 'childName' => 'row 1 table 2',
                 'childId2' => 1,
                 'childName2' => 'row 1 table 3',
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'name' => 'row 1 table 1',
                 'childId' => 2,
@@ -53,8 +53,8 @@ class MapperTest extends AbstractTest
                 'childName' => 'row 2 table 2',
                 'childId2' => 2,
                 'childName2' => 'row 2 table 3',
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'name' => 'row 1 table 1',
                 'childId' => 2,
@@ -62,8 +62,8 @@ class MapperTest extends AbstractTest
                 'childName' => 'row 2 table 2',
                 'childId2' => 3,
                 'childName2' => 'row 3 table 3',
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'name' => 'row 1 table 1',
                 'childId' => 3,
@@ -71,8 +71,8 @@ class MapperTest extends AbstractTest
                 'childName' => 'row 3 table 2',
                 'childId2' => 4,
                 'childName2' => 'row 4 table 3',
-            ],
-            [
+            ),
+            array(
                 'id' => 2,
                 'name' => 'row 2 table 1',
                 'childId' => 4,
@@ -80,12 +80,12 @@ class MapperTest extends AbstractTest
                 'childName' => 'row 4 table 2',
                 'childId2' => 5,
                 'childName2' => 'row 5 table 3',
-            ],
-            [
+            ),
+            array(
                 'id' => 3,
                 'name' => 'row 3 table 1'
-            ]
-        ];
+            )
+        );
 
         // Sorting the input array so we can properly compare with the output
         foreach ($data as &$part) {
@@ -106,8 +106,8 @@ class MapperTest extends AbstractTest
     public function testWillIgnoreUnidentifiableData()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
-            [
+        $data = array(
+            array(
                 'id' => 3,
                 'name' => 'row 3 table 1',
                 'childId' => null,
@@ -115,8 +115,8 @@ class MapperTest extends AbstractTest
                 'childName' => null,
                 'childId2' => null,
                 'childName2' => null,
-            ]
-        ];
+            )
+        );
 
         // Sorting the input array so we can properly compare with the output
         foreach ($data as &$part) {
@@ -137,26 +137,26 @@ class MapperTest extends AbstractTest
     public function testWillFindObjectByComposedKey()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
-            [
+        $data = array(
+            array(
                 'someId1' => 1,
                 'someId2' => 2,
                 'fId' => 1,
                 'foreignField' => 'something',
-            ],
-            [
+            ),
+            array(
                 'someId1' => 1,
                 'someId2' => 3,
                 'fId' => 2,
                 'foreignField' => 'something2',
-            ],
-            [
+            ),
+            array(
                 'someId1' => 1,
                 'someId2' => 2,
                 'fId' => 5,
                 'foreignField' => 'something3',
-            ],
-        ];
+            ),
+        );
 
         // Sorting the input array so we can properly compare with the output
         foreach ($data as &$part) {
@@ -177,18 +177,18 @@ class MapperTest extends AbstractTest
     public function testCanMapToArrayProperty()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
-            [
+        $data = array(
+            array(
                 'id' => 1,
                 'testField1' => 2,
                 'testField2' => 1,
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'testField1' => 2,
                 'testField2' => 2,
-            ],
-        ];
+            ),
+        );
 
         // Sorting the input array so we can properly compare with the output
         foreach ($data as &$part) {
@@ -209,47 +209,47 @@ class MapperTest extends AbstractTest
     public function testCanMapToArrayAndCollectionProperty()
     {
         $mapper = new ObjectMapper(new MockedMapCollection());
-        $data = [
-            [
+        $data = array(
+            array(
                 'id' => 1,
                 'name' => 'first name',
                 'arrValues' => 2,
                 'childId' => 1,
                 'childName' => 'row 1 col 1',
                 'childTypeId' => 0
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'name' => 'first name',
                 'arrValues' => 3,
                 'childId' => 2,
                 'childName' => 'row 2 col 1',
                 'childTypeId' => 0
-            ],
-            [
+            ),
+            array(
                 'id' => 1,
                 'name' => 'first name',
                 'arrValues' => 3,
                 'childId' => 3,
                 'childName' => 'row 3 col 1',
                 'childTypeId' => 0
-            ],
-            [
+            ),
+            array(
                 'id' => 2,
                 'name' => 'some name',
                 'arrValues' => null,
                 'childId' => 3,
                 'childName' => 'row 3 col 1',
                 'childTypeId' => 0
-            ],
-            [
+            ),
+            array(
                 'id' => 3,
                 'name' => 'some other name',
                 'childId' => 4,
                 'childName' => 'row 4 col 1',
                 'childTypeId' => 0
-            ],
-        ];
+            ),
+        );
 
         // Sorting the input array so we can properly compare with the output
         foreach ($data as &$part) {

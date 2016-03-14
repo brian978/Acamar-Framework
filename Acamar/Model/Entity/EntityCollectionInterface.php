@@ -11,6 +11,11 @@ namespace Acamar\Model\Entity;
 
 use Acamar\Collection\CollectionInterface;
 
+/**
+ * Interface EntityCollectionInterface
+ *
+ * @package Acamar\Model\Entity
+ */
 interface EntityCollectionInterface extends CollectionInterface
 {
     /**

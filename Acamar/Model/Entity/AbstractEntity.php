@@ -9,6 +9,11 @@
 
 namespace Acamar\Model\Entity;
 
+/**
+ * Class AbstractEntity
+ *
+ * @package Acamar\Model\Entity
+ */
 abstract class AbstractEntity implements EntityInterface
 {
     /**
@@ -18,10 +23,10 @@ abstract class AbstractEntity implements EntityInterface
      */
     public function toArray()
     {
-        $properties = [];
+        $properties = array();
         $reflectionClass = new \ReflectionClass($this);
         $objectMethods = $reflectionClass->getMethods(\ReflectionMethod::IS_PUBLIC);
-        $objectProperties = [];
+        $objectProperties = array();
 
         // We need the method to be in the order they are declared (not reversed)
         $objectMethods = array_reverse($objectMethods);

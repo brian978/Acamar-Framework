@@ -36,14 +36,14 @@ class ObjectMapper implements MapperInterface
      *
      * @var array
      */
-    protected $entityPrototypes = [];
+    protected $entityPrototypes = array();
 
     /**
      * The callable methods property acts like a cache for the setProperty() method
      *
      * @var array
      */
-    protected $callableMethods = [];
+    protected $callableMethods = array();
 
     /**
      * @var \SplObjectStorage
@@ -163,7 +163,7 @@ class ObjectMapper implements MapperInterface
         }
 
         if (!isset($this->callableMethods[$objectClass])) {
-            $this->callableMethods[$objectClass] = [];
+            $this->callableMethods[$objectClass] = array();
         }
 
         return $this->callableMethods[$objectClass];
@@ -202,7 +202,7 @@ class ObjectMapper implements MapperInterface
     protected function extractMethodData(array & $callableMethods, EntityInterface $object, $propertyName)
     {
         $methodName = $this->createSetterNameFromPropertyName($propertyName);
-        if (is_callable([$object, $methodName])) {
+        if (is_callable(array($object, $methodName))) {
             // We need to determine if we have a hinted parameter (for a collection)
             // We also only care about the first parameter since that is the only one we use
             $reflection = new \ReflectionObject($object);
@@ -219,7 +219,7 @@ class ObjectMapper implements MapperInterface
             }
 
             // Caching our info so it's faster next time
-            $callableMethods[$propertyName] = ["method" => $methodName, "collection" => $collectionPrototype];
+            $callableMethods[$propertyName] = array("method" => $methodName, "collection" => $collectionPrototype);
         } else {
             // So we don't call the method we need to reset it to null
             $methodName = null;
@@ -243,7 +243,7 @@ class ObjectMapper implements MapperInterface
     protected function setProperty($objectClass, EntityInterface $object, $propertyName, $value)
     {
         if (!isset($this->callableMethods[$objectClass])) {
-            $this->callableMethods[$objectClass] = [];
+            $this->callableMethods[$objectClass] = array();
         }
 
         $callableMethods = &$this->callableMethods[$objectClass];
@@ -338,9 +338,9 @@ class ObjectMapper implements MapperInterface
                         } else {
                             $methodName = $this->createGetterNameFromPropertyName($property['toProperty']);
                             if ($object->$methodName() instanceof EntityCollectionInterface) {
-                                $this->populateCollection([$data], $property['map'], $object->$methodName());
+                                $this->populateCollection(array($data), $property['map'], $object->$methodName());
                             } else {
-                                $collection = $this->populateCollection([$data], $property['map']);
+                                $collection = $this->populateCollection(array($data), $property['map']);
                                 if (!empty($collection)) {
                                     $this->setProperty($objectClass, $object, $property['toProperty'], $collection);
                                 }
@@ -409,7 +409,7 @@ class ObjectMapper implements MapperInterface
                         if (isset($propertyName['map'])) {
                             $methodName = $this->createGetterNameFromPropertyName($propertyName['toProperty']);
                             if ($object->$methodName() instanceof EntityCollectionInterface) {
-                                $this->populateCollection([$part], $propertyName['map'], $object->$methodName());
+                                $this->populateCollection(array($part), $propertyName['map'], $object->$methodName());
                             }
                         } else {
                             $this->populate($part, $map, $object);
@@ -470,7 +470,7 @@ class ObjectMapper implements MapperInterface
      */
     public function extract(EntityInterface $object, $map = 'default')
     {
-        $result = [];
+        $result = array();
 
         // Selecting the map from the ones available
         if (is_string($map)) {
@@ -514,7 +514,7 @@ class ObjectMapper implements MapperInterface
      */
     public function extractCollection(EntityCollectionInterface $collection, $map = 'default')
     {
-        $result = [];
+        $result = array();
 
         // Selecting the map from the ones available
         if (is_string($map)) {
@@ -527,7 +527,7 @@ class ObjectMapper implements MapperInterface
         }
 
         foreach ($collection as $object) {
-            $collectionData = [];
+            $collectionData = array();
 
             // The object data will contain child object but will ignore collections
             $objectData = $this->extract($object, $map);
@@ -552,7 +552,7 @@ class ObjectMapper implements MapperInterface
                         }
                     } elseif (is_array($propertyValue)) {
                         foreach ($propertyValue as $value) {
-                            $collectionData[] = [$toField['toProperty'] => $value];
+                            $collectionData[] = array($toField['toProperty'] => $value);
                         }
                     }
                 }
@@ -599,7 +599,7 @@ class ObjectMapper implements MapperInterface
         $specs = $map['specs'];
 
         // Getting the data that will help us identify the object in the collection
-        $idData = [];
+        $idData = array();
 
         if (is_array($map['identField'])) {
             foreach ($map['identField'] as $identField) {
@@ -625,7 +625,7 @@ class ObjectMapper implements MapperInterface
             return $idData;
         }
 
-        return [];
+        return array();
     }
 
     /**
@@ -637,7 +637,7 @@ class ObjectMapper implements MapperInterface
     protected function convertIdentificationData(array $data)
     {
         $tmpIdData = $data;
-        $data = [];
+        $data = array();
 
         // We need to convert the property names in the identification data to method names
         // We don't call this in the foreach loop below because the call to the createGetterNameFromPropertyName()

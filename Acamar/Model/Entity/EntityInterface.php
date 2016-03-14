@@ -9,6 +9,11 @@
 
 namespace Acamar\Model\Entity;
 
+/**
+ * Interface EntityInterface
+ *
+ * @package Acamar\Model\Entity
+ */
 interface EntityInterface
 {
     /**

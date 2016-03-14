@@ -1,6 +1,6 @@
 <?php
 
-return [
+return array(
     'APPLICATION_ENV' => 'development',
     'HTTP_HOST' => 'localhost',
     'HTTP_CONNECTION' => 'keep-alive',
@@ -13,4 +13,4 @@ return [
     'HTTP_ACCEPT_ENCODING' => 'gzip, deflate, sdch',
     'HTTP_ACCEPT_LANGUAGE' => 'en-US,en;q=0.8,ro;q=0.6',
     'SERVER_SOFTWARE' => 'Apache/2.2.25 (Win32) mod_auth_sspi/1.0.5 mod_ssl/2.2.25 OpenSSL/0.9.8y PHP/5.4.20',
-];
+);

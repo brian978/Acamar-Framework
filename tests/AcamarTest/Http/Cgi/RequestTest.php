@@ -27,9 +27,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
     {
         $server = require realpath(__DIR__ . '/_files/server.php');
 
-        return [
-            [$server]
-        ];
+        return array(
+            array($server)
+        );
     }
 
     /**

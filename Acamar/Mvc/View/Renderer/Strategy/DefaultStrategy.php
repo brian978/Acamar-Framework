@@ -2,9 +2,9 @@
 /**
  * Acamar-Framework
  *
- * @link https://github.com/brian978/Acamar-Framework
+ * @link      https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
+ * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace Acamar\Mvc\View\Renderer\Strategy;
@@ -27,45 +27,54 @@ class DefaultStrategy extends AbstractRenderingStrategy implements RenderingStra
     public function __construct(MvcEvent $event)
     {
         parent::__construct($event);
+    }
 
-        $this->configureTheView();
+    /**
+     * Sets the View object that will be used when rendering
+     *
+     * @param View $view
+     * @return RenderingStrategyInterface
+     */
+    public function setView(View $view)
+    {
+        return parent::setView($this->configureTheView($view));
     }
 
     /**
      * Configures the View object by setting the appropriate properties
      *
-     * @return void
+     * @param View $view
+     * @return View
      */
-    protected function configureTheView()
+    protected function configureTheView(View $view)
     {
         $config = $this->event->getTarget()->getConfig();
-        $view = $this->event->getView();
 
-        if ($view instanceof View) {
-            // Configure the ViewHelperManager
-            $viewHelperManager = $view->getViewHelperManager();
-            $viewHelperManager->setConfig($config);
-            $viewHelperManager->setEvent($this->event);
+        // Configure the ViewHelperManager
+        $viewHelperManager = $view->getViewHelperManager();
+        $viewHelperManager->setConfig($config);
+        $viewHelperManager->setEvent($this->event);
 
-            // Configure the View with the template
-            $route = $this->event->getRoute();
+        // Configure the View with the template
+        $route = $this->event->getRoute();
 
-            if (isset($config['view']['paths'][$route->getModuleName()])) {
-                $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
-            }
+        if (isset($config['view']['paths'][$route->getModuleName()])) {
+            $view->setTemplatesPath($config['view']['paths'][$route->getModuleName()]);
+        }
 
-            if ('' === $view->getLayoutTemplate()) {
-                if (isset($config['view']['layout'][$route->getModuleName()])) {
-                    $view->setLayoutTemplate($config['view']['layout'][$route->getModuleName()]);
-                } else {
-                    $view->setLayoutTemplate('layout/layout.phtml');
-                }
-            }
-
-            if ('' === $view->getTemplate()) {
-                $view->setTemplate($route->getControllerName() . DIRECTORY_SEPARATOR . $route->getActionName());
+        if ('' === $view->getLayoutTemplate()) {
+            if (isset($config['view']['layout'][$route->getModuleName()])) {
+                $view->setLayoutTemplate($config['view']['layout'][$route->getModuleName()]);
+            } else {
+                $view->setLayoutTemplate('layout/layout.phtml');
             }
         }
+
+        if ('' === $view->getTemplate()) {
+            $view->setTemplate($route->getControllerName() . DIRECTORY_SEPARATOR . $route->getActionName());
+        }
+
+        return $view;
     }
 
     /**

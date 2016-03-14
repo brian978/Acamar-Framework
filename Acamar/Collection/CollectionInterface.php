@@ -11,6 +11,11 @@ namespace Acamar\Collection;
 
 use Iterator;
 
+/**
+ * Interface CollectionInterface
+ *
+ * @package Acamar\Collection
+ */
 interface CollectionInterface extends Iterator
 {
 

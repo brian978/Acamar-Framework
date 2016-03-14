@@ -26,6 +26,6 @@ class ControllerTest extends \PHPUnit_Framework_TestCase
      */
     public function testThrowsErrorWhenEventIsWrong()
     {
-        $this->getMock('\Acamar\Mvc\Controller\AbstractController', [], [new MvcEvent()]);
+        $this->getMock('\Acamar\Mvc\Controller\AbstractController', array(), array(new MvcEvent()));
     }
 }

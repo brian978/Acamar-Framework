@@ -14,6 +14,11 @@ use Acamar\Http\Response;
 use Acamar\Mvc\Application;
 use Acamar\Mvc\Event\MvcEvent;
 
+/**
+ * Class AbstractController
+ *
+ * @package Acamar\Mvc\Controller
+ */
 abstract class AbstractController
 {
     /**

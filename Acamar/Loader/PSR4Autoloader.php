@@ -9,7 +9,6 @@
 
 namespace Acamar\Loader;
 
-// Loading the dependencies
 require_once 'LoaderInterface.php';
 
 /**
@@ -24,12 +23,12 @@ class PSR4Autoloader implements LoaderInterface
      *
      * @var array
      */
-    protected $namespaces = [];
+    protected $namespaces = array();
 
     /**
      * @var array
      */
-    protected $resolved = [];
+    protected $resolved = array();
 
     /**
      * @var bool
@@ -43,7 +42,7 @@ class PSR4Autoloader implements LoaderInterface
     public function register()
     {
         if ($this->registered === false) {
-            $this->registered = spl_autoload_register([$this, 'loadClass']);
+            $this->registered = spl_autoload_register(array($this, 'loadClass'));
         }
     }
 
@@ -53,7 +52,7 @@ class PSR4Autoloader implements LoaderInterface
      * @param array $namespaces
      * @return $this
      */
-    public function registerNamespaces(array $namespaces = [])
+    public function registerNamespaces(array $namespaces = array())
     {
         foreach ($namespaces as $namespace => $path) {
             if (is_string($path)) {
@@ -85,7 +84,7 @@ class PSR4Autoloader implements LoaderInterface
         $path = realpath($path);
         if (!empty($path)) {
             if (!isset($this->namespaces[$namespace])) {
-                $this->namespaces[$namespace] = [];
+                $this->namespaces[$namespace] = array();
             }
 
             $this->namespaces[$namespace][] = $path;
@@ -138,10 +137,10 @@ class PSR4Autoloader implements LoaderInterface
         do {
             $namespace .= array_shift($pieces);
             if (isset($this->namespaces[$namespace])) {
-                $this->resolved[$class] = [
+                $this->resolved[$class] = array(
                     'ns' => $namespace,
                     'class' => str_replace($namespace . '\\', '', $class)
-                ];
+                );
                 
                 return true;
             } else {

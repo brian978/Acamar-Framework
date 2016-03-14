@@ -9,7 +9,6 @@
 
 namespace Acamar\Loader;
 
-// Loading the dependencies
 require_once 'LoaderInterface.php';
 
 /**
@@ -24,7 +23,7 @@ class PSR0Autoloader implements LoaderInterface
      *
      * @var array
      */
-    protected $namespaces = [];
+    protected $namespaces = array();
 
     /**
      * @var bool
@@ -38,7 +37,7 @@ class PSR0Autoloader implements LoaderInterface
     public function register()
     {
         if ($this->registered === false) {
-            $this->registered = spl_autoload_register([$this, 'loadClass']);
+            $this->registered = spl_autoload_register(array($this, 'loadClass'));
         }
     }
 
@@ -48,7 +47,7 @@ class PSR0Autoloader implements LoaderInterface
      * @param array $namespaces
      * @return $this
      */
-    public function registerNamespaces(array $namespaces = [])
+    public function registerNamespaces(array $namespaces = array())
     {
         foreach ($namespaces as $namespace => $path) {
             $this->registerNamespace($namespace, $path);

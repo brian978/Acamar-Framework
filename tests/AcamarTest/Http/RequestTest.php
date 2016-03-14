@@ -23,7 +23,9 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function testReturnsEmptyHeadersObject()
     {
-        $this->assertInstanceOf('\Acamar\Http\Headers', (new Request())->getHeaders());
+        $object = new Request();
+
+        $this->assertInstanceOf('\Acamar\Http\Headers', $object->getHeaders());
     }
 
     /**
@@ -31,11 +33,11 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function requestQuerySetterDataProvider()
     {
-        return [
-            ['test', new \stdClass(), null],
-            ['test2', 'testString', 'testString'],
-            ['test3', 12345, '12345']
-        ];
+        return array(
+            array('test', new \stdClass(), null),
+            array('test2', 'testString', 'testString'),
+            array('test3', 12345, '12345')
+        );
     }
 
     /**
@@ -55,16 +57,19 @@ class RequestTest extends \PHPUnit_Framework_TestCase
      */
     public function requestPostSetterDataProvider()
     {
-        return [
-            ['test', new \stdClass(), null],
-            ['test2', 'testString', 'testString'],
-            ['test3', 12345, '12345']
-        ];
+        return array(
+            array('test', new \stdClass(), null),
+            array('test2', 'testString', 'testString'),
+            array('test3', 12345, '12345')
+    );
     }
 
     /**
      * @dataProvider requestQuerySetterDataProvider
      * @covers       Request::setPost
+     * @param string $name
+     * @param mixed $value
+     * @param mixed $assertValue
      */
     public function testPostSetterAcceptsOnlyStringOrNumber($name, $value, $assertValue)
     {
@@ -76,16 +81,18 @@ class RequestTest extends \PHPUnit_Framework_TestCase
 
     public function testSetPostParamsCanHandleArrays()
     {
-        $params = [
+        $params = array(
             'id' => 1,
-            'book' => [
+            'book' => array(
                 'bookId' => '10   ',
-            ]
-        ];
+            )
+        );
 
         $request = new Request();
         $request->setPostParams($params);
 
-        $this->assertEquals('10', $request->getPost('book')['bookId']);
+        $book = $request->getPost('book');
+
+        $this->assertEquals('10', $book['bookId']);
     }
 }

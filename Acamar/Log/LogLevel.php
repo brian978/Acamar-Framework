@@ -47,7 +47,7 @@ abstract class LogLevel
      */
     protected static function getLevelPriority()
     {
-        return [
+        return array(
             LogLevel::EMERGENCY,
             LogLevel::ALERT,
             LogLevel::CRITICAL,
@@ -56,6 +56,6 @@ abstract class LogLevel
             LogLevel::NOTICE,
             LogLevel::INFO,
             LogLevel::DEBUG
-        ];
+        );
     }
 } 

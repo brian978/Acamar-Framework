@@ -32,10 +32,10 @@ class Logger implements LoggerInterface
     /**
      * @var array
      */
-    protected static $adapterAlias = [
+    protected static $adapterAlias = array(
         "blackhole" => "Acamar\\Log\\Adapter\\Blackhole",
         "stdout" => "Acamar\\Log\\Adapter\\StdOut",
-    ];
+    );
 
     /**
      * Creates the Logger object

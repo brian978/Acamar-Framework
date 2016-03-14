@@ -13,7 +13,7 @@ use PHPUnit_Framework_TestCase;
 
 class AbstractTest extends PHPUnit_Framework_TestCase
 {
-    public function __construct($name = null, array $data = [], $dataName = '')
+    public function __construct($name = null, array $data = array(), $dataName = '')
     {
         parent::__construct($name, $data, $dataName);
     }

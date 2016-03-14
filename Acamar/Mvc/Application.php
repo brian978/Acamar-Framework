@@ -21,6 +21,11 @@ use Acamar\Mvc\Router\Router;
 use Acamar\Mvc\View\Renderer\Strategy\RenderingStrategyFactory;
 use Acamar\Mvc\View\Renderer\ViewRenderer;
 
+/**
+ * Class Application
+ *
+ * @package Acamar\Mvc
+ */
 class Application implements ApplicationInterface
 {
     const ENV_PHPUNIT = 'phpunit';
@@ -74,7 +79,7 @@ class Application implements ApplicationInterface
         $this->config = new Config();
 
         // registering the error handler
-        set_exception_handler([$this, 'handleException']);
+        set_exception_handler(array($this, 'handleException'));
     }
 
     /**
@@ -113,7 +118,7 @@ class Application implements ApplicationInterface
      */
     protected function registerNamespaces()
     {
-        $namespaces = [];
+        $namespaces = array();
         $modulesPath = $this->config['modulesPath'];
 
         // The autoloader will call the "realpath" function on all the provided paths
@@ -287,10 +292,10 @@ class Application implements ApplicationInterface
     public function run()
     {
         // Adding some default event handlers
-        $this->eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, [$this, 'onBootstrap']);
-        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, [$this, 'onDispatchError']);
-        $this->eventManager->attach(MvcEvent::EVENT_RENDER, [$this, 'onRender']);
-        $this->eventManager->attach(MvcEvent::EVENT_RENDERED, [$this, 'onRenderComplete']);
+        $this->eventManager->attach(MvcEvent::EVENT_BOOTSTRAP, array($this, 'onBootstrap'));
+        $this->eventManager->attach(MvcEvent::EVENT_DISPATCH_ERROR, array($this, 'onDispatchError'));
+        $this->eventManager->attach(MvcEvent::EVENT_RENDER, array($this, 'onRender'));
+        $this->eventManager->attach(MvcEvent::EVENT_RENDERED, array($this, 'onRenderComplete'));
 
         // Starting the event group
         $mainEvent = new MvcEvent(MvcEvent::EVENT_BOOTSTRAP, $this);
