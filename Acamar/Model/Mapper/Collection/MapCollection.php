@@ -7,7 +7,7 @@
  * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
-namespace Acamar\Model\Mapper;
+namespace Acamar\Model\Mapper\Collection;
 
 use Acamar\Collection\AbstractCollection;
 

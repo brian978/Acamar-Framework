@@ -9,8 +9,13 @@
 
 namespace TestHelpers\Model\Mapper;
 
-use Acamar\Model\Mapper\MapCollection;
+use Acamar\Model\Mapper\Collection\MapCollection;
 
+/**
+ * Class MockedMapCollection
+ *
+ * @package TestHelpers\Model\Mapper
+ */
 class MockedMapCollection extends MapCollection
 {
     /**

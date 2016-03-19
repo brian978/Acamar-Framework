@@ -15,11 +15,11 @@ use Acamar\Model\Entity\EntityInterface;
 use Acamar\Model\Mapper\Exception\WrongDataTypeException;
 
 /**
- * Class AbstractMapper
+ * Class ArrayMapper
  *
  * @package Acamar\Model\Mapper
  */
-class ObjectMapper implements MapperInterface
+class ArrayMapper implements MapperInterface
 {
     /**
      * @var MapCollection
