@@ -13,7 +13,7 @@ use Acamar\Model\Mapper\ObjectMapper;
 use TestHelpers\AbstractTest;
 use TestHelpers\Model\Mapper\MockedMapCollection;
 
-class MapperTest extends AbstractTest
+class ObjectMapperTest extends AbstractTest
 {
     public function testCanUseTheMapToLinkObjects()
     {
