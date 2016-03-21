@@ -32,6 +32,21 @@ class XmlMapperTest extends AbstractTest
             $xml = $mapper->extract($object, "catalog");
         }
 
-        $this->assertEquals($xmlSource, $xml);
+        $this->assertEquals(new \SimpleXMLElement($xmlSource), new \SimpleXMLElement($xml));
+    }
+
+    public function testCanMapComplexXml()
+    {
+        $xmlSource = $this->getResourceContents("complexXml.xml");
+        $xml = "";
+
+        $mapper = new XmlMapper(new XmlMapCollection());
+        $object = $mapper->populate($xmlSource, "catalog");
+
+        if ($object->getTag() !== "") {
+            $xml = $mapper->extract($object, "catalog");
+        }
+
+        $this->assertEquals(new \SimpleXMLElement($xmlSource), new \SimpleXMLElement($xml));
     }
 }

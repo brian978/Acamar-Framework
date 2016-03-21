@@ -46,7 +46,7 @@ class XmlMapper extends ArrayMapper
     }
 
     /**
-     * Extracts the attributes of an XML element
+     * Extracts the attributes of an XML element (used when populating object)
      *
      * @param \SimpleXMLElement $element
      * @return array
@@ -60,6 +60,22 @@ class XmlMapper extends ArrayMapper
         }
 
         return [];
+    }
+
+    /**
+     * Populates a DOMElement with attributes (used when extracting to XML)
+     *
+     * @param \DOMElement $element
+     * @param array $attributes
+     * @return \DOMElement
+     */
+    protected static function populateAttributes(\DOMElement $element, array $attributes)
+    {
+        foreach ($attributes as $name => $value) {
+            $element->setAttribute($name, $value);
+        }
+
+        return $element;
     }
 
     /**
@@ -208,13 +224,13 @@ class XmlMapper extends ArrayMapper
     /**
      * @param \Acamar\Model\Entity\EntityInterface|\Acamar\Model\Entity\XmlEntity $object
      * @param string|array $map
+     * @param \DOMDocument $document
      * @return string
      */
-    public function extract(EntityInterface $object, $map = 'default')
+    public function extract(EntityInterface $object, $map = 'default', \DOMDocument $document = null)
     {
-        $result = "<?xml version=\"1.0\"?>";
         if ($object instanceof XmlEntity === false) {
-            return $result;
+            return "";
         }
 
         // Selecting the map from the ones available
@@ -222,11 +238,72 @@ class XmlMapper extends ArrayMapper
             $map = $this->findMap($map);
         }
 
+        if (null === $document) {
+            $document = new \DOMDocument();
+            $document->preserveWhiteSpace = false;
+            $document->formatOutput = true;
+        }
+
+        // We can't use the extract method recursively because it needs to output a string
+        $document->appendChild($this->extractElement($object, $map, $document));
+
+        return $document->saveXML();
+    }
+
+    /**
+     * @param XmlEntity $object
+     * @param string|array $map
+     * @param \DOMDocument $document
+     * @return \DOMElement
+     */
+    protected function extractElement(XmlEntity $object, $map, \DOMDocument $document)
+    {
+        // Selecting the map from the ones available
+        if (is_string($map)) {
+            $map = $this->findMap($map);
+        }
+
+        // Creating the element for the $object that is attached to the document
+        $element = static::populateAttributes($document->createElement($object->getTag()), $object->getAttributes());
+
         // We need to flip the values and the field names in the map because
         // we need to do the reverse operation of the populate
         $reversedMap = $this->mapCollection->flip($map);
 
+        if ($object->getValue() !== "") {
+            $element->nodeValue = $object->getValue();
+        } else {
+            // First we need to see if we can attach some nodes using the map
+            if (isset($reversedMap["specs"])) {
+                foreach ($reversedMap["specs"] as $fromProperty => $toTag) {
+                    // Do stuff here
+                }
+            }
 
-        return $result;
+
+            // Some data may have been mapped on the children property and not a specific property
+            if ($object->hasChildren()) {
+                /** @var XmlEntity $child */
+                foreach ($object->getChildren() as $child) {
+                    $childNode = $this->extractElement($child, $child->getTag(), $document);
+                    if (!empty($childNode)) {
+                        $element->appendChild($childNode);
+                    }
+                }
+            }
+        }
+
+        return $element;
+    }
+
+    /**
+     *
+     * @param EntityCollectionInterface $collection
+     * @param string|array $map
+     * @return array
+     */
+    public function extractCollection(EntityCollectionInterface $collection, $map = 'default')
+    {
+        throw new \RuntimeException("This method is not available in the XmlMapper");
     }
 }
