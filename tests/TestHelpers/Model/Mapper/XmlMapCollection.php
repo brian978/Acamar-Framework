@@ -24,15 +24,14 @@ class XmlMapCollection extends MapCollection
      * @var array
      */
     protected $collection = [
-        'default' => [
-            'entity' => '\Acamar\Model\Entity\XmlEntity',
+        'catalog_item' => [
+            'entity' => '\TestHelpers\Model\Entity\CatalogItem',
             'specs' => [
-                'id' => 'id',
-                'field1' => 'testField1',
-                'joinedId' => [
-                    'toProperty' => 'testField2',
-                    'map' => 'defaultJoin'
-                ],
+                'item_number' => 'number',
+                'size' => array(
+                    'toProperty' => 'sizes',
+                    'map' => 'item_sizes'
+                )
             ]
         ]
     ];

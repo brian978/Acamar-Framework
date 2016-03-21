@@ -9,6 +9,7 @@
 
 namespace Acamar\Model\Mapper;
 
+use Acamar\Model\Entity\EntityCollection;
 use Acamar\Model\Entity\EntityCollectionInterface;
 use Acamar\Model\Entity\EntityInterface;
 use Acamar\Model\Entity\XmlEntity;
@@ -159,6 +160,8 @@ class XmlMapper extends ArrayMapper
                         if (isset($specs[$childTag]["toProperty"])) {
                             $objectProperty = $specs[$childTag]["toProperty"];
                         }
+                    } else {
+                        $objectProperty = $specs[$childTag];
                     }
                 }
 
@@ -198,6 +201,9 @@ class XmlMapper extends ArrayMapper
      */
     public function populateCollection($data, $map = "default", EntityCollectionInterface $collection = null)
     {
+        // Unused parameters
+        unset($map);
+
         if (!is_string($data) && $data instanceof \SimpleXMLElement === false) {
             $message = 'The $data argument must be either a string or an instance of \SimpleXMLElement';
             $message .= ' ' . gettype($data) . ' given';
@@ -266,20 +272,46 @@ class XmlMapper extends ArrayMapper
         // Creating the element for the $object that is attached to the document
         $element = static::populateAttributes($document->createElement($object->getTag()), $object->getAttributes());
 
-        // We need to flip the values and the field names in the map because
-        // we need to do the reverse operation of the populate
-        $reversedMap = $this->mapCollection->flip($map);
-
         if ($object->getValue() !== "") {
             $element->nodeValue = $object->getValue();
         } else {
             // First we need to see if we can attach some nodes using the map
-            if (isset($reversedMap["specs"])) {
-                foreach ($reversedMap["specs"] as $fromProperty => $toTag) {
-                    // Do stuff here
+            if (isset($map["specs"])) {
+                foreach ($map["specs"] as $tag => $property) {
+                    if (is_array($property)) {
+                        $methodName = $this->createGetterNameFromPropertyName($property["toProperty"]);
+                        $value = $object->$methodName();
+
+                        // Extracted data is a collection
+                        if ($value instanceof EntityCollection) {
+                            /** @var XmlEntity $child */
+                            foreach ($value as $child) {
+                                $childNode = $this->extractElement($child, $child->getTag(), $document);
+                                if (!empty($childNode)) {
+                                    $element->appendChild($childNode);
+                                }
+                            }
+                        } else {
+                            // Extracted data will be in an element
+                            $childNode = $this->extractElement($value, $tag, $document);
+                            if (!empty($childNode)) {
+                                $element->appendChild($childNode);
+                            }
+                        }
+                    } else {
+                        $methodName = $this->createGetterNameFromPropertyName($property);
+                        $value = $object->$methodName();
+
+                        // Extracted data will be in an element
+                        if (!empty($value)) {
+                            $childNode = $this->extractElement($value, $tag, $document);
+                            if (!empty($childNode)) {
+                                $element->appendChild($childNode);
+                            }
+                        }
+                    }
                 }
             }
-
 
             // Some data may have been mapped on the children property and not a specific property
             if ($object->hasChildren()) {
