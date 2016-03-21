@@ -279,53 +279,53 @@ class XmlMapper extends ArrayMapper
             if (isset($map["specs"])) {
                 foreach ($map["specs"] as $tag => $property) {
                     if (is_array($property)) {
-                        $methodName = $this->createGetterNameFromPropertyName($property["toProperty"]);
-                        $value = $object->$methodName();
-
-                        // Extracted data is a collection
-                        if ($value instanceof EntityCollection) {
-                            /** @var XmlEntity $child */
-                            foreach ($value as $child) {
-                                $childNode = $this->extractElement($child, $child->getTag(), $document);
-                                if (!empty($childNode)) {
-                                    $element->appendChild($childNode);
-                                }
-                            }
-                        } else {
-                            // Extracted data will be in an element
-                            $childNode = $this->extractElement($value, $tag, $document);
-                            if (!empty($childNode)) {
-                                $element->appendChild($childNode);
-                            }
-                        }
-                    } else {
-                        $methodName = $this->createGetterNameFromPropertyName($property);
-                        $value = $object->$methodName();
-
-                        // Extracted data will be in an element
-                        if (!empty($value)) {
-                            $childNode = $this->extractElement($value, $tag, $document);
-                            if (!empty($childNode)) {
-                                $element->appendChild($childNode);
-                            }
-                        }
+                        $property = $property["toProperty"];
                     }
+
+                    // Extracting the data from the property
+                    $this->extractFromProperty($property, $object, $document, $element);
                 }
             }
 
             // Some data may have been mapped on the children property and not a specific property
             if ($object->hasChildren()) {
-                /** @var XmlEntity $child */
-                foreach ($object->getChildren() as $child) {
-                    $childNode = $this->extractElement($child, $child->getTag(), $document);
-                    if (!empty($childNode)) {
-                        $element->appendChild($childNode);
-                    }
-                }
+                // Extracting the data from the property
+                $this->extractFromProperty("children", $object, $document, $element);
             }
         }
 
         return $element;
+    }
+
+    /**
+     * @param string $property
+     * @param XmlEntity $object
+     * @param \DOMDocument $document
+     * @param \DOMElement $element
+     */
+    protected function extractFromProperty($property, XmlEntity $object, \DOMDocument $document, \DOMElement $element)
+    {
+        $methodName = $this->createGetterNameFromPropertyName($property);
+        $value = $object->$methodName();
+
+        // Extracted data is a collection
+        if ($value instanceof EntityCollection) {
+            /** @var XmlEntity $child */
+            foreach ($value as $child) {
+                $childNode = $this->extractElement($child, $child->getTag(), $document);
+                if (!empty($childNode)) {
+                    $element->appendChild($childNode);
+                }
+            }
+        } else {
+            // Extracted data will be in an element
+            if ($value instanceof XmlEntity) {
+                $childNode = $this->extractElement($value, $value->getTag(), $document);
+                if (!empty($childNode)) {
+                    $element->appendChild($childNode);
+                }
+            }
+        }
     }
 
     /**
