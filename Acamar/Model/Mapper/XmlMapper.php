@@ -80,6 +80,7 @@ class XmlMapper extends ArrayMapper
     }
 
     /**
+     * Creates an object and sets the XML tag and attributes
      *
      * @param \SimpleXMLElement $data
      * @param array $map
@@ -90,16 +91,20 @@ class XmlMapper extends ArrayMapper
         /** @var XmlEntity $object */
         $object = $this->createEntityObject($map["entity"]);
 
-        // Tag
-        $object->setTag($data->getName());
+        // Validating the object type
+        if (!$object instanceof XmlEntity) {
+            throw new \RuntimeException("The created object is not of type \\Acamar\\Model\\Entity\\XmlEntity");
+        }
 
-        // Attributes
+        $object->setTag($data->getName());
         $object->setAttributes(static::extractAttributes($data));
 
         return $object;
     }
 
     /**
+     * The method converts a string or \SimpleXMLElement $object to a set of objects
+     *
      * @param string|\SimpleXMLElement $data
      * @param string $map
      * @param EntityInterface|null $object
@@ -228,6 +233,8 @@ class XmlMapper extends ArrayMapper
     }
 
     /**
+     * The method does the opposite of the populate method
+     *
      * @param \Acamar\Model\Entity\EntityInterface|\Acamar\Model\Entity\XmlEntity $object
      * @param string|array $map
      * @param \DOMDocument $document
@@ -250,13 +257,15 @@ class XmlMapper extends ArrayMapper
             $document->formatOutput = true;
         }
 
-        // We can't use the extract method recursively because it needs to output a string
+        // We can't use the extract method recursively because it needs to output a string and not an object
         $document->appendChild($this->extractElement($object, $map, $document));
 
         return $document->saveXML();
     }
 
     /**
+     * Extracts a \DOMElement using the data found in the $object
+     *
      * @param XmlEntity $object
      * @param string|array $map
      * @param \DOMDocument $document
@@ -300,6 +309,8 @@ class XmlMapper extends ArrayMapper
     }
 
     /**
+     * Extracts data from a property of the object
+     *
      * @param string $property
      * @param XmlEntity $object
      * @param \DOMDocument $document

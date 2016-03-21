@@ -25,7 +25,7 @@ interface MapperInterface
     public function createEntityObject($className);
 
     /**
-     * The method converts and array of data (or an object that can be iterated as an array)
+     * The method converts an array of data (or an object that can be iterated as an array)
      * to a set of objects
      *
      * @param mixed $data

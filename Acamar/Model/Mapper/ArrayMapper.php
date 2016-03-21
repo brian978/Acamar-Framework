@@ -465,6 +465,8 @@ class ArrayMapper implements MapperInterface
     }
 
     /**
+     * The method does the opposite of the populate method
+     *
      * @param \Acamar\Model\Entity\EntityInterface $object
      * @param string|array $map
      * @return array
