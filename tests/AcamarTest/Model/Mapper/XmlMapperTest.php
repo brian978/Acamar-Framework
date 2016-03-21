@@ -9,7 +9,9 @@
 
 namespace AcamarTests\Model\Mapper;
 
+use Acamar\Model\Mapper\XmlMapper;
 use TestHelpers\AbstractTest;
+use TestHelpers\Model\Mapper\XmlMapCollection;
 
 /**
  * Class XmlMapperTest
@@ -20,11 +22,9 @@ class XmlMapperTest extends AbstractTest
 {
     public function testCanMapXml()
     {
-        $xmlObject = new \SimpleXMLElement($this->getResourceContents("complexXml.xml"));
+        $mapper = new XmlMapper(new XmlMapCollection());
+        $object = $mapper->populate($this->getResourceContents("complexXml.xml"), "catalog");
 
-        $array = json_decode(json_encode($xmlObject), true);
-        $array = array($xmlObject->getName() => $array);
 
-        echo 1;
     }
 }

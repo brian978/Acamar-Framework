@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<catalog>
+<catalog random="attribute">
     <product description="Cardigan Sweater" product_image="cardigan.jpg">
         <catalog_item gender="Men's">
             <item_number>QWZ5671</item_number>
@@ -38,4 +38,5 @@
         </catalog_item>
     </product>
     <footer>This is a product catalog</footer>
+    <footer2 attrsad="backupfooter">This is a product catalog with complex data</footer2>
 </catalog>
