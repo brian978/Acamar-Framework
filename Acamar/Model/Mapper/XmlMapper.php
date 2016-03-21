@@ -65,7 +65,7 @@ class XmlMapper extends ArrayMapper
     /**
      *
      * @param \SimpleXMLElement $data
-     * @param array             $map
+     * @param array $map
      * @return XmlEntity
      */
     protected function createObject(\SimpleXMLElement $data, array $map)
