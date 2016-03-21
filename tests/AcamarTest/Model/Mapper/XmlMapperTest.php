@@ -20,11 +20,18 @@ use TestHelpers\Model\Mapper\XmlMapCollection;
  */
 class XmlMapperTest extends AbstractTest
 {
-    public function testCanMapXml()
+    public function testCanMapSimpleXml()
     {
+        $xmlSource = $this->getResourceContents("simpleXml.xml");
+        $xml = "";
+
         $mapper = new XmlMapper(new XmlMapCollection());
-        $object = $mapper->populate($this->getResourceContents("complexXml.xml"), "catalog");
+        $object = $mapper->populate($xmlSource, "catalog");
 
+        if ($object->getTag() !== "") {
+            $xml = $mapper->extract($object, "catalog");
+        }
 
+        $this->assertEquals($xmlSource, $xml);
     }
 }
