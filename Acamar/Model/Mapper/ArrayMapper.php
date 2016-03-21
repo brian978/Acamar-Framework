@@ -12,6 +12,7 @@ namespace Acamar\Model\Mapper;
 use Acamar\Model\Entity\EntityCollection;
 use Acamar\Model\Entity\EntityCollectionInterface;
 use Acamar\Model\Entity\EntityInterface;
+use Acamar\Model\Mapper\Collection\MapCollection;
 use Acamar\Model\Mapper\Exception\WrongDataTypeException;
 
 /**
