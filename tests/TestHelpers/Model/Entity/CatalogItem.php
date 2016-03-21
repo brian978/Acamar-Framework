@@ -20,9 +20,9 @@ use Acamar\Model\Entity\XmlEntity;
 class CatalogItem extends XmlEntity
 {
     /**
-     * @var string
+     * @var XmlEntity
      */
-    protected $number = "";
+    protected $number = null;
 
     /**
      * @var EntityCollection
@@ -30,7 +30,7 @@ class CatalogItem extends XmlEntity
     protected $sizes = null;
 
     /**
-     * @return string
+     * @return XmlEntity
      */
     public function getNumber()
     {
@@ -38,9 +38,9 @@ class CatalogItem extends XmlEntity
     }
 
     /**
-     * @param string $number
+     * @param XmlEntity $number
      */
-    public function setNumber($number)
+    public function setNumber(XmlEntity $number)
     {
         $this->number = $number;
     }
