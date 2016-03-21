@@ -275,22 +275,24 @@ class XmlMapper extends ArrayMapper
         if ($object->getValue() !== "") {
             $element->nodeValue = $object->getValue();
         } else {
-            // First we need to see if we can attach some nodes using the map
-            if (isset($map["specs"])) {
-                foreach ($map["specs"] as $tag => $property) {
-                    if (is_array($property)) {
-                        $property = $property["toProperty"];
-                    }
-
-                    // Extracting the data from the property
-                    $this->extractFromProperty($property, $object, $document, $element);
-                }
+            // For code correctness
+            if (!isset($map["specs"])) {
+                $map["specs"] = [];
             }
 
-            // Some data may have been mapped on the children property and not a specific property
-            if ($object->hasChildren()) {
+            // Adding a default mapping in case the $object->hasChildren()
+            if (!isset($map["specs"]["children"])) {
+                $map["specs"]["children"] = "children";
+            }
+
+            // Extracting the data according to the specs
+            foreach ($map["specs"] as $property) {
+                if (is_array($property)) {
+                    $property = $property["toProperty"];
+                }
+
                 // Extracting the data from the property
-                $this->extractFromProperty("children", $object, $document, $element);
+                $this->extractFromProperty($property, $object, $document, $element);
             }
         }
 
@@ -308,7 +310,6 @@ class XmlMapper extends ArrayMapper
         $methodName = $this->createGetterNameFromPropertyName($property);
         $value = $object->$methodName();
 
-        // Extracted data is a collection
         if ($value instanceof EntityCollection) {
             /** @var XmlEntity $child */
             foreach ($value as $child) {
@@ -317,13 +318,10 @@ class XmlMapper extends ArrayMapper
                     $element->appendChild($childNode);
                 }
             }
-        } else {
-            // Extracted data will be in an element
-            if ($value instanceof XmlEntity) {
-                $childNode = $this->extractElement($value, $value->getTag(), $document);
-                if (!empty($childNode)) {
-                    $element->appendChild($childNode);
-                }
+        } else if ($value instanceof XmlEntity) {
+            $childNode = $this->extractElement($value, $value->getTag(), $document);
+            if (!empty($childNode)) {
+                $element->appendChild($childNode);
             }
         }
     }
