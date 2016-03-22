@@ -83,11 +83,11 @@ class XmlMapper extends ArrayMapper
     /**
      * Creates an object and sets the XML tag and attributes
      *
-     * @param \SimpleXMLElement $data
+     * @param \SimpleXMLElement $element
      * @param array $map
      * @return XmlEntity
      */
-    protected function createObject(\SimpleXMLElement $data, array $map)
+    protected function createObject(\SimpleXMLElement $element, array $map)
     {
         /** @var XmlEntity $object */
         $object = $this->createEntityObject($map["entity"]);
@@ -97,8 +97,8 @@ class XmlMapper extends ArrayMapper
             throw new \RuntimeException("The created object is not of type \\Acamar\\Model\\Entity\\XmlEntity");
         }
 
-        $object->setTag($data->getName());
-        $object->setAttributes(static::extractAttributes($data));
+        $object->setTag($element->getName());
+        $object->setAttributes(static::extractAttributes($element));
 
         return $object;
     }
