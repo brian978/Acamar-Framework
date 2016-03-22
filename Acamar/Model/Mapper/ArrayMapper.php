@@ -173,13 +173,7 @@ class ArrayMapper implements MapperInterface
      */
     protected function & getObjectMethodsData(EntityInterface $object)
     {
-        try {
-            $objectClass = $this->objectClasses->offsetGet($object);
-        } catch (\UnexpectedValueException $e) {
-            $objectClass = get_class($object);
-            $this->objectClasses->attach($object, $objectClass);
-        }
-
+        $objectClass = get_class($object);
         if (!isset($this->callableMethods[$objectClass])) {
             $this->callableMethods[$objectClass] = [];
         }
@@ -197,16 +191,12 @@ class ArrayMapper implements MapperInterface
     protected function isCollection(EntityInterface $object, $propertyName)
     {
         // Calling the setter and registering it in the callableMethods property for future use
-        $callableMethods = $this->getObjectMethodsData($object);
+        $callableMethods = &$this->getObjectMethodsData($object);
         if (!isset($callableMethods[$propertyName])) {
             $this->extractMethodData($callableMethods, $object, $propertyName);
         }
 
-        if (is_array($callableMethods[$propertyName])) {
-            return null !== $callableMethods[$propertyName]['collection'];
-        }
-
-        return false;
+        return (null !== $callableMethods[$propertyName]['collection']);
     }
 
     /**

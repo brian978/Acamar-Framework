@@ -54,13 +54,14 @@ class XmlMapper extends ArrayMapper
      */
     protected static function extractAttributes(\SimpleXMLElement $element)
     {
-        $attributes = json_decode(json_encode($element->attributes()), true);
+        $attributes = [];
 
-        if (isset($attributes["@attributes"]) && is_array($attributes["@attributes"])) {
-            return $attributes["@attributes"];
+        /** @var \SimpleXMLElement $attribute */
+        foreach ($element->attributes() as $attribute) {
+            $attributes[$attribute->getName()] = (string)$attribute;
         }
 
-        return [];
+        return $attributes;
     }
 
     /**
