@@ -47,6 +47,13 @@ class ArrayMapper implements MapperInterface
     protected $callableMethods = [];
 
     /**
+     * Cache for the getters and setters
+     *
+     * @var array
+     */
+    protected $methodNames = [];
+
+    /**
      * @var \SplObjectStorage
      */
     protected $objectClasses = null;
@@ -117,35 +124,45 @@ class ArrayMapper implements MapperInterface
     }
 
     /**
+     * Generates a setter name for a given property
      *
      * @param string $property
      * @return mixed
      */
     protected function createSetterNameFromPropertyName($property)
     {
-        return preg_replace_callback(
-            '/_([a-z])/',
-            function ($string) {
-                return ucfirst($string);
-            },
-            'set' . ucfirst($property)
-        );
+        if (!isset($this->methodNames["setters"][$property])) {
+            $this->methodNames["setters"][$property] = preg_replace_callback(
+                '/_([a-z])/',
+                function ($string) {
+                    return ucfirst($string);
+                },
+                'set' . ucfirst($property)
+            );
+        }
+
+        return $this->methodNames["setters"][$property];
     }
 
     /**
+     * Generates a getter name for a given property
      *
      * @param string $property
      * @return mixed
      */
     protected function createGetterNameFromPropertyName($property)
     {
-        return preg_replace_callback(
-            '/_([a-z])/',
-            function ($string) {
-                return ucfirst($string);
-            },
-            'get' . ucfirst($property)
-        );
+        if (!isset($this->methodNames["getters"][$property])) {
+            $this->methodNames["getters"][$property] = preg_replace_callback(
+                '/_([a-z])/',
+                function ($string) {
+                    return ucfirst($string);
+                },
+                'get' . ucfirst($property)
+            );
+        }
+
+        return $this->methodNames["getters"][$property];
     }
 
     /**
