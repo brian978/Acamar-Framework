@@ -34,13 +34,18 @@ class XmlMapper extends ArrayMapper
 
     /**
      * @param string $name
+     * @param string $alternativeName
      * @return array
      */
-    public function findMap($name)
+    public function findMap($name, $alternativeName = "")
     {
         $map = $this->mapCollection->findMap($name);
         if (empty($map)) {
-            $map = $this->defaultMap;
+            if (!empty($alternativeName)) {
+                return $this->findMap($alternativeName);
+            }
+
+            return $this->defaultMap;
         }
 
         return $map;
@@ -107,13 +112,14 @@ class XmlMapper extends ArrayMapper
      * The method converts a string or \SimpleXMLElement $object to a set of objects
      *
      * @param string|\SimpleXMLElement $data
-     * @param string $map
+     * @param string|array $map
      * @param EntityInterface|null $object
      * @return XmlEntity
      * @throws WrongDataTypeException
      */
     public function populate($data, $map = 'default', EntityInterface $object = null)
     {
+        // Data argument validation
         if (!is_string($data) && $data instanceof \SimpleXMLElement === false) {
             $message = 'The $data argument must be either a string or an instance of \SimpleXMLElement';
             $message .= ' ' . gettype($data) . ' given';
@@ -121,12 +127,20 @@ class XmlMapper extends ArrayMapper
             throw new WrongDataTypeException($message);
         }
 
+        // Map argument validation
+        if (!is_string($map) && !is_array($map)) {
+            throw new \InvalidArgumentException("The provided map must be either a string or an array");
+        }
+
+        // Converting the data string to XML to we can parse it
         if (is_string($data)) {
             $data = new \SimpleXMLElement($data);
         }
 
         // Loading the map
-        $map = $this->findMap($map);
+        if (is_string($map)) {
+            $map = $this->findMap($map);
+        }
 
         // Shortcuts
         $objectClass = &$map["entity"];
@@ -207,9 +221,6 @@ class XmlMapper extends ArrayMapper
      */
     public function populateCollection($data, $map = "default", EntityCollectionInterface $collection = null)
     {
-        // Unused parameters
-        unset($map);
-
         if (!is_string($data) && $data instanceof \SimpleXMLElement === false) {
             $message = 'The $data argument must be either a string or an instance of \SimpleXMLElement';
             $message .= ' ' . gettype($data) . ' given';
@@ -225,7 +236,12 @@ class XmlMapper extends ArrayMapper
             $data = new \SimpleXMLElement($data);
         }
 
-        $object = $this->populate($data, $data->getName());
+        // Finding the map
+        if (is_string($map)) {
+            $map = $this->findMap($map, $data->getName());
+        }
+
+        $object = $this->populate($data, $map);
         if ($object->getTag() !== "") {
             $collection->add($object);
         }
@@ -297,11 +313,6 @@ class XmlMapper extends ArrayMapper
 
             // Extracting the data according to the specs
             foreach ($map["specs"] as $property) {
-                if (is_array($property)) {
-                    $property = $property["toProperty"];
-                }
-
-                // Extracting the data from the property
                 $this->extractFromProperty($property, $object, $document, $element);
             }
         }
@@ -312,26 +323,34 @@ class XmlMapper extends ArrayMapper
     /**
      * Extracts data from a property of the object
      *
-     * @param string $property
+     * @param string|array $property
      * @param XmlEntity $object
      * @param \DOMDocument $document
      * @param \DOMElement $element
      */
     protected function extractFromProperty($property, XmlEntity $object, \DOMDocument $document, \DOMElement $element)
     {
-        $methodName = $this->createGetterNameFromPropertyName($property);
+        // Extracting the property name since $property can contain some extra data
+        $propertyName = $property;
+        $propertyMap = "";
+        if (is_array($property)) {
+            $propertyName = $property["toProperty"];
+            $propertyMap = $property["map"];
+        }
+
+        $methodName = $this->createGetterNameFromPropertyName($propertyName);
         $value = $object->$methodName();
 
         if ($value instanceof EntityCollection) {
             /** @var XmlEntity $child */
             foreach ($value as $child) {
-                $childNode = $this->extractElement($child, $child->getTag(), $document);
+                $childNode = $this->extractElement($child, $this->findMap($propertyMap, $child->getTag()), $document);
                 if (!empty($childNode)) {
                     $element->appendChild($childNode);
                 }
             }
         } else if ($value instanceof XmlEntity) {
-            $childNode = $this->extractElement($value, $value->getTag(), $document);
+            $childNode = $this->extractElement($value, $this->findMap($propertyMap, $value->getTag()), $document);
             if (!empty($childNode)) {
                 $element->appendChild($childNode);
             }

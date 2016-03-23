@@ -26,7 +26,7 @@ class MapCollection extends AbstractCollection
      */
     public function findMap($name)
     {
-        if (isset($this->collection[$name])) {
+        if (is_string($name) && !empty($name) && isset($this->collection[$name])) {
             return $this->collection[$name];
         }
 

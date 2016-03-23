@@ -28,10 +28,16 @@ class XmlMapCollection extends MapCollection
             'entity' => '\TestHelpers\Model\Entity\CatalogItem',
             'specs' => [
                 'item_number' => 'number',
-                'size' => array(
+                'size' => [
                     'toProperty' => 'sizes',
                     'map' => 'item_sizes'
-                )
+                ]
+            ]
+        ],
+        'item_sizes' => [
+            'entity' => '\TestHelpers\Model\Entity\CatalogItemSize',
+            'specs' => [
+                'color_swatch' => 'colors'
             ]
         ]
     ];
