@@ -188,7 +188,7 @@ class XmlMapper extends ArrayMapper
                 // Mapping the data
                 if (!$this->isCollection($object, $objectProperty)) {
                     $childObject = $this->populate($child, $childMap);
-                    if ($childObject !== null) {
+                    if (null !== $childObject) {
                         $this->setProperty($objectClass, $object, $objectProperty, $childObject);
                     }
                 } else {
@@ -228,7 +228,7 @@ class XmlMapper extends ArrayMapper
             throw new WrongDataTypeException($message);
         }
 
-        if ($collection === null) {
+        if (null === $collection) {
             $collection = clone $this->getCollectionPrototype();
         }
 
@@ -242,7 +242,7 @@ class XmlMapper extends ArrayMapper
         }
 
         $object = $this->populate($data, $map);
-        if ($object->getTag() !== "") {
+        if ("" !== $object->getTag()) {
             $collection->add($object);
         }
 
@@ -298,7 +298,7 @@ class XmlMapper extends ArrayMapper
         // Creating the element for the $object that is attached to the document
         $element = static::populateAttributes($document->createElement($object->getTag()), $object->getAttributes());
 
-        if ($object->getValue() !== "") {
+        if ("" !== $object->getValue()) {
             $element->nodeValue = $object->getValue();
         } else {
             // For code correctness
