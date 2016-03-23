@@ -168,7 +168,7 @@ class XmlMapper extends ArrayMapper
 
                 // Mapping defaults
                 $objectProperty = "children";
-                $childMap = "default";
+                $childMap = $childTag;
 
                 // Trying to find something to map
                 if (isset($specs[$childTag])) {
