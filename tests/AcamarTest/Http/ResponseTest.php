@@ -92,4 +92,15 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals('ok', $json->status);
     }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testMinimisedResponse()
+    {
+        $response = Response::fromString("HTTP/1.1 400 Could not resolve host: www.ssssszzz23dasfsd'].com");
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals("Could not resolve host: www.ssssszzz23dasfsd'].com", $response->getStatusPhrase());
+    }
 }
