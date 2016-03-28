@@ -134,7 +134,7 @@ class Response
 
         if (count($lines)) {
             $line = array_shift($lines);
-            while (false !== $line) {
+            while (null !== $line) {
                 $matched = preg_match(
                     '#HTTP\/(?P<version>1\.[0-9]) (?P<status>[0-9]{3}) (?P<statusPhrase>.*)#',
                     $line,

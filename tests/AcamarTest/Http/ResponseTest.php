@@ -54,6 +54,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromString(Response $response)
     {
@@ -64,6 +65,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithHeaders(Response $response)
     {
@@ -73,6 +75,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithStatusPhrase(Response $response)
     {
@@ -82,6 +85,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithBody(Response $response)
     {
@@ -91,5 +95,16 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals('ok', $json->status);
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testMinimisedResponse()
+    {
+        $response = Response::fromString("HTTP/1.1 400 Could not resolve host: www.ssssszzz23dasfsd'].com");
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals("Could not resolve host: www.ssssszzz23dasfsd'].com", $response->getStatusPhrase());
     }
 }
