@@ -9,6 +9,8 @@
 
 namespace Acamar\Http;
 
+use Acamar\Utils\StringUtils;
+
 /**
  * Class Response
  *
@@ -124,17 +126,15 @@ class Response
             return new self();
         }
 
-        $lines = explode("\r\n", $string);
-        if (empty($lines) || $lines[0] == $string) {
-            $lines = explode("\n", $string);
-        }
+        $eol = StringUtils::detectEol($string);
+        $lines = explode($eol, $string);
 
         /** @var $instance Response */
         $instance = new static;
 
         if (count($lines)) {
             $line = array_shift($lines);
-            while (false !== $line) {
+            while (null !== $line) {
                 $matched = preg_match(
                     '#HTTP\/(?P<version>1\.[0-9]) (?P<status>[0-9]{3}) (?P<statusPhrase>.*)#',
                     $line,
@@ -161,7 +161,7 @@ class Response
             $instance->setHeaders(Headers::fromArray($lines));
 
             // Now that we only have the body we can build it
-            $instance->setBody(implode("\n", $lines));
+            $instance->setBody(implode($eol, $lines));
         }
 
         return $instance;

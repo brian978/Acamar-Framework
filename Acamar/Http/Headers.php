@@ -9,6 +9,7 @@
 
 namespace Acamar\Http;
 
+use Acamar\Utils\StringUtils;
 use Countable;
 use Iterator;
 
@@ -107,10 +108,8 @@ class Headers implements Countable, Iterator
      */
     public static function fromString($string)
     {
-        $lines = explode("\r\n", $string);
-        if (empty($lines) || $lines[0] == $string) {
-            $lines = explode("\n", $string);
-        }
+        $eol = StringUtils::detectEol($string);
+        $lines = explode($eol, $string);
 
         return static::fromArray($lines);
     }

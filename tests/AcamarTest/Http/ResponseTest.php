@@ -54,6 +54,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromString(Response $response)
     {
@@ -64,6 +65,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithHeaders(Response $response)
     {
@@ -73,6 +75,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithStatusPhrase(Response $response)
     {
@@ -82,6 +85,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithBody(Response $response)
     {
@@ -91,5 +95,41 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals('ok', $json->status);
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithRLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_r_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithNLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_n_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithRNLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_rn_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
     }
 }
