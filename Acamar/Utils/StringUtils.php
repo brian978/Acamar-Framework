@@ -20,7 +20,7 @@ class StringUtils
      * Detects the EOL of a string
      *
      * @param string $string
-     * @return string|null
+     * @return string
      */
     public static function detectEol($string)
     {
@@ -37,6 +37,6 @@ class StringUtils
             }
         }
 
-        return null;
+        return PHP_EOL;
     }
 }
