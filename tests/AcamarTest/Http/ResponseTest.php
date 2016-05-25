@@ -132,4 +132,40 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
     }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromImage()
+    {
+        $ch = curl_init("https://www.google.ro/images/nav_logo242.png");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+
+        $response = Response::fromString(curl_exec($ch));
+
+        curl_close($ch);
+
+        $this->assertNotEmpty($response->getBody());
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromImageWithoutHeaders()
+    {
+        $ch = curl_init("https://www.google.ro/images/nav_logo242.png");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+
+        $response = Response::fromString(curl_exec($ch));
+
+        curl_close($ch);
+
+        $this->assertNotEmpty($response->getBody());
+    }
 }

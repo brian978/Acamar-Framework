@@ -2,9 +2,9 @@
 /**
  * Acamar-Framework
  *
- * @link https://github.com/brian978/Acamar-Framework
+ * @link      https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
+ * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace Acamar\Http;
@@ -122,10 +122,12 @@ class Headers implements Countable, Iterator
      */
     public static function fromArray(array &$lines)
     {
+        $count = count($lines);
+
         /** @var $headers Headers */
         $headers = new static();
 
-        if (count($lines)) {
+        if ($count) {
             do {
                 $line = array_shift($lines);
 
@@ -135,8 +137,12 @@ class Headers implements Countable, Iterator
                 } elseif (preg_match('/^\s*$/', $line)) {
                     // Finished with the headers
                     break;
+                } elseif ($count === 1) {
+                    // No headers
+                    $lines[] = $line;
+                    break;
                 }
-            } while (false !== $line);
+            } while (null !== $line);
         }
 
         return $headers;
