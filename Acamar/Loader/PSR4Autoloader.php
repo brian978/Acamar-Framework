@@ -141,7 +141,7 @@ class PSR4Autoloader implements LoaderInterface
                     'ns' => $namespace,
                     'class' => str_replace($namespace . '\\', '', $class)
                 ];
-                
+
                 return true;
             } else {
                 $namespace .= '\\';

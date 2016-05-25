@@ -97,7 +97,7 @@ class EventManager
         /** @var $queue null|SplPriorityQueue */
         $queue = null;
         if (isset($this->events[$event])) {
-            $queue = $this->events[$event];
+            $queue = clone $this->events[$event];
         }
 
         // Calling the listeners

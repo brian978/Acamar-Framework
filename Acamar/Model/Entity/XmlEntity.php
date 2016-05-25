@@ -24,7 +24,7 @@ class XmlEntity extends AbstractEntity
     /**
      * @var array
      */
-    protected $attributes = array();
+    protected $attributes = [];
 
     /**
      * @var string

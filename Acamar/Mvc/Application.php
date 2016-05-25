@@ -2,9 +2,9 @@
 /**
  * Acamar-Framework
  *
- * @link https://github.com/brian978/Acamar-Framework
+ * @link      https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
+ * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace Acamar\Mvc;
@@ -14,7 +14,7 @@ use Acamar\Event\EventManager;
 use Acamar\Http\Cgi\Request;
 use Acamar\Http\Response;
 use Acamar\Loader\LoaderInterface;
-use Acamar\Loader\PSR0Autoloader;
+use Acamar\Loader\PSR4Autoloader;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\Router\Route;
 use Acamar\Mvc\Router\Router;
@@ -34,7 +34,7 @@ class Application implements ApplicationInterface
     const ENV_PRODUCTION = 'production';
 
     /**
-     * @var PSR0Autoloader
+     * @var PSR4Autoloader
      */
     protected $autoloader = null;
 
@@ -162,7 +162,7 @@ class Application implements ApplicationInterface
         // Checking if the configuration cache is enabled
         $isConfigCacheEnabled = false;
         if (isset($appConfig['configCache']) && !empty($appConfig['configCache']['filePath'])) {
-            $isConfigCacheEnabled = (bool) $appConfig['configCache']['enabled'];
+            $isConfigCacheEnabled = (bool)$appConfig['configCache']['enabled'];
         }
 
         // Getting the cached version if it exists and setting a flag

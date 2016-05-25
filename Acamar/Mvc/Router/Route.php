@@ -2,9 +2,9 @@
 /**
  * Acamar-Framework
  *
- * @link https://github.com/brian978/Acamar-Framework
+ * @link      https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
+ * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace Acamar\Mvc\Router;
@@ -147,7 +147,7 @@ class Route
      */
     public function setName($name)
     {
-        $this->name = (string) $name;
+        $this->name = (string)$name;
 
         return $this;
     }

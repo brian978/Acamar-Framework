@@ -2,9 +2,9 @@
 /**
  * Acamar-Framework
  *
- * @link https://github.com/brian978/Acamar-Framework
+ * @link      https://github.com/brian978/Acamar-Framework
  * @copyright Copyright (c) 2014
- * @license https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
+ * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
 namespace AcamarTest\Http;
@@ -54,6 +54,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromString(Response $response)
     {
@@ -64,6 +65,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithHeaders(Response $response)
     {
@@ -73,6 +75,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithStatusPhrase(Response $response)
     {
@@ -82,6 +85,7 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
     /**
      * @covers       Acamar\Http\Response::fromString
      * @dataProvider responseProvider
+     * @param Response $response
      */
     public function testCreateResponseFromStringWithBody(Response $response)
     {
@@ -91,5 +95,88 @@ class ResponseTest extends \PHPUnit_Framework_TestCase
         }
 
         $this->assertEquals('ok', $json->status);
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testMinimisedResponse()
+    {
+        $response = Response::fromString("HTTP/1.1 400 Could not resolve host: www.ssssszzz23dasfsd'].com");
+
+        $this->assertEquals(400, $response->getStatusCode());
+        $this->assertEquals("Could not resolve host: www.ssssszzz23dasfsd'].com", $response->getStatusPhrase());
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithRLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_r_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithNLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_n_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromStringWithRNLineEndings()
+    {
+        $response = Response::fromString(
+            file_get_contents(realpath(__DIR__ . '/_files/response_headers_rn_endings.txt'))
+        );
+
+        $this->assertEquals(35, $response->getHeaders()->get(Headers::CONTENT_LENGTH));
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromImage()
+    {
+        $ch = curl_init("https://www.google.ro/images/nav_logo242.png");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, true);
+
+        $response = Response::fromString(curl_exec($ch));
+
+        curl_close($ch);
+
+        $this->assertNotEmpty($response->getBody());
+    }
+
+    /**
+     * @covers Acamar\Http\Response::fromString
+     */
+    public function testCreateResponseFromImageWithoutHeaders()
+    {
+        $ch = curl_init("https://www.google.ro/images/nav_logo242.png");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_HEADER, false);
+
+        $response = Response::fromString(curl_exec($ch));
+
+        curl_close($ch);
+
+        $this->assertNotEmpty($response->getBody());
     }
 }
