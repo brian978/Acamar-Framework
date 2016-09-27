@@ -20,12 +20,15 @@ use Acamar\Mvc\Event\MvcEvent;
 class ControllerTest extends \PHPUnit_Framework_TestCase
 {
     /**
-     * @covers                   Acamar\Mvc\Controller\AbstractController::__construct()
+     * @covers \Acamar\Mvc\Controller\AbstractController::__construct()
      * @expectedException \RuntimeException
      * @expectedExceptionMessage Invalid event target type
      */
     public function testThrowsErrorWhenEventIsWrong()
     {
-        $this->getMock('\Acamar\Mvc\Controller\AbstractController', [], [new MvcEvent()]);
+        $this->getMockBuilder('\Acamar\Mvc\Controller\AbstractController')
+            ->setMethods(array())
+            ->setConstructorArgs(array(new MvcEvent()))
+            ->getMock();
     }
 }

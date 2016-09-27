@@ -21,6 +21,7 @@ framework.
 # Minimum requirements
 * PHP 5.6.19
 * Nginx / Apache web server (it's not yet tested on others)
+* PHPUnit 5.5 (for unit testing only)
 
 # Documentation
 

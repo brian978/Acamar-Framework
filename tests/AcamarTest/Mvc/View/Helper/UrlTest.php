@@ -54,7 +54,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
         $router->addRoute(Route::factory('mvc', $config['routes']['mvc']));
 
         // The application is required by the event
-        $application = $this->getMock('\Acamar\Mvc\ApplicationInterface');
+        $application = $this->createMock('\Acamar\Mvc\ApplicationInterface');
 
         $application->expects($this->any())
             ->method('getConfig')
@@ -65,7 +65,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
             ->will($this->returnValue($router));
 
         // Mocking the event
-        $this->event = $this->getMock('Acamar\Mvc\Event\MvcEvent');
+        $this->event = $this->createMock('Acamar\Mvc\Event\MvcEvent');
 
         $this->event->expects($this->any())
             ->method('getTarget')
