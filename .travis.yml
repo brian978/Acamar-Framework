@@ -4,7 +4,7 @@ php:
 
 branches:
   only:
-    - v2.1.0
+    - v3.x
     
 install:
    - composer install
