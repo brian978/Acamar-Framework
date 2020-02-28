@@ -9,4 +9,4 @@ branches:
 install:
    - composer install
 
-script: phpunit --configuration tests/phpunit.xml.dist
+script: phpunit --configuration tests/phpunit.xml.dist --testsuite full
