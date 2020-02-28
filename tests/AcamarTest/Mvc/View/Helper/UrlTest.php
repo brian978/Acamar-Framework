@@ -15,13 +15,14 @@ use Acamar\Http\Cgi\Request;
 use Acamar\Mvc\Router\Route;
 use Acamar\Mvc\Router\Router;
 use Acamar\Mvc\View\Helper\Url;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class UrlTest
  *
  * @package AcamarTest\Mvc\View\Helper
  */
-class UrlTest extends \PHPUnit_Framework_TestCase
+class UrlTest extends TestCase
 {
     /**
      * @var \Acamar\Mvc\Event\MvcEvent|\PHPUnit_Framework_MockObject_MockObject
@@ -34,7 +35,7 @@ class UrlTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         // The application contains a config object
         $config = new Config();

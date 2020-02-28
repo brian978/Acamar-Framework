@@ -14,14 +14,14 @@ use Acamar\Http\Request;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\Router\Route;
 use Acamar\Mvc\Router\Router;
-
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RouterTest
  *
  * @package AcamarTest\Mvc\Router
  */
-class RouterTest extends \PHPUnit_Framework_TestCase
+class RouterTest extends TestCase
 {
     /**
      * @covers Router::onRoute

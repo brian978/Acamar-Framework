@@ -9,14 +9,14 @@
 
 namespace TestHelpers;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class AbstractTest
  *
  * @package TestHelpers
  */
-class AbstractTest extends PHPUnit_Framework_TestCase
+class AbstractTest extends TestCase
 {
     /**
      * AbstractTest constructor.
@@ -38,7 +38,7 @@ class AbstractTest extends PHPUnit_Framework_TestCase
      */
     protected function getResourcePath($filename)
     {
-        $resourcesFolder = getcwd() . DIRECTORY_SEPARATOR . "Resources" . DIRECTORY_SEPARATOR;
+        $resourcesFolder = TESTS_ROOT_PATH . DIRECTORY_SEPARATOR . "Resources" . DIRECTORY_SEPARATOR;
         $path = realpath($resourcesFolder . $filename);
 
         if (empty($path)) {

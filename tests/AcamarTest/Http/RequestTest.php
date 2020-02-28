@@ -10,13 +10,14 @@
 namespace AcamarTest\Http;
 
 use Acamar\Http\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestTest
  *
  * @package AcamarTest\Http
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
     /**
      * @covers Request::getHeaders

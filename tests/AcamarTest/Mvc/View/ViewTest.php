@@ -10,14 +10,14 @@
 namespace AcamarTest\Mvc\View;
 
 use Acamar\Mvc\View\View;
-
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ViewTest
  *
  * @package AcamarTest\Mvc\View
  */
-class ViewTest extends \PHPUnit_Framework_TestCase
+class ViewTest extends TestCase
 {
     /**
      * @expectedException \RuntimeException

@@ -9,10 +9,10 @@
 
 namespace AcamarTests\Model\Entity;
 
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 use TestHelpers\Model\Entity\MockEntity;
 
-class EntityTest extends PHPUnit_Framework_TestCase
+class EntityTest extends TestCase
 {
     public function testEntityCanOutputArray()
     {

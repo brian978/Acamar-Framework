@@ -10,14 +10,14 @@
 namespace AcamarTest\Mvc\Router;
 
 use Acamar\Mvc\Router\Route;
-
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RouteTest
  *
  * @package AcamarTest\Mvc\Router
  */
-class RouteTest extends \PHPUnit_Framework_TestCase
+class RouteTest extends TestCase
 {
     /**
      * @covers Acamar\Mvc\Router\Route::matches

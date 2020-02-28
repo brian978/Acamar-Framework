@@ -10,13 +10,14 @@
 namespace AcamarTest\Http\Cgi;
 
 use Acamar\Http\Cgi\Request;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class RequestTest
  *
  * @package AcamarTest\Http\Cgi
  */
-class RequestTest extends \PHPUnit_Framework_TestCase
+class RequestTest extends TestCase
 {
     /**
      * this is used to simulate the $_SERVER super global

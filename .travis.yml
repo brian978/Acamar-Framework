@@ -1,9 +1,12 @@
 language: php
 php:
-  - "5.4"
+  - "7.3"
 
 branches:
   only:
-    - master
+    - v2.1.0
+    
+install:
+   - composer install
 
 script: phpunit --configuration tests/phpunit.xml.dist

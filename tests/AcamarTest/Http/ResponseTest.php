@@ -11,14 +11,14 @@ namespace AcamarTest\Http;
 
 use Acamar\Http\Headers;
 use Acamar\Http\Response;
-
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ResponseTest
  *
  * @package AcamarTest\Http
  */
-class ResponseTest extends \PHPUnit_Framework_TestCase
+class ResponseTest extends TestCase
 {
     /**
      * @covers Acamar\Http\Response::getContentType

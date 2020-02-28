@@ -10,14 +10,14 @@
 namespace AcamarTest\Mvc\Controller;
 
 use Acamar\Mvc\Event\MvcEvent;
-
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ControllerTest
  *
  * @package AcamarTest\Mvc\Controller
  */
-class ControllerTest extends \PHPUnit_Framework_TestCase
+class ControllerTest extends TestCase
 {
     /**
      * @covers \Acamar\Mvc\Controller\AbstractController::__construct()

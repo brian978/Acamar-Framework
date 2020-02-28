@@ -14,13 +14,14 @@ use Acamar\Http\Response;
 use Acamar\Mvc\Dispatcher;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\View\View;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class DispatcherTest
  *
  * @package AcamarTest\Mvc
  */
-class DispatcherTest extends \PHPUnit_Framework_TestCase
+class DispatcherTest extends TestCase
 {
     /**
      * @var Dispatcher
@@ -39,7 +40,7 @@ class DispatcherTest extends \PHPUnit_Framework_TestCase
      *
      * @return void
      */
-    public function setUp()
+    public function setUp(): void
     {
         $this->dispatcher = new Dispatcher(new EventManager());
 

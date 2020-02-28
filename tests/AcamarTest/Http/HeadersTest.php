@@ -11,13 +11,14 @@ namespace AcamarTest\Http;
 
 
 use Acamar\Http\Headers;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class HeadersTest
  *
  * @package AcamarTest\Http
  */
-class HeadersTest extends \PHPUnit_Framework_TestCase
+class HeadersTest extends TestCase
 {
     /**
      * @covers Acamar\Http\Headers::fromString()

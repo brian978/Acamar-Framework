@@ -12,13 +12,14 @@ namespace AcamarTest\Mvc\View;
 use Acamar\Config\Config;
 use Acamar\Mvc\Event\MvcEvent;
 use Acamar\Mvc\View\ViewHelperManager;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class ViewHelperManagerTest
  *
  * @package AcamarTest\Mvc\View
  */
-class ViewHelperManagerTest extends \PHPUnit_Framework_TestCase
+class ViewHelperManagerTest extends TestCase
 {
     /**
      * @covers ViewHelperManager::getHelper

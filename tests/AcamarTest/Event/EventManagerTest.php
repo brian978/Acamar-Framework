@@ -11,14 +11,14 @@ namespace AcamarTest\Event;
 
 use Acamar\Event\Event;
 use Acamar\Event\EventManager;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
 /**
  * Class EventManagerTest
  *
  * @package AcamarTest\Event
  */
-class EventManagerTest extends PHPUnit_Framework_TestCase
+class EventManagerTest extends TestCase
 {
     public function testEventsCanBeAttachedAndTriggered()
     {

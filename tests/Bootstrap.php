@@ -7,6 +7,8 @@
  * @license   https://github.com/brian978/Acamar-Framework/blob/master/LICENSE New BSD License
  */
 
+ define('TESTS_ROOT_PATH', __DIR__);
+
 use Acamar\Loader\PSR4Autoloader;
 
 $path = realpath(dirname(__DIR__));
